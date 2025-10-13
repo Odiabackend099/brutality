@@ -47,6 +47,13 @@ services:
       N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
       N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
       OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true
+      
+      # Security: Block dangerous nodes
+      NODES_EXCLUDE=ExecuteCommand,ReadFile,WriteFile,ReadBinaryFile,WriteBinaryFile,HTTPRequest,Webhook
+      
+      # External execution for security
+      EXECUTIONS_PROCESS=main
+      QUEUE_BULL_REDIS_DB=0
 
       # Supabase
       SUPABASE_URL=${SUPABASE_URL}

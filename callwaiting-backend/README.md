@@ -4,6 +4,16 @@
 
 **The Supabase service_role key was exposed in the original plan. You MUST rotate it immediately before deployment.**
 
+## 🔒 Security Hardening Applied
+
+This deployment includes production-level security measures:
+
+- **HMAC-SHA256 Webhook Verification**: Proper cryptographic signature validation
+- **Timestamp Freshness Checks**: Prevents replay attacks
+- **Dangerous Node Blocking**: n8n configured to block risky operations
+- **Server Hardening**: Firewall, fail2ban, automatic updates
+- **Monitoring & Alerting**: Security monitoring and incident response
+
 ## 📋 Prerequisites
 
 - VPS or server with Docker & Docker Compose installed
@@ -13,7 +23,21 @@
 
 ## 🚀 Quick Deployment
 
-### 1. Setup Environment
+### 1. Server Security Setup (Recommended)
+
+```bash
+# Run server hardening script (Ubuntu/Debian)
+./server-setup.sh
+
+# This will configure:
+# - Firewall (UFW)
+# - Fail2ban intrusion detection
+# - Automatic security updates
+# - File integrity monitoring
+# - Security monitoring scripts
+```
+
+### 2. Setup Environment
 
 ```bash
 # Clone and navigate to the backend directory
@@ -26,7 +50,7 @@ cp env.example .env
 nano .env
 ```
 
-### 2. Deploy with Docker
+### 3. Deploy with Docker
 
 ```bash
 # Start the stack
@@ -36,7 +60,7 @@ docker-compose up -d
 docker-compose logs -f n8n-main
 ```
 
-### 3. Configure SSL (if not using Cloudflare)
+### 4. Configure SSL (if not using Cloudflare)
 
 ```bash
 # Install certbot and get SSL certificate
@@ -44,13 +68,13 @@ sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d n8n.odia.dev
 ```
 
-### 4. Setup Supabase Database
+### 5. Setup Supabase Database
 
 1. Go to Supabase Dashboard → SQL Editor
 2. Run the contents of `db/supabase_schema_hardened.sql`
 3. Enable PITR backups in Settings → Database (Pro plan)
 
-### 5. Import n8n Workflows
+### 6. Import n8n Workflows
 
 1. Access n8n at `https://n8n.odia.dev` (use Basic Auth from .env)
 2. Import `n8n_workflows/payment_workflow_hardened.json`
@@ -60,14 +84,14 @@ sudo certbot --nginx -d n8n.odia.dev
    - Flutterwave Bearer Token
    - Gmail SMTP
 
-### 6. Configure Flutterwave
+### 7. Configure Flutterwave
 
 1. Go to Flutterwave Dashboard → Settings → Webhooks
 2. Set webhook URL: `https://n8n.odia.dev/webhook/flutterwave`
 3. Enable events: `charge.completed`, `transfer.completed`
 4. Set secret hash and copy to `FLW_VERIF_HASH` in .env
 
-### 7. Setup Cloudflare WAF (Optional but Recommended)
+### 8. Setup Cloudflare WAF (Optional but Recommended)
 
 Create these rules in Cloudflare Dashboard:
 
@@ -90,7 +114,7 @@ Rate: 60 requests per minute per IP
 Action: Block for 10 minutes
 ```
 
-### 8. Email Deliverability
+### 9. Email Deliverability
 
 Set up SPF/DKIM/DMARC DNS records for your domain:
 
@@ -198,6 +222,15 @@ docker-compose up -d
 - [ ] Queue mode enabled with Redis
 - [ ] PITR backups enabled in Supabase
 
+## 🔒 Security Documentation
+
+For detailed security information:
+- **SECURITY_HARDENING.md**: Complete security hardening guide
+- **server-setup.sh**: Automated server security configuration
+- **Webhook Security**: HMAC-SHA256 verification with timestamp checks
+- **n8n Security**: Dangerous node blocking and external execution
+- **Server Hardening**: Firewall, fail2ban, monitoring, and incident response
+
 ## 📞 Support
 
 If issues persist:
@@ -205,7 +238,8 @@ If issues persist:
 2. Verify all environment variables are set correctly
 3. Test Flutterwave webhook manually with curl
 4. Check Supabase RLS policies and service key
-5. Contact: callwaitingai@gmail.com
+5. Review security documentation in SECURITY_HARDENING.md
+6. Contact: callwaitingai@gmail.com
 
 ## 🎯 Success Metrics
 
