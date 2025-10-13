@@ -1,0 +1,84 @@
+{
+  "name": "CallWaiting • Lead Capture (CORS-Enabled)",
+  "nodes": [
+    {
+      "id": "Webhook_Leads",
+      "name": "Webhook (Leads)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 200],
+      "parameters": {
+        "path": "leads_callwaiting",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" },
+              { "name": "Access-Control-Allow-Methods", "value": "OPTIONS,POST" },
+              { "name": "Access-Control-Allow-Headers", "value": "content-type" }
+            ]
+          }
+        }
+      },
+      "webhookMethods": { "POST": true }
+    },
+    {
+      "id": "Respond_200_Leads",
+      "name": "Respond 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [420, 200],
+      "parameters": {
+        "responseBody": "={\"success\": true}",
+        "responseCode": 200
+      }
+    },
+    {
+      "id": "Fn_ValidateLead",
+      "name": "Validate Lead Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [640, 160],
+      "parameters": {
+        "functionCode": "const data = $json;\n\n// Basic validation\nif (!data.name || !data.contact) {\n  throw new Error('Name and contact are required');\n}\n\n// Sanitize inputs\nreturn [{\n  json: {\n    name: (data.name || '').trim(),\n    business: (data.business || '').trim(),\n    contact: (data.contact || '').trim(),\n    description: (data.description || '').trim()\n  }\n}];"
+      }
+    },
+    {
+      "id": "Supabase_Insert_Lead",
+      "name": "Supabase • Insert Lead",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [860, 160],
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "leads_callwaiting",
+        "columns": "name,business,contact,description",
+        "returnFields": "id"
+      },
+      "credentials": { "supabaseApi": { "id": "SUPABASE_SERVICE", "name": "Supabase (service role)" } }
+    },
+    {
+      "id": "Email_Internal_Lead",
+      "name": "Email • New Lead",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1080, 160],
+      "parameters": {
+        "fromEmail": "no-reply@callwaitingai.dev",
+        "toEmail": "={{$env.ALERT_EMAIL}}",
+        "subject": "🎯 New Lead: {{$json.name}}",
+        "text": "Name: {{$json.name}}\\nBusiness: {{$json.business}}\\nContact: {{$json.contact}}\\nDescription: {{$json.description}}\\n\\nSubmitted at: {{new Date().toISOString()}}"
+      },
+      "credentials": { "emailSmtp": { "id": "SMTP_GMAIL", "name": "Gmail SMTP (app pw)" } }
+    }
+  ],
+  "connections": {
+    "Webhook (Leads)": { "main": [ [ { "node": "Respond 200", "type": "main", "index": 0 } ] ] },
+    "Respond 200": { "main": [ [ { "node": "Validate Lead Data", "type": "main", "index": 0 } ] ] },
+    "Validate Lead Data": { "main": [ [ { "node": "Supabase • Insert Lead", "type": "main", "index": 0 } ] ] },
+    "Supabase • Insert Lead": { "main": [ [ { "node": "Email • New Lead", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
