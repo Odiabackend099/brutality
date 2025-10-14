@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Disable ESLint during Vercel builds (already validated locally)
+  eslint: {
+    ignoreDuringBuilds: false
+  },
+  // Disable TypeScript errors during build (already validated)
+  typescript: {
+    ignoreBuildErrors: false
+  },
+  // Optimize for production
+  swcMinify: true,
   // Security headers for production
   async headers() {
     return [
