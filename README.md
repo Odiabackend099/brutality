@@ -1,16 +1,30 @@
 # CallWaiting AI - AI Receptionist Landing Page
 
-> **Never Miss a Customer — Let AI Answer Calls, WhatsApp & TikTok DMs 24/7**
+> **Stop Losing Sales to Slow Replies — Let AI Answer Calls & DMs Instantly**
 
-A modern, responsive landing page for CallWaiting AI service with integrated payment processing via Flutterwave and automated lead capture.
+A high-conversion, TikTok-native landing page for CallWaiting AI service with integrated payment processing, free trial offering, and automated lead capture. Designed for creators, influencers, and Shopify store owners.
+
+## ✨ Latest Redesign (October 2025)
+
+**Complete landing page overhaul focused on conversion optimization:**
+- 🎯 **New ROI-Focused Messaging**: "Stop Losing Sales to Slow Replies" headline
+- 🆓 **Free Trial First**: 7-day free trial prominently featured (no credit card required)
+- 📱 **TikTok-Native Design**: 3-5 second attention span optimization
+- 💰 **Creator-Focused Copy**: Revenue metrics, time savings, and social proof
+- 📊 **Enhanced Social Proof**: 3 detailed testimonials with specific results
+- 🚀 **Sticky Mobile CTA**: Always-visible conversion button on mobile
+- 🎨 **Interactive Demos**: Voice call + TikTok DM chat examples
+- 📈 **ROI Metrics Section**: +20% sales, 5s response time, 100% leads answered
 
 ## 🚀 Features
 
-- **Modern Design**: Clean, professional landing page with dark theme
+- **High-Conversion Design**: TikTok-native layout with urgency messaging and ROI focus
+- **Free Trial Offering**: Risk-free 7-day trial with no credit card required
 - **Payment Integration**: Flutterwave payment links for $300 Starter and $500 Pro plans
-- **Lead Capture**: Automated form submission with CORS support
-- **Mobile Responsive**: Optimized for all devices
-- **SEO Optimized**: Meta tags, structured data, and performance optimized
+- **Lead Capture**: Automated form submission with CORS support to n8n webhook
+- **Mobile First**: Sticky CTA bar for mobile users, responsive across all devices
+- **SEO Optimized**: Meta tags for TikTok/Shopify keywords, LLM-friendly footer content
+- **Interactive Demos**: Side-by-side voice and chat demo previews
 - **Security**: Production-ready security headers and best practices
 
 ## 🛠 Tech Stack
@@ -102,24 +116,46 @@ The lead form is configured to submit to:
 https://n8n.odia.dev/webhook/leads_callwaiting
 ```
 
-## 🎨 Customization
+## 🎨 Page Structure & Sections
+
+The redesigned landing page follows a proven conversion funnel:
+
+1. **Hero Section**: ROI-focused headline + visual demo mockup
+2. **Social Proof Bar**: TikTok Shop, WhatsApp, Shopify logos + testimonial
+3. **Problem/Pain Point**: "Missed Messages = Missed Money" with urgency stats
+4. **Solution/Value Prop**: 4 benefit cards (Instant, Answers, Sales, Human-like)
+5. **Demo Section**: Interactive voice call + TikTok DM chat examples
+6. **Creator Benefits/ROI**: Narrative + 3 metric cards with results
+7. **Use Cases**: Law firms, realtors, clinics, TikTok/Shopify stores
+8. **Pricing**: Free Trial (highlighted) + $300 Starter + $500 Pro
+9. **Testimonials**: 3 detailed reviews with specific results
+10. **Contact Form**: Lead capture with n8n webhook integration
+11. **SEO Footer**: Keyword-rich description for search engines
+12. **Sticky Mobile CTA**: Fixed bottom bar on mobile devices
 
 ### Colors and Branding
 
-The design uses a cyan/blue gradient theme. To customize:
+The design uses the CallWaiting AI brand colors:
 
-1. Update the gradient classes in `app/page.tsx`
-2. Modify the color scheme in Tailwind classes
-3. Update the logo and branding elements
+- **Primary Gradient**: Cyan (#22D3EE) → Blue (#3B82F6)
+- **Accent Purple**: For headline flourishes
+- **Success Green**: (#4ADE80) for free trial and checkmarks
+- **Urgency Red/Orange**: For pain point section
+- **Dark Background**: Slate-950 (#020617) for premium feel
 
-### Content
+To customize:
+1. Update gradient classes in `app/page.tsx`
+2. Modify Tailwind color values in components
+3. Maintain high contrast for accessibility
 
-Key sections to customize:
-- Hero headline and description
-- Pricing plans and features
-- Testimonials
-- Contact information
-- Footer content
+### Content Customization
+
+Key sections to update:
+- **Hero**: Headline variants in comments (test A/B options)
+- **Pricing**: Update Flutterwave links and amounts
+- **Testimonials**: Add real customer reviews with results
+- **Use Cases**: Tailor to your target industries
+- **Footer**: Update company info and keywords
 
 ## 🔒 Security Features
 
