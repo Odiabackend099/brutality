@@ -1,0 +1,324 @@
+{
+  "name": "CallWaiting AI • Flutterwave Payment Verification",
+  "nodes": [
+    {
+      "id": "webhook_flutterwave",
+      "name": "Webhook - Flutterwave",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "parameters": {
+        "path": "payments/flutterwave",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "webhookMethods": { "POST": true }
+    },
+    {
+      "id": "respond_200",
+      "name": "Respond 200 Immediately",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [420, 300],
+      "parameters": {
+        "responseBody": "={\"received\": true}",
+        "responseCode": 200
+      }
+    },
+    {
+      "id": "verify_signature",
+      "name": "Verify Webhook Signature",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [640, 200],
+      "parameters": {
+        "functionCode": "// Flutterwave sends verif-hash header (direct comparison, not HMAC)\nconst headers = $json.headers || {};\nconst receivedHash = headers['verif-hash'] || headers['Verif-Hash'] || headers['VERIF-HASH'];\nconst expectedHash = $env.FLW_VERIF_HASH;\n\nif (!receivedHash) {\n  return [{\n    json: {\n      valid: false,\n      reason: 'missing_hash',\n      body: $json.body || $json\n    }\n  }];\n}\n\nif (receivedHash !== expectedHash) {\n  return [{\n    json: {\n      valid: false,\n      reason: 'invalid_hash',\n      received: receivedHash,\n      body: $json.body || $json\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    valid: true,\n    body: $json.body || $json\n  }\n}];"
+      }
+    },
+    {
+      "id": "if_valid_signature",
+      "name": "If Valid Signature",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [860, 200],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.valid}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "parse_payment_data",
+      "name": "Parse Payment Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1080, 120],
+      "parameters": {
+        "functionCode": "const body = $json.body || {};\nconst data = body.data || body;\n\n// Extract payment details\nconst payment = {\n  transaction_id: data.id || data.txRef || data.tx_ref,\n  flw_ref: data.flwRef || data.flw_ref,\n  amount: parseFloat(data.amount || 0),\n  currency: data.currency || 'USD',\n  status: (data.status || '').toLowerCase(),\n  customer_email: data.customer?.email || data.email,\n  customer_name: data.customer?.name || data.name,\n  customer_phone: data.customer?.phone_number || data.phone,\n  payment_type: data.payment_type,\n  created_at: data.created_at || new Date().toISOString(),\n  raw_data: JSON.stringify(data)\n};\n\n// Determine plan type based on amount\nif (payment.amount >= 500) {\n  payment.plan = 'pro';\n  payment.plan_name = 'Pro Setup';\n} else if (payment.amount >= 300) {\n  payment.plan = 'starter';\n  payment.plan_name = 'Starter Setup';\n} else {\n  payment.plan = 'unknown';\n  payment.plan_name = 'Unknown';\n}\n\nreturn [{ json: payment }];"
+      }
+    },
+    {
+      "id": "verify_with_flutterwave",
+      "name": "Verify with Flutterwave API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1300, 120],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.flutterwave.com/v3/transactions/{{$json.transaction_id}}/verify",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "flutterwaveApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.FLW_SECRET_KEY}}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "check_payment_status",
+      "name": "Check Payment Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1520, 120],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.data.status}}",
+              "operation": "equal",
+              "value2": "successful"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "insert_payment",
+      "name": "Insert Payment to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1740, 60],
+      "parameters": {
+        "operation": "insert",
+        "tableId": "payments",
+        "data": "={\n  \"transaction_id\": \"{{$node['Parse Payment Data'].json.transaction_id}}\",\n  \"flw_ref\": \"{{$node['Parse Payment Data'].json.flw_ref}}\",\n  \"amount\": {{$node['Parse Payment Data'].json.amount}},\n  \"currency\": \"{{$node['Parse Payment Data'].json.currency}}\",\n  \"status\": \"{{$json.data.status}}\",\n  \"customer_email\": \"{{$node['Parse Payment Data'].json.customer_email}}\",\n  \"customer_name\": \"{{$node['Parse Payment Data'].json.customer_name}}\",\n  \"customer_phone\": \"{{$node['Parse Payment Data'].json.customer_phone}}\",\n  \"plan\": \"{{$node['Parse Payment Data'].json.plan}}\",\n  \"plan_name\": \"{{$node['Parse Payment Data'].json.plan_name}}\",\n  \"payment_type\": \"{{$node['Parse Payment Data'].json.payment_type}}\",\n  \"verified\": true,\n  \"raw_data\": {{$node['Parse Payment Data'].json.raw_data}},\n  \"created_at\": \"{{$node['Parse Payment Data'].json.created_at}}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase_cred",
+          "name": "Supabase (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "find_lead",
+      "name": "Find Lead by Email",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1960, 60],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "leads",
+        "returnAll": false,
+        "limit": 1,
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "condition": "equals",
+              "keyValue": "={{$node['Parse Payment Data'].json.customer_email}}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase_cred",
+          "name": "Supabase (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "update_lead_paid",
+      "name": "Update Lead Status to Paid",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [2180, 60],
+      "parameters": {
+        "operation": "update",
+        "tableId": "leads",
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "condition": "equals",
+              "keyValue": "={{$node['Parse Payment Data'].json.customer_email}}"
+            }
+          ]
+        },
+        "data": "={\n  \"status\": \"paid\",\n  \"plan\": \"{{$node['Parse Payment Data'].json.plan}}\",\n  \"paid_amount\": {{$node['Parse Payment Data'].json.amount}},\n  \"paid_at\": \"{{new Date().toISOString()}}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase_cred",
+          "name": "Supabase (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "send_confirmation_email",
+      "name": "Send Payment Confirmation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2400, 0],
+      "parameters": {
+        "fromEmail": "callwaitingai@gmail.com",
+        "toEmail": "={{$node['Parse Payment Data'].json.customer_email}}",
+        "subject": "✅ Payment Confirmed - Your AI Receptionist Setup Starts Now!",
+        "emailFormat": "html",
+        "html": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1e293b; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #10b981 0%, #22d3ee 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; }\n    .content { background: #f8fafc; padding: 30px; margin-top: 20px; border-radius: 8px; }\n    .receipt { background: white; padding: 20px; border-left: 4px solid #10b981; margin: 20px 0; }\n    .cta-button { display: inline-block; background: #22d3ee; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; }\n    .footer { text-align: center; color: #64748b; font-size: 14px; margin-top: 30px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1 style=\"margin: 0;\">✅ Payment Confirmed!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Hi {{$node['Parse Payment Data'].json.customer_name}},</p>\n      \n      <p><strong>Great news!</strong> Your payment has been confirmed and your AI receptionist setup is now scheduled.</p>\n      \n      <div class=\"receipt\">\n        <h3 style=\"margin-top: 0;\">Payment Receipt</h3>\n        <p><strong>Plan:</strong> {{$node['Parse Payment Data'].json.plan_name}}</p>\n        <p><strong>Amount:</strong> ${{$node['Parse Payment Data'].json.amount}} {{$node['Parse Payment Data'].json.currency}}</p>\n        <p><strong>Transaction ID:</strong> {{$node['Parse Payment Data'].json.transaction_id}}</p>\n        <p><strong>Date:</strong> {{$node['Parse Payment Data'].json.created_at}}</p>\n      </div>\n      \n      <h3>What Happens Next?</h3>\n      <ol>\n        <li><strong>Within 24 hours:</strong> Our team will email you a setup questionnaire</li>\n        <li><strong>Setup call:</strong> We'll schedule a 30-min call to configure your AI</li>\n        <li><strong>48-hour launch:</strong> Your AI receptionist goes live!</li>\n      </ol>\n      \n      <p><strong>Ready to get started faster?</strong> Book your setup call now:</p>\n      \n      <a href=\"{{$env.NEXT_PUBLIC_CALENDLY_LINK}}\" class=\"cta-button\">Schedule Setup Call</a>\n      \n      <p>Questions? Reply to this email or call us at your convenience.</p>\n      \n      <p>Excited to get you set up!</p>\n      \n      <p>Best,<br>\n      <strong>The CallWaiting AI Team</strong></p>\n    </div>\n    <div class=\"footer\">\n      <p>CallWaiting AI - AI Receptionist for TikTok & Shopify Sellers</p>\n      <p>callwaitingai@gmail.com</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "credentials": {
+        "smtp": {
+          "id": "gmail_smtp",
+          "name": "Gmail SMTP (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "notify_team_payment",
+      "name": "Notify Team - New Payment",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2400, 120],
+      "parameters": {
+        "fromEmail": "callwaitingai@gmail.com",
+        "toEmail": "={{$env.ALERT_EMAIL}}",
+        "subject": "💰 NEW PAYMENT: {{$node['Parse Payment Data'].json.plan_name}} - ${{$node['Parse Payment Data'].json.amount}}",
+        "emailFormat": "html",
+        "html": "=<h2>🎉 New Payment Received!</h2>\n<h3>Customer Details</h3>\n<ul>\n  <li><strong>Name:</strong> {{$node['Parse Payment Data'].json.customer_name}}</li>\n  <li><strong>Email:</strong> {{$node['Parse Payment Data'].json.customer_email}}</li>\n  <li><strong>Phone:</strong> {{$node['Parse Payment Data'].json.customer_phone}}</li>\n</ul>\n<h3>Payment Details</h3>\n<ul>\n  <li><strong>Plan:</strong> {{$node['Parse Payment Data'].json.plan_name}}</li>\n  <li><strong>Amount:</strong> ${{$node['Parse Payment Data'].json.amount}} {{$node['Parse Payment Data'].json.currency}}</li>\n  <li><strong>Transaction ID:</strong> {{$node['Parse Payment Data'].json.transaction_id}}</li>\n  <li><strong>Status:</strong> VERIFIED ✅</li>\n</ul>\n<hr>\n<p><strong>⚡ ACTION REQUIRED:</strong></p>\n<ol>\n  <li>Send setup questionnaire within 24 hours</li>\n  <li>Schedule setup call with customer</li>\n  <li>Begin 48-hour setup process</li>\n</ol>",
+        "options": {}
+      },
+      "credentials": {
+        "smtp": {
+          "id": "gmail_smtp",
+          "name": "Gmail SMTP (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "log_invalid_signature",
+      "name": "Log Invalid Signature",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1080, 280],
+      "parameters": {
+        "functionCode": "// Log security incident\nconst incident = {\n  timestamp: new Date().toISOString(),\n  reason: $json.reason,\n  received_hash: $json.received,\n  ip: $json.headers?.['x-forwarded-for'] || 'unknown',\n  body: $json.body\n};\n\nconsole.error('SECURITY: Invalid webhook signature', incident);\n\n// Send alert email\nreturn [{ json: incident }];"
+      }
+    },
+    {
+      "id": "alert_invalid_signature",
+      "name": "Alert Team - Invalid Signature",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1300, 280],
+      "parameters": {
+        "fromEmail": "callwaitingai@gmail.com",
+        "toEmail": "={{$env.ALERT_EMAIL}}",
+        "subject": "🚨 SECURITY ALERT: Invalid Flutterwave Webhook Signature",
+        "emailFormat": "html",
+        "html": "=<h2 style=\"color: #dc2626;\">🚨 Security Alert</h2>\n<p><strong>Invalid webhook signature detected on Flutterwave payment endpoint.</strong></p>\n<ul>\n  <li><strong>Timestamp:</strong> {{$json.timestamp}}</li>\n  <li><strong>Reason:</strong> {{$json.reason}}</li>\n  <li><strong>IP:</strong> {{$json.ip}}</li>\n</ul>\n<p>This could be:</p>\n<ul>\n  <li>A replay attack attempt</li>\n  <li>Misconfigured webhook on Flutterwave dashboard</li>\n  <li>Expired/incorrect verif-hash in n8n env vars</li>\n</ul>\n<p><strong>Action:</strong> Review Flutterwave webhook settings and n8n FLW_VERIF_HASH env var.</p>",
+        "options": {}
+      },
+      "credentials": {
+        "smtp": {
+          "id": "gmail_smtp",
+          "name": "Gmail SMTP (CallWaiting)"
+        }
+      }
+    },
+    {
+      "id": "log_failed_payment",
+      "name": "Log Failed Payment",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1740, 180],
+      "parameters": {
+        "functionCode": "// Log failed/pending payment\nconst payment = $node['Parse Payment Data'].json;\nconst verification = $json.data;\n\nconsole.log(`Payment not successful: ${payment.transaction_id} - Status: ${verification.status}`);\n\nreturn [{\n  json: {\n    transaction_id: payment.transaction_id,\n    status: verification.status,\n    customer_email: payment.customer_email,\n    amount: payment.amount\n  }\n}];"
+      }
+    }
+  ],
+  "connections": {
+    "webhook_flutterwave": {
+      "main": [[{ "node": "respond_200", "type": "main", "index": 0 }]]
+    },
+    "respond_200": {
+      "main": [[{ "node": "verify_signature", "type": "main", "index": 0 }]]
+    },
+    "verify_signature": {
+      "main": [[{ "node": "if_valid_signature", "type": "main", "index": 0 }]]
+    },
+    "if_valid_signature": {
+      "main": [
+        [{ "node": "parse_payment_data", "type": "main", "index": 0 }],
+        [{ "node": "log_invalid_signature", "type": "main", "index": 0 }]
+      ]
+    },
+    "parse_payment_data": {
+      "main": [[{ "node": "verify_with_flutterwave", "type": "main", "index": 0 }]]
+    },
+    "verify_with_flutterwave": {
+      "main": [[{ "node": "check_payment_status", "type": "main", "index": 0 }]]
+    },
+    "check_payment_status": {
+      "main": [
+        [{ "node": "insert_payment", "type": "main", "index": 0 }],
+        [{ "node": "log_failed_payment", "type": "main", "index": 0 }]
+      ]
+    },
+    "insert_payment": {
+      "main": [[{ "node": "find_lead", "type": "main", "index": 0 }]]
+    },
+    "find_lead": {
+      "main": [[{ "node": "update_lead_paid", "type": "main", "index": 0 }]]
+    },
+    "update_lead_paid": {
+      "main": [
+        [
+          { "node": "send_confirmation_email", "type": "main", "index": 0 },
+          { "node": "notify_team_payment", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "log_invalid_signature": {
+      "main": [[{ "node": "alert_invalid_signature", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-14T00:00:00.000Z",
+  "versionId": "1"
+}
