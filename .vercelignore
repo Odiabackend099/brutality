@@ -1,6 +1,4 @@
 # Ignore build artifacts
-.next/
-out/
 node_modules/
 
 # Ignore local files
