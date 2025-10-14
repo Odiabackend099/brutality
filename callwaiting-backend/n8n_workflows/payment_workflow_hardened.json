@@ -13,6 +13,7 @@
         "responseMode": "lastNode",
         "options": {}
       },
+      "notes": "CRITICAL: Set 'Response Mode' to 'On Received', enable 'Binary Data' toggle. Route directly to 'Respond 200 Immediately' for Flutterwave timeout compliance.",
       "webhookMethods": { "POST": true }
     },
     {
@@ -33,7 +34,7 @@
       "typeVersion": 1,
       "position": [640, 160],
       "parameters": {
-        "functionCode": "// Flutterwave webhook signature verification with HMAC-SHA256\nconst crypto = require('crypto');\nconst headers = $json.headers || {};\nconst receivedSig = headers['verif-hash'] || headers['Verif-Hash'] || headers['VERIF-HASH'];\nconst secret = $env.FLW_VERIF_HASH;\nconst rawBody = JSON.stringify($json.body || $json);\n\n// Compute HMAC-SHA256 of raw body with secret\nconst expectedSig = crypto\n  .createHmac('sha256', secret)\n  .update(rawBody)\n  .digest('base64');\n\n// Compare signatures\nif (!receivedSig || receivedSig !== expectedSig) {\n  return [{ \n    json: { \n      valid: false, \n      reason: 'signature-mismatch',\n      received: receivedSig,\n      expected: expectedSig.substring(0, 10) + '...',\n      headers: Object.keys(headers),\n      bodySize: rawBody.length\n    } \n  }];\n}\n\n// Optional: Check timestamp freshness (if available)\nconst payload = $json.body || $json;\nif (payload.timestamp) {\n  const now = Date.now();\n  const webhookTime = new Date(payload.timestamp).getTime();\n  const ageSeconds = (now - webhookTime) / 1000;\n  \n  if (ageSeconds > 60) {\n    return [{ \n      json: { \n        valid: false, \n        reason: 'webhook-too-old',\n        ageSeconds: Math.round(ageSeconds)\n      } \n    }];\n  }\n}\n\nreturn [{ json: { valid: true, body: payload } }];"
+        "functionCode": "// Flutterwave webhook signature verification with HMAC-SHA256\n// CRITICAL: Always .trim() both verif-hash header and secret to avoid whitespace mismatch\nconst crypto = require('crypto');\nconst headers = $json.headers || {};\nconst receivedSig = String(headers['verif-hash'] || headers['Verif-Hash'] || headers['VERIF-HASH'] || '').trim();\nconst secret = String($env.FLW_VERIF_HASH || '').trim();\nconst rawBody = JSON.stringify($json.body || $json);\n\n// Compute HMAC-SHA256 of raw body with secret\nconst expectedSig = crypto\n  .createHmac('sha256', secret)\n  .update(rawBody)\n  .digest('base64');\n\n// Compare signatures (both trimmed)\nif (!receivedSig || receivedSig !== expectedSig) {\n  return [{ \n    json: { \n      valid: false, \n      reason: 'signature-mismatch',\n      received: receivedSig,\n      expected: expectedSig.substring(0, 10) + '...',\n      headers: Object.keys(headers),\n      bodySize: rawBody.length\n    } \n  }];\n}\n\n// Optional: Check timestamp freshness (if available)\nconst payload = $json.body || $json;\nif (payload.timestamp) {\n  const now = Date.now();\n  const webhookTime = new Date(payload.timestamp).getTime();\n  const ageSeconds = (now - webhookTime) / 1000;\n  \n  if (ageSeconds > 60) {\n    return [{ \n      json: { \n        valid: false, \n        reason: 'webhook-too-old',\n        ageSeconds: Math.round(ageSeconds)\n      } \n    }];\n  }\n}\n\nreturn [{ json: { valid: true, body: payload } }];"
       }
     },
     {
@@ -112,7 +113,8 @@
         "conflictTarget": "flutterwave_id",
         "returnFields": "id,flutterwave_id,transaction_ref"
       },
-      "credentials": { "supabaseApi": { "id": "SUPABASE_SERVICE", "name": "Supabase (service role)" } }
+      "credentials": { "supabaseApi": { "id": "SUPABASE_SERVICE", "name": "Supabase (service role)" } },
+      "notes": "IDEMPOTENCY: Uses flutterwave_id as conflict target. Duplicate webhooks will update existing record, not create duplicates."
     },
     {
       "id": "Email_Customer",

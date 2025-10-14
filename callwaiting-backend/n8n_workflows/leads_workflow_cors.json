@@ -21,6 +21,7 @@
           }
         }
       },
+      "notes": "CORS ENABLED: Must respond to OPTIONS requests with 200 + CORS headers for browser form submissions. Cloudflare WAF must allow OPTIONS for this path.",
       "webhookMethods": { "POST": true }
     },
     {

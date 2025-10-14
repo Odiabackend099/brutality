@@ -1,5 +1,34 @@
 # CallWaiting AI Backend Deployment Guide
 
+## 🧩 Production Reality Stress Test (v1.0 Operator Checklist)
+
+**Before pushing or tagging a release, every operator/Maintainer MUST verify:**
+
+- [ ] **Webhook Path (Flutterwave Dashboard):**  
+      Set exactly as `https://n8n.odia.dev/webhook/flutterwave` (no trailing slash, no upper-case).
+- [ ] **n8n Webhook Node:**  
+      "Response Mode" = "On Received" (immediate 200), "Response Data" = "No Response Data", "Binary Data" ON.
+- [ ] **Signature Handling:**  
+      Workflow's verification node `.trim()`s both `verif-hash` and secret.
+- [ ] **Supabase idempotency:**  
+      Run:  
+      `select indexname from pg_indexes where tablename='payments_callwaiting';`  
+      Expect unique on `flutterwave_id`.
+- [ ] **Cloudflare/Nginx Timeout:**  
+      Proxy timeout is **≥ 10 seconds**; Flutterwave webhooks retry after 5s if no response.
+- [ ] **SMTP Quota:**  
+      Gmail app pw = ~2,000 msgs/day. For scale/production, migrate to SendGrid/AWS SES.
+- [ ] **Bootstrap Script:**  
+      Run:  
+      `bash -x bootstrap_callwaiting.sh`  
+      Both cURL tests (good/bad secret) yield 200/401+ as expected.
+- [ ] **Commit Hygiene/Safety:**  
+      Run:  
+      `git check-ignore -v .env` and `git check-ignore -v server-setup.sh`  
+      Both must show "ignored by .gitignore".
+
+**Tag a release ONLY when every box is checked.**
+
 ## 🚨 CRITICAL SECURITY NOTICE
 
 **The Supabase service_role key was exposed in the original plan. You MUST rotate it immediately before deployment.**
@@ -39,6 +68,19 @@ This deployment includes production-level security measures:
 
 ### 2. Setup Environment
 
+**Option A: Automated Bootstrap (Recommended)**
+```bash
+# Run the automated bootstrap script
+./bootstrap_callwaiting.sh
+
+# This will:
+# - Create .env with all required variables
+# - Set up docker-compose.yml
+# - Start n8n + Redis stack
+# - Run basic webhook validation tests
+```
+
+**Option B: Manual Setup**
 ```bash
 # Clone and navigate to the backend directory
 cd callwaiting-backend
@@ -130,6 +172,60 @@ TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:callwaitingai@gmail.com"
 
 ## 🧪 Testing Protocol
 
+### Comprehensive Test Suite
+```bash
+# Run all tests to validate deployment
+./test/run-all-tests.sh
+```
+
+This will:
+- Test webhook HMAC-SHA256 verification logic
+- Validate all configuration files
+- Check Docker Compose syntax
+- Verify security hardening
+- Generate test vectors and curl commands
+- Provide detailed test results
+
+### Webhook Verification Tests
+```bash
+cd callwaiting-backend/test
+npm install
+npm run test:all
+```
+
+This will:
+- Generate test webhooks with valid HMAC-SHA256 signatures
+- Test all verification scenarios (valid, invalid, old, missing)
+- Run official Flutterwave test vectors
+- Provide curl commands for manual testing
+- Validate the security implementation
+
+### Official Flutterwave Tests
+```bash
+cd callwaiting-backend/test
+node flutterwave-official-test.js
+```
+
+This will:
+- Test with official Flutterwave specifications
+- Show exact signatures and payloads
+- Generate curl commands for manual testing
+- Validate HMAC-SHA256 implementation
+
+### End-to-End Webhook Tests
+```bash
+cd callwaiting-backend/test
+npm install
+npm run test:webhook
+```
+
+This will:
+- Actually post to your n8n webhook endpoint
+- Test all verification scenarios live
+- Show HTTP responses and status codes
+- Validate end-to-end webhook processing
+- Test idempotency with duplicate webhooks
+
 ### Payment Flow Test
 1. Make a $1 test payment via Flutterwave link
 2. Verify webhook fires within 30 seconds
@@ -150,6 +246,7 @@ TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:callwaitingai@gmail.com"
 2. Try non-POST requests to webhooks → should be blocked
 3. Test rate limiting → should block after 60 requests/minute
 4. Verify emails land in inbox (not spam)
+5. Test replay attacks with old timestamps → should be rejected
 
 ## 📊 Monitoring & Maintenance
 
@@ -177,6 +274,23 @@ docker-compose up -d
 docker-compose pull
 docker-compose up -d
 ```
+
+## 🔧 Bootstrap Script Documentation
+
+### Expected Bootstrap Output
+```bash
+[test] Valid secret header -> expect HTTP 200
+200
+
+[test] Wrong secret header -> expect 401/403
+401
+```
+
+### Troubleshooting Bootstrap
+- **If you get `200` for both tests:** Webhook endpoint is not properly configured
+- **If you get connection errors:** Check n8n is running and accessible  
+- **If you get `500` errors:** Check n8n logs for execution errors
+- **If you get `404` errors:** Verify webhook path is exactly `/webhook/flutterwave`
 
 ## 🔧 Troubleshooting
 
@@ -221,6 +335,7 @@ docker-compose up -d
 - [ ] Domain email configured with SPF/DKIM/DMARC
 - [ ] Queue mode enabled with Redis
 - [ ] PITR backups enabled in Supabase
+- [ ] **Production Reality Stress Test completed (all boxes checked above)**
 
 ## 🔒 Security Documentation
 
@@ -249,6 +364,33 @@ If issues persist:
 - Zero duplicate payment records
 - 100% webhook signature verification
 - All security checklist items completed
+
+## 🏷️ Tagging a Gold Baseline Release
+
+After a full, green pass of the Production Reality Stress Test checklist:
+
+```bash
+git tag -a v1.0 -m "CallWaiting AI hardened production release"
+git push origin v1.0
+```
+
+**This creates your production-ready, investor-grade baseline.**
+From here, only feature work changes — infra stays frozen and reliable.
+
+## 🟢 Operational Principles (Cemented in Docs)
+
+- **Deterministic deploy:** "No manual steps." All infra/config/first-run delivered via script or documented n8n import.
+- **Full observability:** Logs, Supabase row per event, Gmail alert per failure, traceable via request-id if needed.
+- **Secret rotation:** Explicit quarterly rotation steps for all keys, log rotation events in the repo (in a sec log or README section).
+
+**Every deployment is deterministic.**
+No manual clicks — `bootstrap_callwaiting.sh` + `deploy.sh` yield the same result every time.
+
+**Every failure is observable.**
+Request-ID logs + Supabase rows + Gmail alerts mean no silent drop.
+
+**Every secret has a rotation path.**
+Flutterwave → Supabase → Gmail: rotate quarterly; store rotation dates in README.
 
 ---
 

@@ -1,0 +1,31 @@
+{
+  "name": "callwaitingai-webhook-tests",
+  "version": "1.0.0",
+  "description": "Test vectors and validation scripts for CallWaiting AI webhook verification",
+  "main": "webhook-test-vectors.js",
+  "scripts": {
+    "test": "node test-webhook-verification.js",
+    "generate": "node webhook-test-vectors.js",
+    "official": "node flutterwave-official-test.js",
+    "webhook": "node webhook-test.js",
+    "test:all": "npm run test && npm run generate && npm run official",
+    "test:webhook": "npm run webhook"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "axios": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "webhook",
+    "testing",
+    "flutterwave",
+    "hmac",
+    "security",
+    "n8n"
+  ],
+  "author": "ODIADEV AI LTD",
+  "license": "MIT"
+}

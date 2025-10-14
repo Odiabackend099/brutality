@@ -108,6 +108,9 @@ secrets/
 *.p12
 *.pfx
 
+# Server setup scripts (keep in repo for security hardening)
+# server-setup.sh is intentionally tracked for security hardening
+
 # Database dumps
 *.sql.gz
 *.dump
