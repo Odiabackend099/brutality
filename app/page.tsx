@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight, Headphones, Check, Phone } from 'lucide-react';
+import { ChatWidget } from '@/components/ChatWidget';
 
 const FLW_STARTER = 'https://flutterwave.com/pay/tcasx4xsfmdj';
 const FLW_PRO = 'https://flutterwave.com/pay/vcpp9rpmnvdm';
@@ -107,7 +108,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">Simple pricing that grows with you</h2>
-            <p className="mt-3 text-slate-300/90">Start free. Pay setup when you're ready.</p>
+            <p className="mt-3 text-slate-300/90">Start free. Pay setup when you&apos;re ready.</p>
           </div>
 
           <div className="mt-8 grid md:grid-cols-2 gap-6">
@@ -216,6 +217,9 @@ export default function Page() {
           Start Free Trial
         </a>
       </div>
+
+      {/* Chat Widget */}
+      <ChatWidget />
     </>
   );
 }

@@ -1,0 +1,266 @@
+{
+  "name": "CallWaiting AI - Complete with OpenAI + MiniMax TTS",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/webhook/tts_minimax",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 200]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "userMessage",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "messageType",
+              "value": "={{ $json.body.type }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "audioData",
+              "value": "={{ $json.body.audio || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-input",
+      "name": "Extract Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [220, 200],
+      "notes": "Extract user message and type from webhook payload"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are CallWaiting AI, a friendly and professional AI receptionist assistant. You help businesses manage calls, bookings, and customer inquiries. Be concise, helpful, and professional. Keep responses under 100 words."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.userMessage }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 150
+        }
+      },
+      "id": "openai-chat",
+      "name": "OpenAI Chat",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.3,
+      "position": [440, 200],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-credentials",
+          "name": "OpenAI API"
+        }
+      },
+      "notes": "Generate AI response using GPT-4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "aiResponseText",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-ai-response",
+      "name": "Extract AI Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [660, 200],
+      "notes": "Extract the text from OpenAI response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.minimax.chat/v1/t2a_v2",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_MINIMAX_JWT>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": {{ JSON.stringify($json.aiResponseText) }},\n  \"model\": \"speech-01\",\n  \"voice_id\": \"female_1\",\n  \"sample_rate\": 24000,\n  \"format\": \"mp3\",\n  \"bitrate\": 128000\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "minimax-tts",
+      "name": "MiniMax TTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 200],
+      "notes": "Convert AI text response to speech using MiniMax TTS"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "text",
+              "value": "={{ $('Extract AI Response').item.json.aiResponseText }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "audio_url",
+              "value": "={{ $json.data?.audio_file || $json.audio_file || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "includeOtherFields": false
+        }
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1100, 200],
+      "notes": "Format final response with text and audio URL"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [1320, 200]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Input": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat": {
+      "main": [
+        [
+          {
+            "node": "Extract AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract AI Response": {
+      "main": [
+        [
+          {
+            "node": "MiniMax TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MiniMax TTS": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
