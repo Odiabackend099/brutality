@@ -1,16 +1,25 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Phone, MessageSquare, Clock, CheckCircle, Zap, Users, TrendingUp, Star, ArrowRight, Play } from 'lucide-react';
 import { initPlausible, trackPlausible, getPlausibleDomain } from './analytics/plausible-loader';
 
+type LeadFormState = {
+  name: string;
+  business: string;
+  contact: string;
+  description: string;
+};
+
 export default function CallWaitingLanding() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LeadFormState>({
     name: '',
     business: '',
     contact: '',
     description: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('');
+  const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | ''>('');
   const [analyticsReady, setAnalyticsReady] = useState(false);
 
   useEffect(() => {
@@ -68,8 +77,9 @@ export default function CallWaitingLanding() {
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
