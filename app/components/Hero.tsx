@@ -65,19 +65,18 @@ export default function Hero() {
         {/* Right hero video */}
         <div className="relative">
           <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-2 shadow-[0_0_40px_rgba(59,130,246,0.25)]">
-            <video
-              className="rounded-2xl w-full h-auto"
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster="/poster.jpg"
-            >
-              <source src="/animations/ai-demo.mp4" type="video/mp4" />
-            </video>
+            <div className="relative w-full overflow-hidden rounded-2xl" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                className="absolute inset-0 h-full w-full rounded-2xl"
+                src="https://www.youtube-nocookie.com/embed/XtrBXhluQtM?autoplay=1&mute=1&loop=1&playlist=XtrBXhluQtM&controls=0&modestbranding=1&rel=0"
+                title="CallWaiting AI ad"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
           </div>
           <p className="text-xs text-slate-400 mt-2 text-center">
-            Replace `/public/animations/ai-demo.mp4` with your InVideo hero loop.
+            Streaming YouTube ad loop (muted autoplay, privacy-enhanced mode).
           </p>
         </div>
       </div>

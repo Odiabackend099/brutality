@@ -47,7 +47,7 @@ This implementation fixes the original plan's critical security and reliability 
 - [ ] Deploy updated landing (`app/page.tsx` + components)
 - [ ] Test Flutterwave buttons (open in new tab, correct plan)
 - [ ] Verify Calendly CTA uses the latest link
-- [ ] Replace hero media assets in `public/` (poster, video, OG image)
+- [ ] Update hero embed link in `app/components/Hero.tsx` and refresh poster/OG assets in `public/`
 
 ## 🧪 Testing Protocol
 
@@ -62,7 +62,7 @@ This implementation fixes the original plan's critical security and reliability 
 ### Frontend Conversion Test
 1. Open the site on mobile and desktop
 2. Confirm sticky CTA appears only on mobile and links to Flutterwave Starter
-3. Play hero video (or confirm placeholder loads)
+3. Play hero video (YouTube embed should autoplay muted)
 4. Validate Pricing CTAs and FAQ anchor links
 
 ### Security Test

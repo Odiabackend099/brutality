@@ -7,6 +7,7 @@ A high-converting landing experience tailored for TikTok and Shopify traffic. In
 ## 🚀 Features
 
 - **Hero Conversion Block**: Gradient hero with video slot and dual CTAs (free trial + Calendly)
+- **Embedded Demo Video**: YouTube ad loop autoplaying via privacy-enhanced embed
 - **Mobile Sticky CTA**: Persistent bottom CTA to boost conversions on mobile
 - **Pricing Grid**: Direct Flutterwave payment buttons for Starter and Pro plans
 - **SEO Ready**: Optimized metadata, OG tags, and Twitter cards
@@ -35,7 +36,7 @@ callwaitingai-landing-2025/
 ├── analytics/                   # Client-side analytics helpers (optional Plausible)
 ├── callwaiting-backend/         # Backend deployment archive
 ├── public/
-│   ├── animations/ai-demo.mp4   # Hero video loop placeholder
+│   ├── animations/ai-demo.mp4   # Optional fallback hero video loop
 │   ├── logo.svg                 # Brand mark
 │   ├── og.jpg                   # OpenGraph image (1200x630)
 │   └── poster.jpg               # Hero video poster frame
@@ -115,7 +116,7 @@ The design uses a cyan/blue/emerald gradient theme. To customize:
 
 1. Update gradient helpers in `app/globals.css`
 2. Adjust section copy or Tailwind classes inside `app/components`
-3. Replace assets in `public/` (`logo.svg`, `og.jpg`, `poster.jpg`, `animations/ai-demo.mp4`)
+3. Replace assets in `public/` (`logo.svg`, `og.jpg`, `poster.jpg`, optional `animations/ai-demo.mp4`)
 
 ### Content
 
@@ -126,6 +127,7 @@ Key sections to customize:
 - Pricing plans and features
 - FAQ entries
 - Footer content
+- YouTube embed URL in `app/components/Hero.tsx` if the ad video changes
 
 ## 🔒 Security Features
 
