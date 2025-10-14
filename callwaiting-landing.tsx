@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Phone, MessageSquare, Clock, CheckCircle, Zap, Users, TrendingUp, Star, ArrowRight, Play } from 'lucide-react';
+import { initPlausible, trackPlausible, getPlausibleDomain } from './analytics/plausible-loader';
 
 export default function CallWaitingLanding() {
   const [formData, setFormData] = useState({
@@ -10,10 +11,19 @@ export default function CallWaitingLanding() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
+  const [analyticsReady, setAnalyticsReady] = useState(false);
+
+  useEffect(() => {
+    initPlausible();
+    if (getPlausibleDomain()) {
+      setAnalyticsReady(true);
+    }
+  }, []);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setSubmitStatus(''); // Clear previous status
+    const payload = { ...formData };
     
     try {
       const response = await fetch('https://n8n.odia.dev/webhook/leads_callwaiting', {
@@ -28,13 +38,31 @@ export default function CallWaitingLanding() {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', business: '', contact: '', description: '' });
+        if (analyticsReady) {
+          trackPlausible('LeadFormSubmitted', {
+            source: 'landing',
+            contactProvided: payload.contact ? 'yes' : 'no'
+          });
+        }
       } else {
         console.error('Form submission failed:', response.status, response.statusText);
         setSubmitStatus('error');
+        if (analyticsReady) {
+          trackPlausible('LeadFormFailed', {
+            source: 'landing',
+            status: response.status
+          });
+        }
       }
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
+      if (analyticsReady) {
+        trackPlausible('LeadFormError', {
+          source: 'landing',
+          message: error instanceof Error ? error.message : 'unknown'
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
