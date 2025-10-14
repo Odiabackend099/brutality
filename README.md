@@ -1,31 +1,17 @@
-# CallWaiting AI - AI Receptionist Landing Page
+# CallWaiting AI - Conversion-Optimized Landing Page
 
-> **Stop Losing Sales to Slow Replies — Let AI Answer Calls & DMs Instantly**
+> **Stop losing carts to slow replies. CallWaiting AI answers TikTok DMs, WhatsApp, and phone calls in seconds.**
 
-A high-conversion, TikTok-native landing page for CallWaiting AI service with integrated payment processing, free trial offering, and automated lead capture. Designed for creators, influencers, and Shopify store owners.
-
-## ✨ Latest Redesign (October 2025)
-
-**Complete landing page overhaul focused on conversion optimization:**
-- 🎯 **New ROI-Focused Messaging**: "Stop Losing Sales to Slow Replies" headline
-- 🆓 **Free Trial First**: 7-day free trial prominently featured (no credit card required)
-- 📱 **TikTok-Native Design**: 3-5 second attention span optimization
-- 💰 **Creator-Focused Copy**: Revenue metrics, time savings, and social proof
-- 📊 **Enhanced Social Proof**: 3 detailed testimonials with specific results
-- 🚀 **Sticky Mobile CTA**: Always-visible conversion button on mobile
-- 🎨 **Interactive Demos**: Voice call + TikTok DM chat examples
-- 📈 **ROI Metrics Section**: +20% sales, 5s response time, 100% leads answered
+A high-converting landing experience tailored for TikTok and Shopify traffic. Includes hero demo video slot, sticky mobile CTA, and direct purchase links for Flutterwave.
 
 ## 🚀 Features
 
-- **High-Conversion Design**: TikTok-native layout with urgency messaging and ROI focus
-- **Free Trial Offering**: Risk-free 7-day trial with no credit card required
-- **Payment Integration**: Flutterwave payment links for $300 Starter and $500 Pro plans
-- **Lead Capture**: Automated form submission with CORS support to n8n webhook
-- **Mobile First**: Sticky CTA bar for mobile users, responsive across all devices
-- **SEO Optimized**: Meta tags for TikTok/Shopify keywords, LLM-friendly footer content
-- **Interactive Demos**: Side-by-side voice and chat demo previews
-- **Security**: Production-ready security headers and best practices
+- **Hero Conversion Block**: Gradient hero with video slot and dual CTAs (free trial + Calendly)
+- **Mobile Sticky CTA**: Persistent bottom CTA to boost conversions on mobile
+- **Pricing Grid**: Direct Flutterwave payment buttons for Starter and Pro plans
+- **SEO Ready**: Optimized metadata, OG tags, and Twitter cards
+- **Tailwind Styling**: Clean utility-first styling with custom gradient helpers
+- **Analytics-Ready**: Optional Plausible hook via env var
 
 ## 🛠 Tech Stack
 
@@ -41,12 +27,18 @@ A high-conversion, TikTok-native landing page for CallWaiting AI service with in
 
 ```
 callwaitingai-landing-2025/
-├── app/                         # Next.js App Router source
-│   ├── layout.tsx               # Root layout and metadata
-│   └── page.tsx                 # Landing page UI
-├── analytics/                   # Client-side analytics helpers
+├── app/
+│   ├── components/              # Landing page sections (Hero, Pricing, etc.)
+│   ├── globals.css              # Tailwind directives + custom utilities
+│   ├── layout.tsx               # Metadata and root layout
+│   └── page.tsx                 # Landing page composition
+├── analytics/                   # Client-side analytics helpers (optional Plausible)
 ├── callwaiting-backend/         # Backend deployment archive
-├── public/                      # Static assets (optional)
+├── public/
+│   ├── animations/ai-demo.mp4   # Hero video loop placeholder
+│   ├── logo.svg                 # Brand mark
+│   ├── og.jpg                   # OpenGraph image (1200x630)
+│   └── poster.jpg               # Hero video poster frame
 ├── tailwind.config.ts           # Tailwind CSS configuration
 ├── postcss.config.js            # PostCSS pipeline for Tailwind
 ├── package.json                 # Dependencies and scripts
@@ -92,14 +84,16 @@ See `callwaiting-backend/README.md` for complete backend deployment instructions
 
 ### Environment Variables
 
-For Vercel deployment, set these environment variables:
+Set these in your deployment environment:
 
 - `NEXT_PUBLIC_APP_URL` - Your domain (e.g., `https://callwaitingai.dev`)
-- `NEXT_PUBLIC_N8N_WEBHOOK_URL` - n8n webhook URL (e.g., `https://n8n.odia.dev`)
+- `NEXT_PUBLIC_N8N_WEBHOOK_URL` - n8n base URL (if referenced elsewhere)
+- `NEXT_PUBLIC_CALENDLY_LINK` - Calendly link for demo bookings (optional override)
+- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` - Domain for Plausible analytics (optional)
 
 ### Payment Links
 
-Update the Flutterwave payment links near the top of `app/page.tsx`:
+Payment buttons live in `app/components/Pricing.tsx`:
 
 ```tsx
 // Starter plan ($300)
@@ -109,82 +103,57 @@ href="https://flutterwave.com/pay/tcasx4xsfmdj"
 href="https://flutterwave.com/pay/vcpp9rpmnvdm"
 ```
 
-### Lead Form
+### Lead Capture
 
-The lead form is configured to submit to:
-```
-https://n8n.odia.dev/webhook/leads_callwaiting
-```
+The previous lead form has been removed in favour of direct trial and payment CTAs. Capture leads via Calendly bookings or your CRM of choice.
 
-## 🎨 Page Structure & Sections
-
-The redesigned landing page follows a proven conversion funnel:
-
-1. **Hero Section**: ROI-focused headline + visual demo mockup
-2. **Social Proof Bar**: TikTok Shop, WhatsApp, Shopify logos + testimonial
-3. **Problem/Pain Point**: "Missed Messages = Missed Money" with urgency stats
-4. **Solution/Value Prop**: 4 benefit cards (Instant, Answers, Sales, Human-like)
-5. **Demo Section**: Interactive voice call + TikTok DM chat examples
-6. **Creator Benefits/ROI**: Narrative + 3 metric cards with results
-7. **Use Cases**: Law firms, realtors, clinics, TikTok/Shopify stores
-8. **Pricing**: Free Trial (highlighted) + $300 Starter + $500 Pro
-9. **Testimonials**: 3 detailed reviews with specific results
-10. **Contact Form**: Lead capture with n8n webhook integration
-11. **SEO Footer**: Keyword-rich description for search engines
-12. **Sticky Mobile CTA**: Fixed bottom bar on mobile devices
+## 🎨 Customization
 
 ### Colors and Branding
 
-The design uses the CallWaiting AI brand colors:
+The design uses a cyan/blue/emerald gradient theme. To customize:
 
-- **Primary Gradient**: Cyan (#22D3EE) → Blue (#3B82F6)
-- **Accent Purple**: For headline flourishes
-- **Success Green**: (#4ADE80) for free trial and checkmarks
-- **Urgency Red/Orange**: For pain point section
-- **Dark Background**: Slate-950 (#020617) for premium feel
+1. Update gradient helpers in `app/globals.css`
+2. Adjust section copy or Tailwind classes inside `app/components`
+3. Replace assets in `public/` (`logo.svg`, `og.jpg`, `poster.jpg`, `animations/ai-demo.mp4`)
 
-To customize:
-1. Update gradient classes in `app/page.tsx`
-2. Modify Tailwind color values in components
-3. Maintain high contrast for accessibility
+### Content
 
-### Content Customization
-
-Key sections to update:
-- **Hero**: Headline variants in comments (test A/B options)
-- **Pricing**: Update Flutterwave links and amounts
-- **Testimonials**: Add real customer reviews with results
-- **Use Cases**: Tailor to your target industries
-- **Footer**: Update company info and keywords
+Key sections to customize:
+- Hero headline and description
+- Demo CTA copy
+- How It Works steps
+- Pricing plans and features
+- FAQ entries
+- Footer content
 
 ## 🔒 Security Features
 
 - **Security Headers**: X-Frame-Options, X-Content-Type-Options, etc.
-- **CORS Protection**: Proper CORS handling for form submissions
-- **Input Validation**: Client-side and server-side validation
-- **Rate Limiting**: Backend rate limiting via n8n and Nginx
+- **Backend Hardening**: See `callwaiting-backend` documentation
+- **Payment Links**: Direct Flutterwave checkout links (no card data handled onsite)
 
 ## 📱 Mobile Optimization
 
 - Responsive design for all screen sizes
+- Sticky CTA for mobile conversions
 - Touch-friendly buttons and interactions
-- Optimized images and loading
-- Mobile-first approach
+- Optimized video and gradient backgrounds
 
 ## 🚀 Performance
 
 - **Next.js Optimization**: Automatic code splitting and optimization
-- **Image Optimization**: Optimized images and lazy loading
-- **Bundle Analysis**: Optimized bundle size
+- **Tailwind CSS**: Purges unused styles in production
+- **Static Assets**: CDN friendly OG image, poster, and video slot
 - **CDN**: Vercel's global CDN for fast loading
 
 ## 📊 Analytics & Monitoring
 
-To add analytics:
+Enable the tools you need:
 
 1. **Google Analytics**: Add GA4 tracking code
 2. **Vercel Analytics**: Built-in analytics with Vercel
-3. **Custom Events**: Track form submissions and button clicks
+3. **Plausible**: Enable via `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
 
 ## 🔧 Development
 
@@ -201,7 +170,7 @@ npm run lint     # Run ESLint
 
 - ESLint configuration included
 - TypeScript for type safety
-- Consistent code formatting
+- Tailwind utility classes for styling
 
 ## 🚀 Deployment
 

@@ -44,10 +44,10 @@ This implementation fixes the original plan's critical security and reliability 
 - [ ] Update n8n workflows to use domain email
 
 ### Phase 6: Frontend Updates
-- [ ] Deploy updated `app/page.tsx` with payment links
-- [ ] Test payment button clicks (should open Flutterwave)
-- [ ] Test lead form submission with CORS
-- [ ] Verify error handling works
+- [ ] Deploy updated landing (`app/page.tsx` + components)
+- [ ] Test Flutterwave buttons (open in new tab, correct plan)
+- [ ] Verify Calendly CTA uses the latest link
+- [ ] Replace hero media assets in `public/` (poster, video, OG image)
 
 ## 🧪 Testing Protocol
 
@@ -59,12 +59,11 @@ This implementation fixes the original plan's critical security and reliability 
 5. Confirm founder receives alert email
 6. Test duplicate webhook (should not create duplicate record)
 
-### Lead Form Test
-1. Submit lead form from browser
-2. Verify CORS preflight passes
-3. Check Supabase for lead record
-4. Confirm founder receives lead alert
-5. Test form validation and error handling
+### Frontend Conversion Test
+1. Open the site on mobile and desktop
+2. Confirm sticky CTA appears only on mobile and links to Flutterwave Starter
+3. Play hero video (or confirm placeholder loads)
+4. Validate Pricing CTAs and FAQ anchor links
 
 ### Security Test
 1. Send webhook with wrong `verif-hash` → should be rejected

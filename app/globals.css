@@ -2,11 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+/* Brand gradient helpers */
+.bg-brand-gradient {
+  background-image: radial-gradient(1200px 600px at 10% -10%, rgba(34, 211, 238, 0.25), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(59, 130, 246, 0.25), transparent 60%),
+    radial-gradient(1200px 800px at 50% 120%, rgba(74, 222, 128, 0.2), transparent 60%);
 }
 
-html,
-body {
-  @apply min-h-full bg-slate-950 text-slate-50 antialiased;
+/* subtle noise */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+}
+
+/* Button base */
+.btn {
+  @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold transition transform-gpu;
+}
+.btn-primary {
+  @apply bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)];
+}
+.btn-ghost {
+  @apply border border-slate-700/70 bg-slate-900/40 hover:bg-slate-800/60 text-slate-100;
+}
+.sticky-cta {
+  @apply fixed bottom-4 left-4 right-4 z-50 md:hidden;
+}
+.section {
+  @apply py-16 md:py-24;
+}
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 md:px-8;
 }

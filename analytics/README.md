@@ -26,10 +26,8 @@ This guide establishes the analytics baseline for CallWaiting AI after monitorin
 1. **Create Site** in Plausible with domain `callwaitingai.dev`.
 2. **Set ENV:** add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=callwaitingai.dev` (or staging domain) to deployment environment.
 3. **Script Loader:** `analytics/plausible-loader.tsx` (see file) injects script dynamically to keep bundle clean.
-4. **Event Hooks:** Landing form (`app/page.tsx`) triggers:
-   - `LeadFormSubmitted` on successful submission.
-   - `LeadFormFailed` on error (optional).
-5. **Goal Setup:** in Plausible UI create custom goal for `LeadFormSubmitted`.
+4. **Event Hooks:** Add CTA click handlers in `app/components` if you need granular tracking (e.g., `trackPlausible('ClickStartTrial')`).
+5. **Goal Setup:** In Plausible UI, configure custom goals for button clicks or outbound links.
 6. **Backup Metric:** If Plausible unreachable, Supabase events still log counts via `analytics_events`.
 
 > **Privacy:** Plausible avoids cookies; include mention in privacy policy. Disable script in preview deployments by omitting env var.

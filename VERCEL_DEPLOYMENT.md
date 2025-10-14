@@ -85,9 +85,7 @@ The landing page integrates with:
    - Starter: `https://flutterwave.com/pay/tcasx4xsfmdj`
    - Pro: `https://flutterwave.com/pay/vcpp9rpmnvdm`
 
-2. **Lead Form**: Submits to n8n webhook
-   - URL: `https://n8n.odia.dev/webhook/leads_callwaiting`
-   - CORS-enabled for browser compatibility
+2. **Calendly CTA**: Uses `NEXT_PUBLIC_CALENDLY_LINK` for demo bookings
 
 3. **Webhook Processing**: n8n workflows handle
    - Payment verification via Flutterwave API
@@ -99,15 +97,13 @@ The landing page integrates with:
 ### 1. Frontend Tests
 
 - [ ] Landing page loads correctly
-- [ ] Payment buttons open Flutterwave links
-- [ ] Lead form submits successfully
+- [ ] Payment buttons open Flutterwave links in new tab
+- [ ] Calendly CTA opens scheduling link
 - [ ] Mobile responsive design works
 - [ ] All links and navigation work
 
 ### 2. Integration Tests
 
-- [ ] Lead form creates Supabase record
-- [ ] Founder receives email alert
 - [ ] Payment webhook processes correctly
 - [ ] Customer receives confirmation email
 
