@@ -23,7 +23,7 @@ Your repository is now ready at: [https://github.com/Odiabackend099/callwaitinga
 5. **Environment Variables** (Optional):
    ```
    NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
-   NEXT_PUBLIC_N8N_WEBHOOK_URL=https://n8n.odia.dev
+   NEXT_PUBLIC_N8N_WEBHOOK=https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax
    ```
 
 6. **Click "Deploy"**
@@ -58,7 +58,7 @@ Set these in Vercel Dashboard → Project Settings → Environment Variables:
 
 ```
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
-NEXT_PUBLIC_N8N_WEBHOOK_URL=https://n8n.odia.dev
+NEXT_PUBLIC_N8N_WEBHOOK=https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax
 ```
 
 ### 3. Analytics (Optional)

@@ -88,7 +88,7 @@ See `callwaiting-backend/README.md` for complete backend deployment instructions
 Set these in your deployment environment:
 
 - `NEXT_PUBLIC_APP_URL` - Your domain (e.g., `https://callwaitingai.dev`)
-- `NEXT_PUBLIC_N8N_WEBHOOK_URL` - n8n base URL (if referenced elsewhere)
+- `NEXT_PUBLIC_N8N_WEBHOOK` - Full n8n webhook endpoint for the chat/voice widget (default `https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax`)
 - `NEXT_PUBLIC_CALENDLY_LINK` - Calendly link for demo bookings (optional override)
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` - Domain for Plausible analytics (optional)
 
@@ -107,6 +107,16 @@ href="https://flutterwave.com/pay/vcpp9rpmnvdm"
 ### Lead Capture
 
 The previous lead form has been removed in favour of direct trial and payment CTAs. Capture leads via Calendly bookings or your CRM of choice.
+
+### Chat & Voice AI Webhook
+
+The floating chat widget sends both text and voice inputs to the n8n workflow at:
+
+```
+https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax
+```
+
+Override the endpoint with `NEXT_PUBLIC_N8N_WEBHOOK` if you deploy another environment.
 
 ## 🎨 Customization
 
