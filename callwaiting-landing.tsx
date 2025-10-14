@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Phone, MessageSquare, Clock, CheckCircle, Zap, Users, TrendingUp, Star, ArrowRight, Play } from 'lucide-react';
+import { Phone, CheckCircle, Zap, Star, ArrowRight, Play } from 'lucide-react';
 import { initPlausible, trackPlausible, getPlausibleDomain } from './analytics/plausible-loader';
 
 type LeadFormState = {
@@ -21,6 +21,11 @@ export default function CallWaitingLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | ''>('');
   const [analyticsReady, setAnalyticsReady] = useState(false);
+
+  // Payment and booking links
+  const FLW_STARTER = 'https://flutterwave.com/pay/tcasx4xsfmdj';
+  const FLW_PRO = 'https://flutterwave.com/pay/vcpp9rpmnvdm';
+  const CALENDLY = typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_CALENDLY_LINK || 'https://calendly.com/callwaitingai/30min';
 
   useEffect(() => {
     initPlausible();
@@ -93,15 +98,20 @@ export default function CallWaitingLanding() {
               CallWaiting AI
             </span>
           </div>
-          <button className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+          <a
+            href={FLW_STARTER}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 inline-block"
+          >
             Get Started
-          </button>
+          </a>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 blur-3xl pointer-events-none"></div>
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center space-x-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
             <Zap className="w-4 h-4 text-cyan-400" />
@@ -122,14 +132,26 @@ export default function CallWaitingLanding() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+            <a
+              href={CALENDLY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              aria-label="Hear a live demo"
+            >
               <Play className="w-5 h-5" />
               <span>Hear a Live Demo</span>
-            </button>
-            <button className="px-8 py-4 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full font-bold text-lg hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+            </a>
+            <a
+              href={FLW_STARTER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full font-bold text-lg hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              aria-label="Get your setup for $300"
+            >
               <span>Get Your Setup ($300 Flat)</span>
               <ArrowRight className="w-5 h-5" />
-            </button>
+            </a>
           </div>
 
           <div className="mt-16 flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-sm text-slate-400">
@@ -169,9 +191,14 @@ export default function CallWaitingLanding() {
                 <Play className="w-16 h-16" />
               </div>
             </div>
-            <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+            <a
+              href={FLW_STARTER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+            >
               I Want One Like This →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -440,6 +467,7 @@ export default function CallWaitingLanding() {
               </div>
               
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
