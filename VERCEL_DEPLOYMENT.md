@@ -17,7 +17,7 @@ Your repository is now ready at: [https://github.com/Odiabackend099/callwaitinga
    - Framework Preset: `Next.js`
    - Root Directory: `./` (default)
    - Build Command: `npm run build` (default)
-   - Output Directory: `out` (for static export)
+   - Output Directory: _leave blank_ (Vercel uses `.next`)
    - Install Command: `npm install` (default)
 
 5. **Environment Variables** (Optional):
@@ -69,7 +69,7 @@ Enable Vercel Analytics in Project Settings → Analytics.
 
 Your deployment includes:
 
-- ✅ **Static Export**: Optimized for CDN delivery
+- ✅ **Static Optimization**: Next.js App Router `app` directory prerendered for CDN
 - ✅ **Security Headers**: Production-ready security
 - ✅ **Mobile Responsive**: Optimized for all devices
 - ✅ **SEO Optimized**: Meta tags and structured data

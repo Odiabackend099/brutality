@@ -27,16 +27,18 @@ A modern, responsive landing page for CallWaiting AI service with integrated pay
 
 ```
 callwaitingai-landing-2025/
-├── callwaiting-landing.tsx      # Main landing page component
+├── app/                         # Next.js App Router source
+│   ├── layout.tsx               # Root layout and metadata
+│   └── page.tsx                 # Landing page UI
+├── analytics/                   # Client-side analytics helpers
 ├── callwaiting-backend/         # Backend deployment archive
-│   ├── docker-compose.yml       # Production Docker stack
-│   ├── n8n_workflows/           # Automation workflows
-│   ├── db/                      # Database schema
-│   └── README.md               # Backend setup guide
-├── package.json                # Dependencies and scripts
-├── next.config.js              # Next.js configuration
-├── vercel.json                 # Vercel deployment config
-└── README.md                   # This file
+├── public/                      # Static assets (optional)
+├── tailwind.config.ts           # Tailwind CSS configuration
+├── postcss.config.js            # PostCSS pipeline for Tailwind
+├── package.json                 # Dependencies and scripts
+├── next.config.js               # Next.js configuration
+├── vercel.json                  # Vercel deployment config
+└── README.md                    # This file
 ```
 
 ## 🚀 Quick Start
@@ -83,7 +85,7 @@ For Vercel deployment, set these environment variables:
 
 ### Payment Links
 
-Update the Flutterwave payment links in `callwaiting-landing.tsx`:
+Update the Flutterwave payment links near the top of `app/page.tsx`:
 
 ```tsx
 // Starter plan ($300)
@@ -106,7 +108,7 @@ https://n8n.odia.dev/webhook/leads_callwaiting
 
 The design uses a cyan/blue gradient theme. To customize:
 
-1. Update the gradient classes in `callwaiting-landing.tsx`
+1. Update the gradient classes in `app/page.tsx`
 2. Modify the color scheme in Tailwind classes
 3. Update the logo and branding elements
 
@@ -177,8 +179,8 @@ npm run lint     # Run ESLint
 
 ```bash
 npm run build
-npm run export
-# Upload 'out' folder to your hosting provider
+npm run start
+# Serve the production build locally or behind your own reverse proxy
 ```
 
 ## 📞 Support

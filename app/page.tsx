@@ -365,8 +365,8 @@ export default function CallWaitingLanding() {
                 ))}
               </div>
               <p className="text-lg text-slate-300 mb-6 italic">
-                "Our AI receptionist booked 8 new appointments the first week — and customers
-                thought it was a real staff member."
+                &ldquo;Our AI receptionist booked 8 new appointments the first week — and customers
+                thought it was a real staff member.&rdquo;
               </p>
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-lg">
@@ -386,8 +386,8 @@ export default function CallWaitingLanding() {
                 ))}
               </div>
               <p className="text-lg text-slate-300 mb-6 italic">
-                "It handles all my TikTok Shop messages and order questions automatically.
-                Worth every dollar."
+                &ldquo;It handles all my TikTok Shop messages and order questions automatically.
+                Worth every dollar.&rdquo;
               </p>
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-lg">
@@ -477,7 +477,7 @@ export default function CallWaitingLanding() {
 
               {submitStatus === 'success' && (
                 <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 text-center text-green-300">
-                  Thank you! We'll be in touch within 24 hours.
+                  Thank you! We will be in touch within 24 hours.
                 </div>
               )}
               {submitStatus === 'error' && (

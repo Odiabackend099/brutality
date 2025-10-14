@@ -44,7 +44,7 @@ This implementation fixes the original plan's critical security and reliability 
 - [ ] Update n8n workflows to use domain email
 
 ### Phase 6: Frontend Updates
-- [ ] Deploy updated `callwaiting-landing.tsx` with payment links
+- [ ] Deploy updated `app/page.tsx` with payment links
 - [ ] Test payment button clicks (should open Flutterwave)
 - [ ] Test lead form submission with CORS
 - [ ] Verify error handling works
