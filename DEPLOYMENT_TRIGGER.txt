@@ -1,0 +1,4 @@
+# Force clean deployment
+Timestamp: 2025-10-14 06:05 UTC
+Latest commit: e0425e4
+Purpose: Trigger fresh build after .vercelignore addition
