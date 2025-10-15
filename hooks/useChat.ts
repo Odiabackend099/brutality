@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { generateSignature } from '@/lib/generateSignature';
 
 export interface ChatMessage {
   id: string;
@@ -22,10 +23,12 @@ export function useChat() {
   const [error, setError] = useState<string | null>(null);
 
   const sendMessage = useCallback(async (content: string, audioBlob?: Blob) => {
-    // Primary: env override or path-based prod URL; Secondary: ID URL fallback
-    const primaryUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK ||
-      'https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax';
-    const fallbackUrl = 'https://callwaitingai.app.n8n.cloud/webhook/81fb9266-6a50-40b5-b4ce-0aea0c865a3b';
+    // Use secure Supabase Edge Function proxy (with HMAC validation + rate limiting)
+    const primaryUrl = process.env.NEXT_PUBLIC_WEBHOOK_PROXY_URL ||
+      'https://YOUR_PROJECT.supabase.co/functions/v1/webhook-proxy';
+
+    // Webhook secret for HMAC signature
+    const webhookSecret = process.env.NEXT_PUBLIC_WEBHOOK_SECRET || '';
 
     // Add user message to chat
     const userMessage: ChatMessage = {
@@ -66,7 +69,11 @@ export function useChat() {
         };
       }
 
-      console.log('Sending to webhook:', primaryUrl, payload);
+      // Generate HMAC signature for request
+      const bodyString = JSON.stringify(payload);
+      const signature = await generateSignature(bodyString, webhookSecret);
+
+      console.log('Sending to secure webhook proxy:', primaryUrl);
 
       // Abort if the webhook hangs
       const controller = new AbortController();
@@ -77,23 +84,12 @@ export function useChat() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'x-webhook-signature': signature,
           },
-          body: JSON.stringify(payload),
+          body: bodyString,
           signal: controller.signal,
         });
-        // If primary URL is missing or not registered (404), try the ID URL
-        if (!response.ok && response.status === 404) {
-          response = await fetch(fallbackUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload),
-            signal: controller.signal,
-          });
-        }
       } finally {
         clearTimeout(timeout);
       }
