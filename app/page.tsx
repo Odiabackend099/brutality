@@ -3,8 +3,7 @@
 import { ArrowRight, Headphones, Check, Phone } from 'lucide-react';
 import { ChatWidget } from '@/components/ChatWidget';
 
-const FLW_STARTER = 'https://flutterwave.com/pay/tcasx4xsfmdj';
-const FLW_PRO = 'https://flutterwave.com/pay/vcpp9rpmnvdm';
+// Payment links moved to dashboard (users must sign up first for free trial)
 const CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_LINK || 'https://calendly.com/callwaitingai/30min';
 
 export default function Page() {
@@ -23,14 +22,20 @@ export default function Page() {
             <Phone className="w-6 h-6 text-cyan-300" />
             <span className="font-bold text-lg tracking-tight">CallWaiting AI</span>
           </div>
-          <a
-            href={FLW_STARTER}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)]"
-          >
-            Get Started
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center rounded-full px-5 py-2 font-medium text-slate-200 hover:text-white transition-colors"
+            >
+              Log In
+            </a>
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)]"
+            >
+              Start Free Trial
+            </a>
+          </div>
         </nav>
 
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center relative z-10">
@@ -54,15 +59,13 @@ export default function Page() {
                 href={CALENDLY}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold border border-slate-700/70 bg-slate-900/40 hover:bg-slate-800/60"
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold border border-slate-700/70 bg-slate-900/40 hover:bg-slate-800/60 transition-colors"
               >
                 <Headphones className="w-5 h-5 mr-2" /> Hear Live Demo
               </a>
               <a
-                href={FLW_STARTER}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)]"
+                href="/login"
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] transition-all"
               >
                 Start Free Trial <ArrowRight className="w-5 h-5 ml-2" />
               </a>
@@ -166,50 +169,67 @@ export default function Page() {
 
           <div className="mt-8 grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 mb-4 text-xs">
+                <span className="text-emerald-300 font-semibold">FREE TRIAL FIRST</span>
+              </div>
               <h3 className="text-xl font-bold">Starter</h3>
               <p className="text-slate-300/90 mt-1">Voice AI setup + 1 channel</p>
               <p className="text-4xl font-extrabold mt-4">
-                $300 <span className="text-base font-semibold text-slate-400">one-time</span>
+                $300 <span className="text-base font-semibold text-slate-400">one-time setup</span>
               </p>
               <ul className="mt-5 space-y-2">
-                {['48-Hour Setup', 'Human-Like Voice', '24/7 Available'].map((f) => (
+                {['Free Trial Included', '48-Hour Setup', 'Human-Like Voice', '24/7 Available'].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-slate-300/90">
                     <Check className="w-4 h-4 text-emerald-400" /> {f}
                   </li>
                 ))}
               </ul>
               <a
-                href={FLW_STARTER}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] mt-6"
+                href="/login"
+                className="inline-flex w-full items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] mt-6 transition-all"
               >
-                Pay $300 Setup <ArrowRight className="w-5 h-5 ml-2" />
+                Start Free Trial <ArrowRight className="w-5 h-5 ml-2" />
               </a>
+              <p className="text-xs text-center text-slate-400 mt-3">
+                Try free • Pay $300 only when you&apos;re ready to launch
+              </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+            <div className="rounded-2xl border border-cyan-400/30 bg-slate-900/40 p-6 relative">
+              <div className="absolute -top-3 right-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/50 bg-cyan-400/20 px-3 py-1 text-xs">
+                <span className="text-cyan-300 font-bold">MOST POPULAR</span>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 mb-4 text-xs">
+                <span className="text-emerald-300 font-semibold">FREE TRIAL FIRST</span>
+              </div>
               <h3 className="text-xl font-bold">Pro</h3>
               <p className="text-slate-300/90 mt-1">Multi-channel voice + WhatsApp + analytics</p>
               <p className="text-4xl font-extrabold mt-4">
-                $500 <span className="text-base font-semibold text-slate-400">one-time</span>
+                $500 <span className="text-base font-semibold text-slate-400">one-time setup</span>
               </p>
               <ul className="mt-5 space-y-2">
-                {['48-Hour Setup', 'Human-Like Voice', '24/7 Available'].map((f) => (
+                {['Free Trial Included', 'Everything in Starter', 'Multi-Channel Support', 'WhatsApp Integration', 'Advanced Analytics'].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-slate-300/90">
                     <Check className="w-4 h-4 text-emerald-400" /> {f}
                   </li>
                 ))}
               </ul>
               <a
-                href={FLW_PRO}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] mt-6"
+                href="/login"
+                className="inline-flex w-full items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] mt-6 transition-all"
               >
-                Pay $500 Setup <ArrowRight className="w-5 h-5 ml-2" />
+                Start Free Trial <ArrowRight className="w-5 h-5 ml-2" />
               </a>
+              <p className="text-xs text-center text-slate-400 mt-3">
+                Try free • Pay $500 only when you&apos;re ready to launch
+              </p>
             </div>
+          </div>
+
+          <div className="mt-8 p-6 rounded-xl border border-slate-800/50 bg-slate-900/20 text-center">
+            <p className="text-slate-300">
+              <span className="font-semibold text-white">How it works:</span> Sign up → Try free → Love it? → Pay setup fee ($300 or $500) → Go live within 48 hours
+            </p>
           </div>
         </div>
       </section>
@@ -262,10 +282,8 @@ export default function Page() {
 
       <div className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
         <a
-          href={FLW_STARTER}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex w-full items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)]"
+          href="/login"
+          className="inline-flex w-full items-center justify-center rounded-full px-6 py-3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_30px_rgba(34,211,238,0.35)] transition-all"
         >
           Start Free Trial
         </a>

@@ -18,7 +18,8 @@ import {
   User,
   AlertCircle,
   CheckCircle,
-  Mail
+  Mail,
+  Sparkles
 } from 'lucide-react'
 
 export default function DashboardLayout({
@@ -96,6 +97,8 @@ export default function DashboardLayout({
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ]
 
+  const upgradeItem = { name: 'Upgrade to Pro', href: '/dashboard/upgrade', icon: Sparkles }
+
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       {/* Mobile sidebar backdrop */}
@@ -169,6 +172,18 @@ export default function DashboardLayout({
               )
             })}
           </nav>
+
+          {/* Upgrade CTA */}
+          <div className="p-4">
+            <Link
+              href={upgradeItem.href}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-400/30 transition-all group"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <upgradeItem.icon className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300" />
+              <span className="font-semibold text-cyan-300 group-hover:text-cyan-200">{upgradeItem.name}</span>
+            </Link>
+          </div>
 
           {/* Sign out */}
           <div className="p-4 border-t border-slate-800">
