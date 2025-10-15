@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { getDashboardStats, getCallLogs } from '@/lib/api'
 import { getUser } from '@/lib/auth'
+import { DashboardSkeleton } from '@/components/LoadingSkeleton'
+import { UsageQuota, QuotaGrid } from '@/components/UsageQuota'
 import {
   Phone,
   MessageSquare,
@@ -68,11 +70,7 @@ export default function DashboardPage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400">Loading dashboard...</div>
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   const statCards = [
@@ -139,6 +137,34 @@ export default function DashboardPage() {
             </div>
           )
         })}
+      </div>
+
+      {/* Usage Quotas */}
+      <div>
+        <h2 className="text-xl font-bold mb-4">Usage Limits</h2>
+        <QuotaGrid>
+          <UsageQuota
+            used={stats?.calls.total || 0}
+            limit={1000}
+            label="API Calls"
+            period="month"
+            showUpgrade={true}
+          />
+          <UsageQuota
+            used={stats?.calls.totalTokens || 0}
+            limit={100000}
+            label="AI Tokens"
+            period="month"
+            showUpgrade={true}
+          />
+          <UsageQuota
+            used={stats?.calls.totalChars || 0}
+            limit={50000}
+            label="TTS Characters"
+            period="month"
+            showUpgrade={true}
+          />
+        </QuotaGrid>
       </div>
 
       {/* Usage Metrics */}

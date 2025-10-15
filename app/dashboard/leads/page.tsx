@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { getLeads } from '@/lib/api'
-import { Users, Mail, Building, MessageSquare, Calendar } from 'lucide-react'
+import { exportLeadsToCSV, exportLeadsToJSON } from '@/lib/exportData'
+import { Users, Mail, Building, MessageSquare, Calendar, Download, FileJson } from 'lucide-react'
 import type { Lead } from '@/lib/supabase'
 
 export default function LeadsPage() {
@@ -53,19 +54,40 @@ export default function LeadsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold">Leads</h1>
           <p className="text-slate-400 mt-1">Manage your business leads and inquiries</p>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search leads..."
-            className="pl-4 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:border-cyan-400 text-sm"
-          />
+        <div className="flex gap-2 flex-wrap">
+          {/* Export Buttons */}
+          <button
+            onClick={() => exportLeadsToCSV(filteredLeads)}
+            disabled={filteredLeads.length === 0}
+            className="px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+          <button
+            onClick={() => exportLeadsToJSON(filteredLeads)}
+            disabled={filteredLeads.length === 0}
+            className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <FileJson className="w-4 h-4" />
+            Export JSON
+          </button>
+
+          {/* Search */}
+          <div className="relative border-l border-slate-700 pl-2">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search leads..."
+              className="pl-4 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:border-cyan-400 text-sm"
+            />
+          </div>
         </div>
       </div>
 

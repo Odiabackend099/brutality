@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getUser, signOut } from '@/lib/auth'
+import { getUser, signOut, isEmailVerified, resendVerificationEmail } from '@/lib/auth'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Link from 'next/link'
 import {
   Phone,
@@ -14,7 +15,10 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  AlertCircle,
+  CheckCircle,
+  Mail
 } from 'lucide-react'
 
 export default function DashboardLayout({
@@ -26,6 +30,9 @@ export default function DashboardLayout({
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [resendingEmail, setResendingEmail] = useState(false)
+  const [resendSuccess, setResendSuccess] = useState(false)
 
   useEffect(() => {
     checkUser()
@@ -38,11 +45,27 @@ export default function DashboardLayout({
         router.push('/login')
       } else {
         setUser(currentUser)
+        const verified = await isEmailVerified()
+        setEmailVerified(verified)
       }
     } catch (error) {
       router.push('/login')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleResendVerification() {
+    setResendingEmail(true)
+    setResendSuccess(false)
+    try {
+      await resendVerificationEmail()
+      setResendSuccess(true)
+      setTimeout(() => setResendSuccess(false), 5000)
+    } catch (error) {
+      console.error('Failed to resend verification email:', error)
+    } finally {
+      setResendingEmail(false)
     }
   }
 
@@ -113,9 +136,16 @@ export default function DashboardLayout({
                 <User className="w-5 h-5 text-slate-900" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {user?.user_metadata?.full_name || 'User'}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium truncate">
+                    {user?.user_metadata?.full_name || 'User'}
+                  </p>
+                  {emailVerified && (
+                    <span title="Email verified">
+                      <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-slate-400 truncate">{user?.email}</p>
               </div>
             </div>
@@ -174,9 +204,38 @@ export default function DashboardLayout({
           </div>
         </header>
 
+        {/* Email Verification Banner */}
+        {!emailVerified && (
+          <div className="bg-yellow-500/10 border-b border-yellow-500/20 px-6 py-4">
+            <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-yellow-200">
+                    Email verification required
+                  </p>
+                  <p className="text-xs text-yellow-300/80">
+                    Please check your inbox and verify your email address to unlock all features.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleResendVerification}
+                disabled={resendingEmail || resendSuccess}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium text-yellow-200 whitespace-nowrap"
+              >
+                <Mail className="w-4 h-4" />
+                {resendingEmail ? 'Sending...' : resendSuccess ? 'Sent!' : 'Resend Email'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Page content */}
         <main className="p-6">
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </main>
       </div>
     </div>

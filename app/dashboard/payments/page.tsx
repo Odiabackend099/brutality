@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { getPayments, getPaymentsByEmail } from '@/lib/api'
 import { getUser } from '@/lib/auth'
-import { DollarSign, Check, X, Clock, ExternalLink } from 'lucide-react'
+import { exportPaymentsToCSV, exportPaymentsToJSON } from '@/lib/exportData'
+import { DollarSign, Check, X, Clock, ExternalLink, Download, FileJson } from 'lucide-react'
 import type { Payment } from '@/lib/supabase'
 
 export default function PaymentsPage() {
@@ -55,29 +56,49 @@ export default function PaymentsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold">Payments</h1>
           <p className="text-slate-400 mt-1">View payment history and transactions</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          {/* Export Buttons */}
           <button
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg ${
-              filter === 'all'
-                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                : 'bg-slate-800/50 text-slate-400 border border-slate-700'
-            }`}
+            onClick={() => exportPaymentsToCSV(filteredPayments)}
+            disabled={filteredPayments.length === 0}
+            className="px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            All
+            <Download className="w-4 h-4" />
+            Export CSV
           </button>
           <button
-            onClick={() => setFilter('verified')}
-            className={`px-4 py-2 rounded-lg ${
-              filter === 'verified'
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'bg-slate-800/50 text-slate-400 border border-slate-700'
-            }`}
+            onClick={() => exportPaymentsToJSON(filteredPayments)}
+            disabled={filteredPayments.length === 0}
+            className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <FileJson className="w-4 h-4" />
+            Export JSON
+          </button>
+
+          {/* Filter Buttons */}
+          <div className="flex gap-2 border-l border-slate-700 pl-2">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-4 py-2 rounded-lg ${
+                filter === 'all'
+                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                  : 'bg-slate-800/50 text-slate-400 border border-slate-700'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter('verified')}
+              className={`px-4 py-2 rounded-lg ${
+                filter === 'verified'
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-slate-800/50 text-slate-400 border border-slate-700'
+              }`}
           >
             Verified
           </button>
@@ -91,6 +112,7 @@ export default function PaymentsPage() {
           >
             Pending
           </button>
+          </div>
         </div>
       </div>
 
