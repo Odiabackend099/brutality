@@ -111,6 +111,52 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Try It Now - Call Ada */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(800px 400px at 50% 50%, rgba(34,211,238,.15), transparent 70%)'
+          }}
+        />
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
+          <div className="rounded-3xl border border-cyan-400/30 bg-gradient-to-br from-slate-900/60 to-slate-800/40 p-8 md:p-12 text-center backdrop-blur-sm shadow-[0_0_50px_rgba(34,211,238,0.2)]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 mb-6 text-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-emerald-300 font-semibold">Ada is live now</span>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">
+              Think it&apos;s just a human?
+              <br />
+              <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 bg-clip-text text-transparent">
+                Call Ada and find out.
+              </span>
+            </h2>
+
+            <p className="text-slate-300/90 text-lg mb-8 max-w-2xl mx-auto">
+              Our AI receptionist Ada is ready to answer your questions right now. Call her and experience real-time AI voice that sounds completely human. No appointment needed.
+            </p>
+
+            <a
+              href="tel:+14156876510"
+              className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-xl bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 hover:brightness-110 shadow-[0_0_40px_rgba(34,211,238,0.4)] transition-all hover:scale-105"
+            >
+              <Phone className="w-6 h-6" />
+              +1 (415) 687-6510
+            </a>
+
+            <p className="mt-6 text-sm text-slate-400">
+              Available 24/7 • Try asking about pricing, features, or setup time
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section id="pricing" className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
