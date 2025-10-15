@@ -22,7 +22,10 @@ export function useChat() {
   const [error, setError] = useState<string | null>(null);
 
   const sendMessage = useCallback(async (content: string, audioBlob?: Blob) => {
-    const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK || 'https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax';
+    // Primary: env override or path-based prod URL; Secondary: ID URL fallback
+    const primaryUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK ||
+      'https://callwaitingai.app.n8n.cloud/webhook/webhook/tts_minimax';
+    const fallbackUrl = 'https://callwaitingai.app.n8n.cloud/webhook/81fb9266-6a50-40b5-b4ce-0aea0c865a3b';
 
     // Add user message to chat
     const userMessage: ChatMessage = {
@@ -70,14 +73,27 @@ export function useChat() {
       const timeout = setTimeout(() => controller.abort(), 30000);
       let response: Response;
       try {
-        response = await fetch(webhookUrl, {
+        response = await fetch(primaryUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
           body: JSON.stringify(payload),
           signal: controller.signal,
         });
+        // If primary URL is missing or not registered (404), try the ID URL
+        if (!response.ok && response.status === 404) {
+          response = await fetch(fallbackUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          });
+        }
       } finally {
         clearTimeout(timeout);
       }
