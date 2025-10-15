@@ -48,7 +48,22 @@ export function AuthForm() {
         setSuccess('Password reset email sent! Check your inbox.')
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred')
+      console.error('Auth error:', err)
+
+      // Provide helpful error messages
+      let errorMessage = err.message || 'An error occurred'
+
+      if (errorMessage.includes('Failed to fetch') || errorMessage.includes('fetch')) {
+        errorMessage = 'Unable to connect to authentication service. Please check:\n1. Is your internet connected?\n2. Is Supabase authentication enabled?\n3. Check the browser console for details.'
+      } else if (errorMessage.includes('Email not confirmed')) {
+        errorMessage = 'Please verify your email address before signing in. Check your inbox for the verification link.'
+      } else if (errorMessage.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please try again.'
+      } else if (errorMessage.includes('User already registered')) {
+        errorMessage = 'This email is already registered. Try signing in instead.'
+      }
+
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
