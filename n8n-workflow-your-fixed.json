@@ -3,7 +3,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "/webhook/tts_minimax",
+        "path": "webhook/tts_minimax",
         "responseMode": "responseNode",
         "options": {}
       },
