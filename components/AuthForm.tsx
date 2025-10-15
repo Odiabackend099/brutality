@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, signUp, signInWithGoogle, resetPassword } from '@/lib/auth'
 import { Mail, Lock, User, Building, AlertCircle, Loader2 } from 'lucide-react'
+
+// Declare hcaptcha types
+declare global {
+  interface Window {
+    hcaptcha: any
+  }
+}
 
 type AuthMode = 'signin' | 'signup' | 'reset'
 
@@ -24,6 +31,38 @@ export function AuthForm() {
   // Honeypot field - bots will fill this, humans won't see it
   const [honeypot, setHoneypot] = useState('')
 
+  // Captcha state
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+
+  // Load hCaptcha script
+  useEffect(() => {
+    if (mode !== 'signup') return
+
+    const script = document.createElement('script')
+    script.src = 'https://js.hcaptcha.com/1/api.js'
+    script.async = true
+    script.defer = true
+    document.body.appendChild(script)
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script)
+      }
+    }
+  }, [mode])
+
+  // Setup hCaptcha callback
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).onHcaptchaSuccess = (token: string) => {
+        setCaptchaToken(token)
+      }
+      (window as any).onHcaptchaExpired = () => {
+        setCaptchaToken(null)
+      }
+    }
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -33,6 +72,13 @@ export function AuthForm() {
     // Honeypot check - if filled, it's a bot
     if (honeypot !== '') {
       setError('Bot detected. Please try again from a real browser.')
+      setLoading(false)
+      return
+    }
+
+    // Captcha check for signup
+    if (mode === 'signup' && !captchaToken) {
+      setError('Please complete the security verification (captcha).')
       setLoading(false)
       return
     }
@@ -51,7 +97,7 @@ export function AuthForm() {
           password: formData.password,
           fullName: formData.fullName,
           company: formData.company,
-        })
+        }, captchaToken!)
         setSuccess('Account created! Please check your email to verify your account.')
       } else if (mode === 'reset') {
         await resetPassword({ email: formData.email })
@@ -208,9 +254,22 @@ export function AuthForm() {
           </div>
         )}
 
+        {/* hCaptcha widget for signup */}
+        {mode === 'signup' && (
+          <div className="flex justify-center">
+            <div
+              className="h-captcha"
+              data-sitekey="20b8003e-d0cd-4a87-935b-5a6ff4ac8617"
+              data-callback="onHcaptchaSuccess"
+              data-expired-callback="onHcaptchaExpired"
+              data-theme="dark"
+            ></div>
+          </div>
+        )}
+
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || (mode === 'signup' && !captchaToken)}
           className="w-full py-3 px-4 bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300 text-slate-900 font-semibold rounded-lg hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading && <Loader2 className="w-5 h-5 animate-spin" />}
