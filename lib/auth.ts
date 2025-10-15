@@ -18,7 +18,7 @@ export interface ResetPasswordData {
 }
 
 // Sign up new user
-export async function signUp({ email, password, fullName, company }: SignUpData) {
+export async function signUp({ email, password, fullName, company }: SignUpData, captchaToken?: string) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -28,6 +28,7 @@ export async function signUp({ email, password, fullName, company }: SignUpData)
         company: company,
       },
       emailRedirectTo: `${window.location.origin}/auth/callback`,
+      captchaToken, // Pass captcha token if provided
     },
   })
 

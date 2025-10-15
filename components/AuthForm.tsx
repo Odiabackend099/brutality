@@ -21,11 +21,21 @@ export function AuthForm() {
     company: '',
   })
 
+  // Honeypot field - bots will fill this, humans won't see it
+  const [honeypot, setHoneypot] = useState('')
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
     setSuccess(null)
+
+    // Honeypot check - if filled, it's a bot
+    if (honeypot !== '') {
+      setError('Bot detected. Please try again from a real browser.')
+      setLoading(false)
+      return
+    }
 
     try {
       if (mode === 'signin') {
@@ -55,6 +65,8 @@ export function AuthForm() {
 
       if (errorMessage.includes('Failed to fetch') || errorMessage.includes('fetch')) {
         errorMessage = 'Unable to connect to authentication service. Please check:\n1. Is your internet connected?\n2. Is Supabase authentication enabled?\n3. Check the browser console for details.'
+      } else if (errorMessage.includes('captcha')) {
+        errorMessage = 'Security verification failed. Please enable captcha in your Supabase dashboard:\n1. Go to Authentication → Settings\n2. Enable "Enable Captcha protection"\n3. Save and try again'
       } else if (errorMessage.includes('Email not confirmed')) {
         errorMessage = 'Please verify your email address before signing in. Check your inbox for the verification link.'
       } else if (errorMessage.includes('Invalid login credentials')) {
@@ -110,6 +122,18 @@ export function AuthForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Honeypot field - hidden from humans, visible to bots */}
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+
         {mode === 'signup' && (
           <>
             <div>
