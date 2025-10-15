@@ -66,7 +66,7 @@ export function useChat() {
         };
       }
 
-      console.log('Sending to webhook:', webhookUrl, payload);
+      console.log('Sending to webhook:', primaryUrl, payload);
 
       // Abort if the webhook hangs
       const controller = new AbortController();

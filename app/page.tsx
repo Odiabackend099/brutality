@@ -77,11 +77,18 @@ export default function Page() {
 
           <div className="relative">
             <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-2 shadow-[0_0_40px_rgba(59,130,246,0.25)]">
-              <video className="rounded-2xl w-full h-auto" autoPlay muted loop playsInline poster="/poster.jpg">
+              <video
+                className="rounded-2xl w-full h-auto"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              >
                 <source src="/animations/ai-demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
               </video>
             </div>
-            <p className="text-xs text-slate-400 mt-2 text-center">Replace /public/animations/ai-demo.mp4 with your InVideo loop.</p>
           </div>
         </div>
       </header>
