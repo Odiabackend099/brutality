@@ -25,7 +25,7 @@ export function useChat() {
   const sendMessage = useCallback(async (content: string, audioBlob?: Blob) => {
     // Use secure Supabase Edge Function proxy (with HMAC validation + rate limiting)
     const primaryUrl = process.env.NEXT_PUBLIC_WEBHOOK_PROXY_URL ||
-      'https://YOUR_PROJECT.supabase.co/functions/v1/webhook-proxy';
+      'https://bcufohulqrceytkrqpgd.supabase.co/functions/v1/webhook-proxy';
 
     // Webhook secret for HMAC signature
     const webhookSecret = process.env.NEXT_PUBLIC_WEBHOOK_SECRET || '';
