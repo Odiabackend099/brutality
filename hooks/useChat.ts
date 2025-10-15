@@ -11,6 +11,9 @@ export interface ChatMessage {
 export interface ChatResponse {
   text: string;
   audio_url?: string;
+  // Some backends may return base64 audio
+  audio_hex?: string;
+  status?: string;
 }
 
 export function useChat() {
@@ -62,13 +65,22 @@ export function useChat() {
 
       console.log('Sending to webhook:', webhookUrl, payload);
 
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      // Abort if the webhook hangs
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+      let response: Response;
+      try {
+        response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
@@ -106,20 +118,28 @@ export function useChat() {
 
       console.log('Parsed response data:', data);
 
+      // Normalize audio URL: support audio_url or audio_hex (base64)
+      let audioUrl: string | undefined;
+      if (data.audio_url && typeof data.audio_url === 'string' && data.audio_url.length > 0) {
+        audioUrl = data.audio_url;
+      } else if (data.audio_hex && typeof data.audio_hex === 'string' && data.audio_hex.length > 0) {
+        audioUrl = `data:audio/mp3;base64,${data.audio_hex}`;
+      }
+
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: `ai-${Date.now()}`,
         type: 'ai',
         content: data.text,
-        audioUrl: data.audio_url,
+        audioUrl,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, aiMessage]);
 
       // Play audio if available
-      if (data.audio_url) {
-        const audio = new Audio(data.audio_url);
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
         audio.play().catch(err => {
           console.error('Failed to play audio:', err);
         });
