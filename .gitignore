@@ -114,3 +114,4 @@ secrets/
 # Database dumps
 *.sql.gz
 *.dump
+tsconfig.tsbuildinfo

@@ -36,6 +36,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     checkUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function checkUser() {
@@ -48,7 +49,7 @@ export default function DashboardLayout({
         const verified = await isEmailVerified()
         setEmailVerified(verified)
       }
-    } catch (error) {
+    } catch {
       router.push('/login')
     } finally {
       setLoading(false)
@@ -62,8 +63,8 @@ export default function DashboardLayout({
       await resendVerificationEmail()
       setResendSuccess(true)
       setTimeout(() => setResendSuccess(false), 5000)
-    } catch (error) {
-      console.error('Failed to resend verification email:', error)
+    } catch (err) {
+      console.error('Failed to resend verification email:', err)
     } finally {
       setResendingEmail(false)
     }

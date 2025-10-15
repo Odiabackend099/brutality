@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getPayments, getPaymentsByEmail } from '@/lib/api'
 import { getUser } from '@/lib/auth'
 import { exportPaymentsToCSV, exportPaymentsToJSON } from '@/lib/exportData'
-import { DollarSign, Check, X, Clock, ExternalLink, Download, FileJson } from 'lucide-react'
+import { DollarSign, Check, Clock, ExternalLink, Download, FileJson } from 'lucide-react'
 import type { Payment } from '@/lib/supabase'
 
 export default function PaymentsPage() {
