@@ -1,5 +1,5 @@
 // API integration layer for backend operations
-import { supabase } from './supabase'
+import { supabase } from './supabase-client'
 import type { Payment, Lead, CallLog } from './supabase'
 
 // ============================================================================
