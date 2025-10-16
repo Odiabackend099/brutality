@@ -10,6 +10,7 @@ import type { Payment } from '@/lib/supabase'
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'verified' | 'pending'>('all')
 
   useEffect(() => {
@@ -26,14 +27,10 @@ export default function PaymentsPage() {
       
       // Try to get user's payments first
       const userPayments = await getPaymentsByEmail(userData.user.email)
-        if (userPayments.length > 0) {
-          setPayments(userPayments)
-        } else {
-          // If no user payments, show all (admin view)
-          const allPayments = await getPayments(50)
-          setPayments(allPayments)
-        }
+      if (userPayments.length > 0) {
+        setPayments(userPayments)
       } else {
+        // If no user payments, show all (admin view)
         const allPayments = await getPayments(50)
         setPayments(allPayments)
       }
