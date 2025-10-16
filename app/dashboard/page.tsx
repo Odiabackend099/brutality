@@ -7,14 +7,12 @@ import { UsageQuota, QuotaGrid } from '@/components/UsageQuota'
 import { CreateAgentModal } from '@/components/CreateAgentModal'
 import {
   Phone,
-  MessageSquare,
   Users,
   TrendingUp,
   Clock,
   Zap,
   Activity,
-  Plus,
-  Sparkles
+  Plus
 } from 'lucide-react'
 import Link from 'next/link'
 

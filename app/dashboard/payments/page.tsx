@@ -10,7 +10,7 @@ import type { Payment } from '@/lib/supabase'
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'verified' | 'pending'>('all')
 
   useEffect(() => {

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Check quota before generating
     try {
       await assertWithinQuota(user.id, estimatedSeconds)
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Quota exceeded. Please upgrade your plan.' },
         { status: 402 }

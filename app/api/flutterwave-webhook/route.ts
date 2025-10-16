@@ -25,8 +25,6 @@ export async function POST(request: NextRequest) {
       const txRef = payload.data.tx_ref
       const transactionId = payload.data.id
       const amount = payload.data.amount
-      const currency = payload.data.currency
-      const customerEmail = payload.data.customer.email
 
       // Verify transaction with Flutterwave
       const verification = await verifyTransaction(transactionId.toString())

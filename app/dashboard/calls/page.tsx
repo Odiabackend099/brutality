@@ -9,7 +9,7 @@ import { Phone, MessageSquare, Clock, Zap, Download, FileJson } from 'lucide-rea
 export default function CallLogsPage() {
   const [calls, setCalls] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'text' | 'voice'>('all')
 
   useEffect(() => {

@@ -63,7 +63,7 @@ export async function POST(
     // Check user quota
     try {
       await assertWithinQuota(agent.user_id, 30) // Estimate 30 seconds for call
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'User quota exceeded. Please upgrade plan.' },
         { status: 402 }

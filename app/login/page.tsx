@@ -1,13 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { signIn, signInWithGoogle } from '@/lib/auth-helpers'
 import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
   

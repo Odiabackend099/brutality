@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { signUp, signInWithGoogle } from '@/lib/auth-helpers'
 import { Mail, Lock, User, Building, AlertCircle, Loader2, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function SignUpPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,7 +22,7 @@ export default function SignUpPage() {
     setError('')
     setSuccess(false)
 
-    const { data, error: authError } = await signUp(formData)
+    const { error: authError } = await signUp(formData)
 
     if (authError) {
       setError(authError.message)

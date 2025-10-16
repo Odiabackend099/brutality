@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getUser } from '@/lib/auth-helpers'
 import { supabase } from '@/lib/supabase-client'
-import { Mic, MicOff, Loader2, Send, Volume2, Play, Settings, Copy, Check, AlertCircle } from 'lucide-react'
+import { Mic, Loader2, Send, Volume2, Play, Settings, Copy, Check, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 interface Agent {

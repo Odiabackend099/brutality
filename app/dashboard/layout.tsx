@@ -32,8 +32,8 @@ export default function DashboardLayout({
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [emailVerified, setEmailVerified] = useState(false)
-  const [resendingEmail, setResendingEmail] = useState(false)
-  const [resendSuccess, setResendSuccess] = useState(false)
+  const [resendingEmail] = useState(false)
+  const [resendSuccess] = useState(false)
 
   useEffect(() => {
     checkUser()

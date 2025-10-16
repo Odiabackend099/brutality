@@ -28,6 +28,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     loadUserData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function loadUserData() {
