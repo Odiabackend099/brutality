@@ -94,8 +94,8 @@ export default function BillingPage() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const user = await getUser()
-        if (!user) {
+        const { data: userData, error: userError } = await getUser()
+        if (userError || !userData?.user) {
           router.push('/login')
           return
         }
@@ -103,7 +103,7 @@ export default function BillingPage() {
         const { data, error } = await supabase
           .from('profiles')
           .select('minutes_quota, minutes_used, plan')
-          .eq('id', user.id)
+          .eq('id', userData.user.id)
           .single()
 
         if (error) throw error

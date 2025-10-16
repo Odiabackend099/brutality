@@ -16,8 +16,8 @@ export default function SuccessPage() {
   useEffect(() => {
     async function verifyUser() {
       try {
-        const user = await getUser()
-        if (!user) {
+        const { data: userData, error: userError } = await getUser()
+        if (userError || !userData?.user) {
           router.push('/login')
           return
         }

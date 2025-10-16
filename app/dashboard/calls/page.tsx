@@ -17,8 +17,13 @@ export default function CallLogsPage() {
 
   async function loadCalls() {
     try {
-      const user = await getUser()
-      const logs = await getCallLogs(user?.id, 100)
+      const { data: userData, error: userError } = await getUser()
+      if (userError || !userData?.user?.id) {
+        setError('Please log in to view calls')
+        return
+      }
+      
+      const logs = await getCallLogs(userData.user.id, 100)
       setCalls(logs)
     } catch (error) {
       console.error('Failed to load calls:', error)

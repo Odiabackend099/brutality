@@ -18,10 +18,14 @@ export default function PaymentsPage() {
 
   async function loadPayments() {
     try {
-      const user = await getUser()
-      if (user?.email) {
-        // Try to get user's payments first
-        const userPayments = await getPaymentsByEmail(user.email)
+      const { data: userData, error: userError } = await getUser()
+      if (userError || !userData?.user?.email) {
+        setError('Please log in to view payments')
+        return
+      }
+      
+      // Try to get user's payments first
+      const userPayments = await getPaymentsByEmail(userData.user.email)
         if (userPayments.length > 0) {
           setPayments(userPayments)
         } else {
