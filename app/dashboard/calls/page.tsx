@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getCallLogs } from '@/lib/api'
-import { getUser } from '@/lib/auth'
+import { getUser } from '@/lib/auth-helpers'
 import { exportCallLogsToCSV, exportCallLogsToJSON } from '@/lib/exportData'
 import { Phone, MessageSquare, Clock, Zap, Download, FileJson } from 'lucide-react'
 

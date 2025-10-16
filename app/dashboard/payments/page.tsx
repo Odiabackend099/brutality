@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getPayments, getPaymentsByEmail } from '@/lib/api'
-import { getUser } from '@/lib/auth'
+import { getUser } from '@/lib/auth-helpers'
 import { exportPaymentsToCSV, exportPaymentsToJSON } from '@/lib/exportData'
 import { DollarSign, Check, Clock, ExternalLink, Download, FileJson } from 'lucide-react'
 import type { Payment } from '@/lib/supabase'

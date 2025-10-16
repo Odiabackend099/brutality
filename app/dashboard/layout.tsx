@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getUser, signOut, isEmailVerified, resendVerificationEmail } from '@/lib/auth'
+import { getUser, signOut } from '@/lib/auth-helpers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Link from 'next/link'
 import {
@@ -42,13 +42,12 @@ export default function DashboardLayout({
 
   async function checkUser() {
     try {
-      const currentUser = await getUser()
-      if (!currentUser) {
+      const { data, error } = await getUser()
+      if (error || !data?.user) {
         router.push('/login')
       } else {
-        setUser(currentUser)
-        const verified = await isEmailVerified()
-        setEmailVerified(verified)
+        setUser(data.user)
+        setEmailVerified(data.user.email_confirmed_at !== null)
       }
     } catch {
       router.push('/login')
@@ -58,17 +57,8 @@ export default function DashboardLayout({
   }
 
   async function handleResendVerification() {
-    setResendingEmail(true)
-    setResendSuccess(false)
-    try {
-      await resendVerificationEmail()
-      setResendSuccess(true)
-      setTimeout(() => setResendSuccess(false), 5000)
-    } catch (err) {
-      console.error('Failed to resend verification email:', err)
-    } finally {
-      setResendingEmail(false)
-    }
+    // TODO: Implement resend verification email
+    console.log('Resend verification email')
   }
 
   async function handleSignOut() {

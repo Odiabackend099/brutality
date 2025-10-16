@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { updatePassword } from '@/lib/auth'
+import { updatePassword } from '@/lib/auth-helpers'
 import { Lock, AlertCircle, Loader2, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
@@ -31,17 +31,19 @@ export default function ResetPasswordPage() {
       return
     }
 
-    try {
-      await updatePassword(password)
-      setSuccess(true)
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 2000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to update password')
-    } finally {
+    const { error: authError } = await updatePassword(password)
+
+    if (authError) {
+      setError(authError.message)
       setLoading(false)
+      return
     }
+
+    setSuccess(true)
+    setLoading(false)
+    setTimeout(() => {
+      router.push('/dashboard')
+    }, 2000)
   }
 
   if (success) {
