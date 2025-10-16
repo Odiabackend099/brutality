@@ -1,308 +1,456 @@
 [
   {
     "id": "TC001",
-    "title": "Validate 'Start Free Trial' CTAs Navigate to /login",
-    "description": "Ensure all 'Start Free Trial' buttons on the homepage navigate to the /login page in signup mode instead of any payment page.",
+    "title": "Homepage Start Free Trial CTAs Navigation",
+    "description": "Verify that all 'Start Free Trial' call-to-action buttons on the homepage navigate to the /login page in signup mode and do not lead directly to payment.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Open homepage on desktop browser"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify presence of all 'Start Free Trial' CTA buttons"
+        "description": "Navigate to the homepage"
       },
       {
         "type": "action",
-        "description": "Click each 'Start Free Trial' button one by one"
+        "description": "Click each visible 'Start Free Trial' button on desktop view"
       },
       {
         "type": "assertion",
-        "description": "Confirm each button redirects to /login page with signup mode active"
+        "description": "Check that each click redirects to the /login page in signup mode"
       },
       {
         "type": "action",
-        "description": "Repeat above steps on mobile browser and verify navigation"
+        "description": "Repeat clicks on all 'Start Free Trial' buttons in mobile viewport with sticky CTAs"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all mobile sticky CTA buttons lead to /login page and no direct payment pages"
       }
     ]
   },
   {
     "id": "TC002",
-    "title": "Verify Homepage Has No Direct Flutterwave Payment Links",
-    "description": "Check the entire homepage to confirm that no direct payment initiation links or buttons targeting Flutterwave payment are present.",
+    "title": "Homepage Absence of Direct Payment Links",
+    "description": "Ensure the homepage does not contain any direct links or buttons initiating Flutterwave payment flows outside of the upgrade process.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Open homepage and review all payment-related buttons and links"
+        "description": "Load the homepage"
       },
       {
         "type": "assertion",
-        "description": "Confirm absence of any direct Flutterwave payment links or payment form elements on homepage"
-      },
-      {
-        "type": "action",
-        "description": "Test source code/DOM for any hidden or non-visible Flutterwave payment elements"
+        "description": "Verify absence of any payment buttons or links pointing directly to Flutterwave payment endpoints"
       },
       {
         "type": "assertion",
-        "description": "Ensure all pricing cards only show 'FREE TRIAL FIRST' badges and no buy-now payment triggers"
+        "description": "Verify pricing cards display 'FREE TRIAL FIRST' badges and no payment action triggers"
       }
     ]
   },
   {
     "id": "TC003",
-    "title": "Dashboard Sidebar Contains Visible and Styled 'Upgrade to Pro' Menu Item",
-    "description": "Confirm that the dashboard sidebar contains a clearly visible and styled 'Upgrade to Pro' menu item linking to the upgrade page.",
-    "category": "ui",
+    "title": "Authentication Flow - Email/Password Signup and Login Without Payment",
+    "description": "Validate that new users can sign up and existing users can log in via email/password without any upfront payment requirements.",
+    "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in to dashboard as a trial user"
-      },
-      {
-        "type": "assertion",
-        "description": "Check dashboard sidebar for presence of 'Upgrade to Pro' menu item"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that 'Upgrade to Pro' menu item is styled per the UI guidelines (e.g., using gradient buttons, badges)"
+        "description": "Navigate to signup page from /login in signup mode"
       },
       {
         "type": "action",
-        "description": "Click on 'Upgrade to Pro' menu item"
+        "description": "Fill in valid email and password fields and submit"
       },
       {
         "type": "assertion",
-        "description": "Confirm navigation to /dashboard/upgrade page"
+        "description": "New user account is created and user is redirected to dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Logout, then navigate to login page"
+      },
+      {
+        "type": "action",
+        "description": "Enter valid registered credentials and login"
+      },
+      {
+        "type": "assertion",
+        "description": "User is successfully authenticated and redirected to dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "No payment prompt or requirement during signup or login"
       }
     ]
   },
   {
     "id": "TC004",
-    "title": "Upgrade Page Loads Successfully with Correct Pricing and Mobile Responsiveness",
-    "description": "Validate that the upgrade page loads properly, displays accurate pricing plans with payment options, related FAQs, and guarantee info, and is fully responsive on mobile devices.",
+    "title": "Authentication Flow - Google OAuth Login Without Payment",
+    "description": "Verify users can authenticate using the Google OAuth flow and gain access to the dashboard without upfront payment.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /dashboard/upgrade page on desktop browser"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify display of pricing plans: Starter ($300) and Pro ($500)"
-      },
-      {
-        "type": "assertion",
-        "description": "Check presence of pricing comparisons, FAQs, and guarantee information sections"
+        "description": "Navigate to login page"
       },
       {
         "type": "action",
-        "description": "Resize window or use mobile emulation mode to test mobile responsiveness"
+        "description": "Click on the Google login button"
+      },
+      {
+        "type": "action",
+        "description": "Authenticate with a valid Google account"
       },
       {
         "type": "assertion",
-        "description": "Confirm all page contents adjust correctly without layout breakage on mobile"
+        "description": "User is logged in and redirected to dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "No payment screen is presented during or after login"
       }
     ]
   },
   {
     "id": "TC005",
-    "title": "Payment Links on Upgrade Page Initiate Flutterwave Payment Flow",
-    "description": "Verify that selecting either pricing plan on the upgrade page correctly initiates the Flutterwave payment process and handles response errors gracefully.",
-    "category": "integration",
+    "title": "Dashboard Accessibility During Free Trial",
+    "description": "Confirm that trial users can fully access AI features and usage statistics on the dashboard before making any payment.",
+    "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "On /dashboard/upgrade, select Starter plan and click the payment button"
+        "description": "Login as a user currently in free trial period"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to dashboard main page"
       },
       {
         "type": "assertion",
-        "description": "Confirm redirect to Flutterwave payment page with accurate plan details"
+        "description": "Dashboard loads successfully and displays accurate usage statistics"
       },
       {
         "type": "action",
-        "description": "Cancel payment and verify user returns to upgrade page without error"
-      },
-      {
-        "type": "action",
-        "description": "Repeat payment initiation with Pro plan and complete successful payment"
+        "description": "Access AI agent testing features from dashboard"
       },
       {
         "type": "assertion",
-        "description": "Validate payment confirmation and post-payment redirect to success page"
-      },
-      {
-        "type": "action",
-        "description": "Simulate payment failure or webhook error, verify error message shown to user"
+        "description": "AI agent testing functions operate without restriction during trial"
       }
     ]
   },
   {
     "id": "TC006",
-    "title": "User Signup and Login Work Without Upfront Payment",
-    "description": "Verify that new users can sign up and log in using email/password and social login (Google OAuth) without making any payment upfront.",
-    "category": "functional",
+    "title": "Dashboard Sidebar 'Upgrade to Pro' Menu Item Presence and Styling",
+    "description": "Verify the presence, visibility, and styling of the 'Upgrade to Pro' menu item in the dashboard sidebar, and that it links correctly to the upgrade page.",
+    "category": "ui",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /login and perform new user signup with valid email and password"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify signup success and immediate dashboard access without payment prompt"
+        "description": "Login and open the user dashboard"
       },
       {
         "type": "action",
-        "description": "Log out and repeat login using the same credentials"
+        "description": "Locate the dashboard sidebar menu"
       },
       {
         "type": "assertion",
-        "description": "Confirm successful login and dashboard access"
+        "description": "Confirm the 'Upgrade to Pro' menu item is visible and styled with badges and gradient styled button or icon as per design"
       },
       {
         "type": "action",
-        "description": "Perform signup/login using Google OAuth flow and confirm access similarly"
+        "description": "Click the 'Upgrade to Pro' menu item"
       },
       {
         "type": "assertion",
-        "description": "Ensure no payment required during authentication flows"
+        "description": "User is navigated to /dashboard/upgrade page"
       }
     ]
   },
   {
     "id": "TC007",
-    "title": "Trial Users Access Dashboard AI Features Seamlessly Before Payment",
-    "description": "Confirm trial users may fully access dashboard features including usage statistics, AI agent testing, and agent management without payment until upgrade point.",
+    "title": "Upgrade Page Load and Mobile Responsiveness Verification",
+    "description": "Ensure the upgrade page loads successfully on desktop and mobile, displays all pricing plans, FAQs, and guarantee information clearly and accurately.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in as a trial user"
+        "description": "Navigate to /dashboard/upgrade page on desktop"
       },
       {
         "type": "assertion",
-        "description": "Check dashboard loads usage statistics and recent call data correctly"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to AI agent management and create a test agent"
+        "description": "Page loads successfully without errors"
       },
       {
         "type": "assertion",
-        "description": "Verify AI agent configuration and test calls succeed"
+        "description": "Pricing cards for Starter ($300) and Pro ($500) plans are displayed with 'FREE TRIAL FIRST' badges and explanatory flow diagrams"
+      },
+      {
+        "type": "assertion",
+        "description": "Frequently asked questions and guarantee information are visible and correctly displayed"
       },
       {
         "type": "action",
-        "description": "Ensure no payment prompts or blocks occur during this usage"
+        "description": "Resize browser or use device emulation to mobile viewport"
+      },
+      {
+        "type": "assertion",
+        "description": "Upgrade page layout adjusts properly and remains fully functional and readable"
       }
     ]
   },
   {
     "id": "TC008",
-    "title": "Verify Metrics Tracking for Signup, Dashboard Usage, and Trial-to-Paid Conversion",
-    "description": "Inspect backend or analytics metrics to confirm increased signups, dashboard activity during trial, and improved trial-to-paid conversion rates since deployment.",
-    "category": "functional",
-    "priority": "Medium",
+    "title": "Payment Link Generation and Flutterwave Integration",
+    "description": "Test that selecting a pricing plan on the upgrade page correctly initiates the Flutterwave payment process, generates valid payment links, and handles success and failure scenarios.",
+    "category": "integration",
+    "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Access analytics or metrics dashboard with appropriate permissions"
+        "description": "On upgrade page, select the Starter plan and initiate payment"
       },
       {
         "type": "assertion",
-        "description": "Verify increased user signups compared to previous baseline"
+        "description": "A valid payment link is generated and Flutterwave payment modal or page opens correctly"
+      },
+      {
+        "type": "action",
+        "description": "Complete payment in Flutterwave sandbox with successful transaction"
       },
       {
         "type": "assertion",
-        "description": "Confirm dashboard usage data shows active feature engagement by trial users"
+        "description": "User is redirected to success page and account setup begins within 48 hours"
+      },
+      {
+        "type": "action",
+        "description": "Repeat selection and payment initiation for Pro plan"
+      },
+      {
+        "type": "action",
+        "description": "Simulate payment failure or cancellation"
       },
       {
         "type": "assertion",
-        "description": "Check trial-to-paid user conversion rate has improved"
+        "description": "User remains on upgrade page and appropriate error messaging is shown"
       }
     ]
   },
   {
     "id": "TC009",
-    "title": "Support Tickets Related to Free Trial and Payment Confusion Are Zero",
-    "description": "Ensure customer support logs and ticketing system show no new requests or complaints regarding confusion about free trial presence or payment requirements.",
+    "title": "Post-Payment User Setup and Live AI Deployment Timeline",
+    "description": "Verify that after successful payment, user setup for live AI deployment is triggered and completed within the expected 48-hour SLA.",
     "category": "functional",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Access support ticketing system or CRM"
+        "description": "Complete a successful payment via Flutterwave upgrade flow"
       },
       {
         "type": "assertion",
-        "description": "Search for tickets related to free trial confusion or payment issues from recent deployment date"
+        "description": "Backend webhook is triggered and setup process starts"
       },
       {
         "type": "assertion",
-        "description": "Confirm zero or no increase in such support tickets"
+        "description": "User record status updates to reflect paid subscription"
+      },
+      {
+        "type": "action",
+        "description": "Simulate or check system logs and user dashboard within 48 hours"
+      },
+      {
+        "type": "assertion",
+        "description": "Live AI deployment is confirmed available to the user"
       }
     ]
   },
   {
     "id": "TC010",
-    "title": "Application Build Completes Successfully with Updated Routes",
-    "description": "Make sure application builds and deploys without errors and all updated routes including /login, /dashboard, /dashboard/upgrade load correctly.",
-    "category": "functional",
-    "priority": "High",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Run full build process on project code using standard CI scripts"
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm build completes without errors or warnings related to new routes or code"
-      },
-      {
-        "type": "action",
-        "description": "Deploy application to staging/test environment"
-      },
-      {
-        "type": "assertion",
-        "description": "Access /login, /dashboard, /dashboard/upgrade, homepage and verify correct loading and routing"
-      }
-    ]
-  },
-  {
-    "id": "TC011",
-    "title": "Navigation Buttons 'Log In' and 'Start Free Trial' Are Distinct and Functional",
-    "description": "Verify that homepage navigation includes clearly distinct, visible 'Log In' and 'Start Free Trial' buttons, each leading to the correct page and functioning correctly on desktop and mobile.",
+    "title": "Navigation Consistency and Clarity Across Pages",
+    "description": "Verify that navigation elements such as 'Log In' and 'Start Free Trial' buttons appear distinctly and correctly on all relevant pages (homepage, login, dashboard) maintaining consistency and clarity.",
     "category": "ui",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Open homepage on desktop device"
+        "description": "Load homepage and check visibility of 'Log In' and 'Start Free Trial' buttons"
       },
       {
         "type": "assertion",
-        "description": "Verify both 'Log In' and 'Start Free Trial' buttons are present and visually distinct"
+        "description": "'Log In' and 'Start Free Trial' buttons are visually distinct and perform expected navigation"
       },
       {
         "type": "action",
-        "description": "Click 'Log In' and verify navigation to /login page (login mode)"
+        "description": "Navigate to login page"
+      },
+      {
+        "type": "assertion",
+        "description": "Both buttons remain visible and direct correctly to signup/login or dashboard"
       },
       {
         "type": "action",
-        "description": "Return to homepage and click 'Start Free Trial', verify navigation to /login page (signup mode)"
+        "description": "Within dashboard, check that navigation reflects user state and allows easy access to 'Upgrade to Pro' and logout"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Error Handling for Authentication Failures",
+    "description": "Confirm that invalid login attempts (incorrect credentials, unregistered email) are handled gracefully with user-friendly error messages, without revealing sensitive system information.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to login page"
       },
       {
         "type": "action",
-        "description": "Repeat all above on mobile device or emulator"
+        "description": "Input invalid email format and submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Error message indicating invalid email format is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Input unregistered email and valid password, then submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Error message indicates credentials invalid without specifying which field"
+      },
+      {
+        "type": "action",
+        "description": "Input registered email and wrong password, then submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Error message indicates credentials invalid without revealing sensitive info"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Error Handling for Payment Failures and Edge Cases",
+    "description": "Validate that payment failures from Flutterwave (network issues, declined card, canceled payment) are gracefully handled with informative messages, and user remains on upgrade page without inconsistent state.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Initiate Flutterwave payment for a selected plan"
+      },
+      {
+        "type": "action",
+        "description": "Simulate network failure during payment submission"
+      },
+      {
+        "type": "assertion",
+        "description": "User is informed of network error and payment is not processed"
+      },
+      {
+        "type": "action",
+        "description": "Simulate card declined status"
+      },
+      {
+        "type": "assertion",
+        "description": "User receives clear decline error message"
+      },
+      {
+        "type": "action",
+        "description": "User cancels the payment process before completion"
+      },
+      {
+        "type": "assertion",
+        "description": "User remains on upgrade page, no change in subscription status"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Metrics Tracking and Conversion Rate Verification",
+    "description": "Confirm that critical metrics for signups, dashboard usage, and trial-to-paid conversion rates are tracked accurately and reflect expected improvements after implementing the free trial flow.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Perform multiple user signups through free trial CTAs"
+      },
+      {
+        "type": "action",
+        "description": "Simulate usage of dashboard AI features by trial users"
+      },
+      {
+        "type": "action",
+        "description": "Complete upgrades to paid plans by some users"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify analytics data captures signups, feature usage, and conversions correctly in tracking system"
+      },
+      {
+        "type": "assertion",
+        "description": "Compare conversion rates pre- and post-implementation, confirming expected increase"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Support Request Reduction for Trial and Payment Confusion",
+    "description": "Verify that support tickets relating to confusion about free trial and payment requirements drop to zero after launch of new user flows.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Review support ticket categorization data before feature rollout"
+      },
+      {
+        "type": "action",
+        "description": "Review support ticket categorization data weekly after rollout"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm support requests related to free trial presence and payment confusion reduce to zero"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Application Build and Route Update Validation",
+    "description": "Ensure the application builds successfully without errors and all new or updated routes (/login, /dashboard/upgrade, etc.) work correctly with the latest code changes.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Run full application build process"
+      },
+      {
+        "type": "assertion",
+        "description": "Build completes without errors or warnings"
+      },
+      {
+        "type": "action",
+        "description": "Deploy application to a staging environment"
+      },
+      {
+        "type": "action",
+        "description": "Verify routing for homepage, /login, /signup, /dashboard, /dashboard/upgrade pages"
+      },
+      {
+        "type": "assertion",
+        "description": "All pages load successfully and present expected content"
       }
     ]
   }

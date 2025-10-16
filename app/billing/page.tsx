@@ -26,7 +26,7 @@ const PRICING_TIERS: PricingTier[] = [
   {
     name: 'Trial',
     price: 0,
-    currency: 'NGN',
+    currency: 'USD',
     minutes: 60,
     features: [
       '60 minutes included',
@@ -37,49 +37,48 @@ const PRICING_TIERS: PricingTier[] = [
     ]
   },
   {
-    name: 'Basic',
-    price: 2900,
-    currency: 'NGN',
-    minutes: 500,
+    name: 'Starter',
+    price: 20,
+    currency: 'USD',
+    minutes: 120,
     features: [
-      '500 minutes/month',
-      'Up to 3 AI agents',
-      'All voice presets',
-      'Priority email support',
-      'Custom prompts',
-      'Usage analytics'
+      '120 AI call minutes',
+      '$0.17 per minute',
+      '1 business line',
+      'AI voice demo + webhook setup',
+      'Basic analytics',
+      'Email support'
     ]
   },
   {
     name: 'Pro',
-    price: 7900,
-    currency: 'NGN',
-    minutes: 5000,
+    price: 80,
+    currency: 'USD',
+    minutes: 600,
     features: [
-      '5,000 minutes/month',
-      'Unlimited AI agents',
-      'All voice presets',
-      'WhatsApp support',
+      '600 AI call minutes',
+      '$0.14 per minute',
+      'Multi-channel support',
+      'Custom voice tone',
+      'Priority support',
       'Advanced analytics',
-      'Custom integrations',
-      'API access'
+      'Call recordings'
     ],
     popular: true
   },
   {
     name: 'Enterprise',
-    price: 19900,
-    currency: 'NGN',
-    minutes: 50000,
+    price: 180,
+    currency: 'USD',
+    minutes: 2000,
     features: [
-      '50,000 minutes/month',
-      'Unlimited everything',
-      'Voice cloning',
-      'Dedicated support',
-      'SLA guarantee',
-      'Custom development',
-      'Team management',
-      'White-label option'
+      '2,000+ AI call minutes',
+      '$0.11 per minute',
+      'Custom integrations & branding',
+      'Dedicated voice model',
+      'API access',
+      'Dedicated account manager',
+      'SLA guarantees'
     ]
   }
 ]
@@ -271,8 +270,7 @@ export default function BillingPage() {
                   <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold text-white">
-                      {tier.currency === 'NGN' ? '₦' : '$'}
-                      {tier.price.toLocaleString()}
+                      ${tier.price.toLocaleString()}
                     </span>
                     {!isTrial && <span className="text-slate-400 text-sm">/month</span>}
                   </div>

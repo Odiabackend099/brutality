@@ -43,7 +43,7 @@ export async function createPaymentLink(data: PaymentLinkData) {
     const payload = {
       tx_ref: data.tx_ref,
       amount: data.amount,
-      currency: data.currency || 'NGN',
+      currency: data.currency || 'USD',
       redirect_url: data.redirect_url,
       customer: data.customer,
       customizations: data.customizations,
@@ -74,31 +74,35 @@ export function verifyWebhookSignature(hash: string) {
   return hash === secretHash
 }
 
-// Plan pricing in Naira (for Nigeria)
+// Plan pricing in USD (per-minute pricing model)
 export const PLANS = {
   trial: {
     name: 'Trial',
     minutes: 60,
     amount: 0,
-    currency: 'NGN'
+    currency: 'USD',
+    ratePerMinute: 0
   },
-  basic: {
-    name: 'Basic',
-    minutes: 500,
-    amount: parseInt(process.env.BASIC_PLAN_AMOUNT || '2900'), // ₦29
-    currency: 'NGN'
+  starter: {
+    name: 'Starter',
+    minutes: 120,
+    amount: parseInt(process.env.STARTER_PLAN_AMOUNT || '2000'), // $20 in cents
+    currency: 'USD',
+    ratePerMinute: 0.17
   },
   pro: {
     name: 'Pro',
-    minutes: 5000,
-    amount: parseInt(process.env.PRO_PLAN_AMOUNT || '7900'), // ₦79
-    currency: 'NGN'
+    minutes: 600,
+    amount: parseInt(process.env.PRO_PLAN_AMOUNT || '8000'), // $80 in cents
+    currency: 'USD',
+    ratePerMinute: 0.14
   },
   enterprise: {
     name: 'Enterprise',
-    minutes: 50000,
-    amount: parseInt(process.env.ENTERPRISE_PLAN_AMOUNT || '19900'), // ₦199
-    currency: 'NGN'
+    minutes: 2000,
+    amount: parseInt(process.env.ENTERPRISE_PLAN_AMOUNT || '18000'), // $180 in cents
+    currency: 'USD',
+    ratePerMinute: 0.11
   }
 } as const
 

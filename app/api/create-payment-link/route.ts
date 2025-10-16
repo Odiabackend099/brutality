@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     // Validate plan
     if (!plan || !PLANS[plan as PlanType]) {
       return NextResponse.json(
-        { error: 'Invalid plan. Must be one of: basic, pro, enterprise' },
+        { error: 'Invalid plan. Must be one of: starter, pro, enterprise' },
         { status: 422 }
       )
     }

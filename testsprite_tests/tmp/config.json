@@ -4,13 +4,13 @@
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
   "executionArgs": {
-    "projectName": "callwaitingai-dev-2025",
+    "projectName": "callwaitingai-landing",
     "projectPath": "/Users/odiadev/callwaitingai.dev 2025",
     "testIds": [],
-    "additionalInstruction": "Test all core functionalities including authentication, dashboard, AI agent management, payment processing, and API endpoints. Focus on user flows and integration testing.",
+    "additionalInstruction": "Test the local development server at http://localhost:3000 with all authentication flows and features working correctly. The server is properly configured with production Supabase credentials and running on port 3000.",
     "envs": {
-      "API_KEY": "sk-user-GssNcEmZ35dntxa3B0mLSC0xMj4a8l_etAJ0Fm9tPGFwTfmcM4GL0Ztf8sbME6-ItjpagXjGPHvCHpQgebFNe6c15xyf-SxkTWHI3lrCcd-FhwaPCqxx_pbqh2__8hFLdEA"
+      "API_KEY": "sk-user-Zk4eDniWuiTnpmMYc75OaiVajaaxp8SfqOV6iBPP2ZcwZOl4MzLK-myiUIqeigWMcTlAYXSjMlRM7iioIKfsMmxkC77em4IpDLN5pbjLPL76F1X56jVuDTMJBijfGpY_x8s"
     }
   },
-  "proxy": "http://a0343add-10bd-45c6-b8bf-055349ff4483:KMEUjWyAUaZlmLVPp9i1ZYbywoMlMhTL@tun.testsprite.com:8080"
+  "proxy": "http://279cb4a2-6f1a-4886-b13b-b6ad331d7668:UPcsWUkSieq8ep7AZWULkzqcaBfmh5yB@tun.testsprite.com:8080"
 }

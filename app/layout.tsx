@@ -2,7 +2,7 @@ export const metadata = {
   metadataBase: new URL('https://www.callwaitingai.dev'),
   title: 'CallWaiting AI — 24/7 AI Receptionist for TikTok & Shopify Sellers',
   description:
-    'Turn missed calls & DMs into sales. Your AI answers TikTok, WhatsApp, and phone in seconds. Free trial now, $300 setup after.',
+    'Turn missed calls & DMs into sales. Your AI answers TikTok, WhatsApp, and phone in seconds. Start at just $20 for 120 voice minutes.',
   openGraph: {
     title: 'CallWaiting AI — 24/7 AI Receptionist for TikTok & Shopify Sellers',
     description:
