@@ -47,8 +47,8 @@ export default function AgentTestPage() {
   useEffect(() => {
     async function loadAgent() {
       try {
-        const user = await getUser()
-        if (!user) {
+        const { data: userData, error: userError } = await getUser()
+        if (userError || !userData?.user) {
           router.push('/login')
           return
         }
@@ -57,7 +57,7 @@ export default function AgentTestPage() {
           .from('agents')
           .select('*')
           .eq('id', agentId)
-          .eq('user_id', user.id)
+          .eq('user_id', userData.user.id)
           .single()
 
         if (error) throw error
