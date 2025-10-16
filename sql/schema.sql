@@ -84,11 +84,15 @@ ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
 
 -- Profiles policies
 DROP POLICY IF EXISTS p_profiles_select ON public.profiles;
-CREATE POLICY p_profiles_select ON public.profiles 
+CREATE POLICY p_profiles_select ON public.profiles
   FOR SELECT USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS p_profiles_insert ON public.profiles;
+CREATE POLICY p_profiles_insert ON public.profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
 DROP POLICY IF EXISTS p_profiles_update ON public.profiles;
-CREATE POLICY p_profiles_update ON public.profiles 
+CREATE POLICY p_profiles_update ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
 
 -- Agents policies
