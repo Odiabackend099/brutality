@@ -1,9 +1,23 @@
 import Flutterwave from 'flutterwave-node-v3'
 
-const flw = new Flutterwave(
-  process.env.FLUTTERWAVE_PUBLIC_KEY!,
-  process.env.FLUTTERWAVE_SECRET_KEY!
-)
+// Lazy initialization to prevent build-time errors when env vars are missing
+let flw: Flutterwave | null = null
+
+function getFlutterwaveClient(): Flutterwave {
+  if (!flw) {
+    const publicKey = process.env.FLUTTERWAVE_PUBLIC_KEY
+    const secretKey = process.env.FLUTTERWAVE_SECRET_KEY
+
+    if (!publicKey || !secretKey) {
+      throw new Error(
+        'FLUTTERWAVE_PUBLIC_KEY and FLUTTERWAVE_SECRET_KEY must be set in environment variables'
+      )
+    }
+
+    flw = new Flutterwave(publicKey, secretKey)
+  }
+  return flw
+}
 
 export interface PaymentLinkData {
   tx_ref: string
@@ -24,6 +38,8 @@ export interface PaymentLinkData {
 
 export async function createPaymentLink(data: PaymentLinkData) {
   try {
+    const client = getFlutterwaveClient()
+
     const payload = {
       tx_ref: data.tx_ref,
       amount: data.amount,
@@ -34,7 +50,7 @@ export async function createPaymentLink(data: PaymentLinkData) {
       meta: data.meta
     }
 
-    const response = await flw.PaymentLink.create(payload)
+    const response = await client.PaymentLink.create(payload)
     return response
   } catch (error) {
     console.error('Flutterwave payment link error:', error)
@@ -44,7 +60,8 @@ export async function createPaymentLink(data: PaymentLinkData) {
 
 export async function verifyTransaction(transactionId: string) {
   try {
-    const response = await flw.Transaction.verify({ id: transactionId })
+    const client = getFlutterwaveClient()
+    const response = await client.Transaction.verify({ id: transactionId })
     return response
   } catch (error) {
     console.error('Flutterwave verification error:', error)

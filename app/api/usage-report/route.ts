@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
 import { getUsage } from '@/lib/usage'
 
+// Force dynamic rendering since we use cookies for auth
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const supabase = createServerSupabase()

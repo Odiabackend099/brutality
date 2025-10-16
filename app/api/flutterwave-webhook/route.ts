@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceSupabase } from '@/lib/supabase-server'
 import { verifyWebhookSignature, verifyTransaction, PLANS, PlanType } from '@/lib/flutterwave'
 
+// Force dynamic rendering for webhook
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     // Verify webhook signature

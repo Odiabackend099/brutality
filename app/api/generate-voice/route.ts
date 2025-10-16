@@ -3,6 +3,9 @@ import { createServerSupabase } from '@/lib/supabase-server'
 import { generateTTS, VoiceId, estimateDuration } from '@/lib/minimax'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
 
+// Force dynamic rendering since we use cookies for auth
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = createServerSupabase()

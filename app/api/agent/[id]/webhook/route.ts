@@ -4,9 +4,26 @@ import { generateTTS } from '@/lib/minimax'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// Force dynamic rendering for webhook
+export const dynamic = 'force-dynamic'
+
+// Lazy initialization to prevent build-time errors when env vars are missing
+let openai: OpenAI | null = null
+
+function getOpenAIClient(): OpenAI {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY
+
+    if (!apiKey) {
+      throw new Error(
+        'OPENAI_API_KEY must be set in environment variables'
+      )
+    }
+
+    openai = new OpenAI({ apiKey })
+  }
+  return openai
+}
 
 export async function POST(
   request: NextRequest,
@@ -72,8 +89,9 @@ export async function POST(
 
     // Generate AI response using OpenAI
     const startTime = Date.now()
-    
-    const completion = await openai.chat.completions.create({
+    const client = getOpenAIClient()
+
+    const completion = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: agent.system_prompt },
