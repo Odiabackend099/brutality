@@ -1,0 +1,309 @@
+[
+  {
+    "id": "TC001",
+    "title": "Validate 'Start Free Trial' CTAs Navigate to /login",
+    "description": "Ensure all 'Start Free Trial' buttons on the homepage navigate to the /login page in signup mode instead of any payment page.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open homepage on desktop browser"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify presence of all 'Start Free Trial' CTA buttons"
+      },
+      {
+        "type": "action",
+        "description": "Click each 'Start Free Trial' button one by one"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm each button redirects to /login page with signup mode active"
+      },
+      {
+        "type": "action",
+        "description": "Repeat above steps on mobile browser and verify navigation"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Verify Homepage Has No Direct Flutterwave Payment Links",
+    "description": "Check the entire homepage to confirm that no direct payment initiation links or buttons targeting Flutterwave payment are present.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open homepage and review all payment-related buttons and links"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm absence of any direct Flutterwave payment links or payment form elements on homepage"
+      },
+      {
+        "type": "action",
+        "description": "Test source code/DOM for any hidden or non-visible Flutterwave payment elements"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure all pricing cards only show 'FREE TRIAL FIRST' badges and no buy-now payment triggers"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Dashboard Sidebar Contains Visible and Styled 'Upgrade to Pro' Menu Item",
+    "description": "Confirm that the dashboard sidebar contains a clearly visible and styled 'Upgrade to Pro' menu item linking to the upgrade page.",
+    "category": "ui",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in to dashboard as a trial user"
+      },
+      {
+        "type": "assertion",
+        "description": "Check dashboard sidebar for presence of 'Upgrade to Pro' menu item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that 'Upgrade to Pro' menu item is styled per the UI guidelines (e.g., using gradient buttons, badges)"
+      },
+      {
+        "type": "action",
+        "description": "Click on 'Upgrade to Pro' menu item"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm navigation to /dashboard/upgrade page"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Upgrade Page Loads Successfully with Correct Pricing and Mobile Responsiveness",
+    "description": "Validate that the upgrade page loads properly, displays accurate pricing plans with payment options, related FAQs, and guarantee info, and is fully responsive on mobile devices.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/upgrade page on desktop browser"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify display of pricing plans: Starter ($300) and Pro ($500)"
+      },
+      {
+        "type": "assertion",
+        "description": "Check presence of pricing comparisons, FAQs, and guarantee information sections"
+      },
+      {
+        "type": "action",
+        "description": "Resize window or use mobile emulation mode to test mobile responsiveness"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all page contents adjust correctly without layout breakage on mobile"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Payment Links on Upgrade Page Initiate Flutterwave Payment Flow",
+    "description": "Verify that selecting either pricing plan on the upgrade page correctly initiates the Flutterwave payment process and handles response errors gracefully.",
+    "category": "integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "On /dashboard/upgrade, select Starter plan and click the payment button"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm redirect to Flutterwave payment page with accurate plan details"
+      },
+      {
+        "type": "action",
+        "description": "Cancel payment and verify user returns to upgrade page without error"
+      },
+      {
+        "type": "action",
+        "description": "Repeat payment initiation with Pro plan and complete successful payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Validate payment confirmation and post-payment redirect to success page"
+      },
+      {
+        "type": "action",
+        "description": "Simulate payment failure or webhook error, verify error message shown to user"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "User Signup and Login Work Without Upfront Payment",
+    "description": "Verify that new users can sign up and log in using email/password and social login (Google OAuth) without making any payment upfront.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login and perform new user signup with valid email and password"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify signup success and immediate dashboard access without payment prompt"
+      },
+      {
+        "type": "action",
+        "description": "Log out and repeat login using the same credentials"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm successful login and dashboard access"
+      },
+      {
+        "type": "action",
+        "description": "Perform signup/login using Google OAuth flow and confirm access similarly"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure no payment required during authentication flows"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Trial Users Access Dashboard AI Features Seamlessly Before Payment",
+    "description": "Confirm trial users may fully access dashboard features including usage statistics, AI agent testing, and agent management without payment until upgrade point.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a trial user"
+      },
+      {
+        "type": "assertion",
+        "description": "Check dashboard loads usage statistics and recent call data correctly"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to AI agent management and create a test agent"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify AI agent configuration and test calls succeed"
+      },
+      {
+        "type": "action",
+        "description": "Ensure no payment prompts or blocks occur during this usage"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Verify Metrics Tracking for Signup, Dashboard Usage, and Trial-to-Paid Conversion",
+    "description": "Inspect backend or analytics metrics to confirm increased signups, dashboard activity during trial, and improved trial-to-paid conversion rates since deployment.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access analytics or metrics dashboard with appropriate permissions"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify increased user signups compared to previous baseline"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm dashboard usage data shows active feature engagement by trial users"
+      },
+      {
+        "type": "assertion",
+        "description": "Check trial-to-paid user conversion rate has improved"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Support Tickets Related to Free Trial and Payment Confusion Are Zero",
+    "description": "Ensure customer support logs and ticketing system show no new requests or complaints regarding confusion about free trial presence or payment requirements.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access support ticketing system or CRM"
+      },
+      {
+        "type": "assertion",
+        "description": "Search for tickets related to free trial confusion or payment issues from recent deployment date"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm zero or no increase in such support tickets"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Application Build Completes Successfully with Updated Routes",
+    "description": "Make sure application builds and deploys without errors and all updated routes including /login, /dashboard, /dashboard/upgrade load correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Run full build process on project code using standard CI scripts"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm build completes without errors or warnings related to new routes or code"
+      },
+      {
+        "type": "action",
+        "description": "Deploy application to staging/test environment"
+      },
+      {
+        "type": "assertion",
+        "description": "Access /login, /dashboard, /dashboard/upgrade, homepage and verify correct loading and routing"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Navigation Buttons 'Log In' and 'Start Free Trial' Are Distinct and Functional",
+    "description": "Verify that homepage navigation includes clearly distinct, visible 'Log In' and 'Start Free Trial' buttons, each leading to the correct page and functioning correctly on desktop and mobile.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open homepage on desktop device"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify both 'Log In' and 'Start Free Trial' buttons are present and visually distinct"
+      },
+      {
+        "type": "action",
+        "description": "Click 'Log In' and verify navigation to /login page (login mode)"
+      },
+      {
+        "type": "action",
+        "description": "Return to homepage and click 'Start Free Trial', verify navigation to /login page (signup mode)"
+      },
+      {
+        "type": "action",
+        "description": "Repeat all above on mobile device or emulator"
+      }
+    ]
+  }
+]

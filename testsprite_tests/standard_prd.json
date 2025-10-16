@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "project": "CallWaiting AI - Homepage User Flow and Business Alignment Fix",
+    "date": "2025-10-15",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "CallWaiting AI is a SaaS platform offering AI-powered voice agents, enabling users to try the AI capabilities for free before committing to a paid setup. The product features a conversion-optimized landing page, a robust authentication system tied to user dashboards, seamless AI agent management, and integrated payment processing through Flutterwave.",
+  "core_goals": [
+    "Align homepage user flows with business objective of free trial before payment",
+    "Remove payment friction by allowing users to try the AI before paying",
+    "Increase conversion rates by demonstrating product value early",
+    "Simplify navigation to signup, dashboard, and upgrade/payment pages",
+    "Provide clear, trustworthy messaging consistent with the \"Free trial now, pay setup later\" model",
+    "Implement industry best practices for SaaS freemium and product-led growth"
+  ],
+  "key_features": [
+    "Conversion-optimized landing page with clear CTAs leading to free signup rather than payment",
+    "Authentication system enabling email/password and social login flows leading to dashboard access",
+    "Dashboard with usage statistics, AI agent testing, and newly added 'Upgrade to Pro' menu item",
+    "Dedicated dashboard upgrade page with pricing comparisons, Flutterwave payment integration, FAQs, and guarantee info",
+    "Mobile sticky CTA buttons linking to free sign up",
+    "Pricing cards on homepage with \"FREE TRIAL FIRST\" badges and explanatory flow diagrams",
+    "Navigation improvements including 'Log In' and 'Start Free Trial' distinct buttons",
+    "Payment processing deferred until after trial, handled via dashboard upgrade page",
+    "Visual enhancements such as badges, gradient styled buttons, and icons for clarity and trust"
+  ],
+  "user_flow_summary": [
+    "User visits homepage and sees prominent \"Start Free Trial\" buttons linking to /login for free signup",
+    "User signs up or logs in via authentication system without upfront payment",
+    "User accesses dashboard and explores AI features during free trial period",
+    "User decides to upgrade and clicks \"Upgrade to Pro\" within dashboard sidebar",
+    "User is taken to /dashboard/upgrade, reviews pricing plans and FAQs",
+    "User selects Starter ($300) or Pro ($500) plan and completes payment via Flutterwave",
+    "Post-payment, user setup occurs within 48 hours for live AI deployment",
+    "Existing users can similarly navigate dashboard to upgrade and pay when ready"
+  ],
+  "validation_criteria": [
+    "All \"Start Free Trial\" CTAs on homepage navigate to /login page (signup mode) instead of payment",
+    "Homepage no longer contains direct Flutterwave payment links",
+    "Dashboard sidebar contains visible and styled \"Upgrade to Pro\" menu item linking to upgrade page",
+    "Upgrade page loads successfully, is mobile responsive, and displays accurate pricing plans with payment links",
+    "Payment links on upgrade page correctly initiate Flutterwave payment for selected plans",
+    "User signup and login flows function without requiring payment upfront",
+    "Trial users can access dashboard AI features seamlessly before payment",
+    "Metrics confirm increased signups, dashboard usage, and improved trial-to-paid conversion",
+    "Support requests related to free trial presence and payment confusion are reduced to zero",
+    "Application build completes successfully with all updated routes"
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "Next.js 14",
+      "React 18",
+      "Supabase",
+      "PostgreSQL",
+      "Tailwind CSS",
+      "Flutterwave",
+      "OpenAI",
+      "MiniMax TTS",
+      "Lucide React",
+      "Vercel",
+      "n8n Cloud"
+    ],
+    "features": [
+      {
+        "name": "Landing Page",
+        "description": "Conversion-optimized landing page with hero section, pricing cards, FAQ, and mobile sticky CTA",
+        "files": [
+          "app/page.tsx",
+          "app/layout.tsx",
+          "app/globals.css"
+        ]
+      },
+      {
+        "name": "Authentication System",
+        "description": "Complete authentication system with Supabase integration, email/password login, Google OAuth, and session management",
+        "files": [
+          "app/login/page.tsx",
+          "app/signup/page.tsx",
+          "app/forgot-password/page.tsx",
+          "app/auth/reset-password/page.tsx",
+          "app/auth/callback/route.ts",
+          "lib/auth-helpers.ts",
+          "lib/supabase-client.ts",
+          "lib/supabase-server.ts",
+          "middleware.ts",
+          "app/api/auth/session/route.ts"
+        ]
+      },
+      {
+        "name": "Dashboard Features",
+        "description": "User dashboard with usage statistics, recent calls, and agent management",
+        "files": [
+          "app/dashboard/page.tsx",
+          "app/dashboard/layout.tsx",
+          "app/dashboard/calls/page.tsx",
+          "app/dashboard/payments/page.tsx",
+          "app/dashboard/settings/page.tsx",
+          "app/dashboard/leads/page.tsx",
+          "lib/api-client.ts"
+        ]
+      },
+      {
+        "name": "AI Agent Management",
+        "description": "Creation, configuration, and testing of AI voice agents with custom prompts and voice presets",
+        "files": [
+          "app/agent/[id]/page.tsx",
+          "components/CreateAgentModal.tsx",
+          "app/api/create-agent/route.ts",
+          "app/api/generate-voice/route.ts",
+          "app/api/agent/[id]/webhook/route.ts",
+          "lib/minimax.ts",
+          "lib/usage.ts"
+        ]
+      },
+      {
+        "name": "Payment Processing",
+        "description": "Flutterwave integration for subscription payments, payment link generation, and webhook handling",
+        "files": [
+          "app/billing/page.tsx",
+          "app/success/page.tsx",
+          "app/api/create-payment-link/route.ts",
+          "app/api/flutterwave-webhook/route.ts",
+          "lib/flutterwave.ts",
+          "types/flutterwave-node-v3.d.ts"
+        ]
+      },
+      {
+        "name": "API & Security",
+        "description": "REST API endpoints, Row-Level Security (RLS), API key validation, and health checks",
+        "files": [
+          "app/api/health/route.ts",
+          "app/api/usage-report/route.ts",
+          "sql/schema.sql",
+          "sql/dashboard-tables.sql"
+        ]
+      },
+      {
+        "name": "Data Management",
+        "description": "Data export utilities, API integration layer, and database operations",
+        "files": [
+          "lib/api.ts",
+          "lib/exportData.ts",
+          "lib/supabase.ts"
+        ]
+      },
+      {
+        "name": "UI Components",
+        "description": "Reusable React components for forms, modals, and data display",
+        "files": [
+          "components/UsageQuota.tsx",
+          "components/ErrorBoundary.tsx",
+          "components/ChatWidget.tsx"
+        ]
+      },
+      {
+        "name": "Configuration & Setup",
+        "description": "Environment configuration, database setup scripts, and deployment guides",
+        "files": [
+          "env.example",
+          "setup-env.sh",
+          "setup-demo-supabase.sh",
+          "test-setup.js",
+          "SETUP_GUIDE.md"
+        ]
+      },
+      {
+        "name": "Documentation",
+        "description": "Comprehensive documentation for setup, deployment, and usage",
+        "files": [
+          "README.md",
+          "PRODUCTION_READY_SUMMARY.md",
+          "MDP_IMPLEMENTATION_COMPLETE.md",
+          "QUICK_START_MDP.md",
+          "PRODUCTION_DEPLOYMENT_CHECKLIST.md"
+        ]
+      }
+    ]
+  }
+}

@@ -115,3 +115,4 @@ secrets/
 *.sql.gz
 *.dump
 tsconfig.tsbuildinfo
+.credentials.txt

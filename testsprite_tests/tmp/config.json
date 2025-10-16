@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "callwaitingai-dev-2025",
+    "projectPath": "/Users/odiadev/callwaitingai.dev 2025",
+    "testIds": [],
+    "additionalInstruction": "Test all core functionalities including authentication, dashboard, AI agent management, payment processing, and API endpoints. Focus on user flows and integration testing.",
+    "envs": {
+      "API_KEY": "sk-user-GssNcEmZ35dntxa3B0mLSC0xMj4a8l_etAJ0Fm9tPGFwTfmcM4GL0Ztf8sbME6-ItjpagXjGPHvCHpQgebFNe6c15xyf-SxkTWHI3lrCcd-FhwaPCqxx_pbqh2__8hFLdEA"
+    }
+  },
+  "proxy": "http://a0343add-10bd-45c6-b8bf-055349ff4483:KMEUjWyAUaZlmLVPp9i1ZYbywoMlMhTL@tun.testsprite.com:8080"
+}

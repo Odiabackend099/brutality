@@ -8,7 +8,15 @@ Add these environment variables in your Vercel project settings before deploying
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://bcufohulqrceytkrqpgd.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+SUPABASE_SERVICE_ROLE_KEY=<your-supabase-service-role-key>
 ```
+
+**⚠️ CRITICAL - Service Role Key Security:**
+- The `SUPABASE_SERVICE_ROLE_KEY` is **SERVER-SIDE ONLY**
+- This key **bypasses all Row Level Security (RLS)** policies
+- **NEVER** expose this key to the client or commit it to Git
+- **Get it from:** Supabase Dashboard → Settings → API → service_role key (copy the secret)
+- **Required for:** Admin operations in API routes (creating agents, managing subscriptions, usage tracking)
 
 ### 💳 Payment Processing (Flutterwave)
 ```

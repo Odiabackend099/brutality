@@ -1,22 +1,85 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
 
-export function createServerSupabase() {
-  const cookieStore = cookies()
-  return createRouteHandlerClient({ cookies: () => cookieStore })
+/**
+ * Validate required Supabase environment variables
+ */
+function validateSupabaseEnv() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !anonKey) {
+    throw new Error(
+      'Missing Supabase configuration. Required environment variables:\n' +
+      '- NEXT_PUBLIC_SUPABASE_URL\n' +
+      '- NEXT_PUBLIC_SUPABASE_ANON_KEY\n' +
+      'Please check your .env.local file or Vercel environment variables.'
+    )
+  }
+
+  return { url, anonKey }
 }
 
-export function createServiceSupabase() {
-  return createClient(
+/**
+ * Create a Supabase client for use in API routes and server components
+ * Automatically manages session cookies
+ */
+export function createServerSupabase() {
+  // Validate environment variables
+  validateSupabaseEnv()
+
+  const cookieStore = cookies()
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          cookieStore.set({ name, value, ...options })
+        },
+        remove(name: string, options: any) {
+          cookieStore.set({ name, value: '', ...options })
+        },
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet: any[]) {
+          cookiesToSet.forEach(({ name, value, ...options }) => {
+            cookieStore.set({ name, value, ...options })
+          })
+        },
+      },
     }
   )
+}
+
+/**
+ * Create a Supabase admin client with service role key
+ * Use this for admin operations that bypass RLS policies
+ */
+export function createServiceSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) {
+    throw new Error(
+      'Missing Supabase service role configuration. Required environment variables:\n' +
+      '- NEXT_PUBLIC_SUPABASE_URL\n' +
+      '- SUPABASE_SERVICE_ROLE_KEY\n' +
+      'IMPORTANT: Never expose SUPABASE_SERVICE_ROLE_KEY to the client.\n' +
+      'This key bypasses Row Level Security and should only be used server-side.'
+    )
+  }
+
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
 }
 

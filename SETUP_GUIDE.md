@@ -1,128 +1,103 @@
-# CallWaiting AI - Production Setup Guide
+# 🚀 CallWaiting AI - Setup Guide
 
-## 🚨 CRITICAL SECURITY FIXES APPLIED
+## Current Status: ❌ Authentication System Needs Configuration
 
-This implementation fixes the original plan's critical security and reliability issues:
+The TestSprite test report shows **26.67% success rate** with critical authentication failures. The main issue is that the Supabase environment variables are not configured.
 
-1. **API Verification**: Every payment verified via Flutterwave API before processing
-2. **Service Key Rotation**: Exposed key must be rotated immediately
-3. **CORS Support**: Lead form works with browser CORS preflight
-4. **Idempotency**: Single unique constraint prevents duplicate payments
-5. **Early Response**: Webhook responds immediately to prevent timeouts
-6. **Domain Email**: Uses domain sender for better deliverability
+## 🔧 **IMMEDIATE ACTION REQUIRED**
 
-## 📋 Setup Checklist
+### Step 1: Configure Supabase (CRITICAL)
 
-### Phase 1: Security (DO FIRST)
-- [ ] **ROTATE** the exposed Supabase service_role key in Supabase Dashboard
-- [ ] Run `supabase_schema_hardened.sql` in Supabase SQL Editor
-- [ ] Enable PITR backups in Supabase (Pro plan required)
+1. **Go to your Supabase Dashboard**
+   - Visit: https://supabase.com/dashboard
+   - Select your project (or create a new one)
 
-### Phase 2: n8n Configuration
-- [ ] Import `n8n_payment_workflow_hardened.json` into n8n
-- [ ] Import `n8n_leads_workflow_cors.json` into n8n
-- [ ] Set environment variables from `n8n_environment_variables.md`
-- [ ] Configure credentials (Supabase, Flutterwave, Gmail SMTP)
-- [ ] Enable queue mode with Redis (optional but recommended)
+2. **Get your API keys**
+   - Go to **Settings** → **API**
+   - Copy the following values:
+     - **Project URL** (e.g., `https://xxxxx.supabase.co`)
+     - **anon public** key (starts with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`)
+     - **service_role** key (starts with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`)
 
-### Phase 3: Flutterwave Setup
-- [ ] Set webhook URL: `https://n8n.odia.dev/webhook/flutterwave`
-- [ ] Enable events: `charge.completed`, `transfer.completed`
-- [ ] Set secret hash and copy to `FLW_VERIF_HASH` env var
-- [ ] Enable retries (3 attempts)
+3. **Update your `.env.local` file**
+   ```bash
+   # Open the file
+   nano .env.local
+   
+   # Update these lines with your actual values:
+   NEXT_PUBLIC_SUPABASE_URL=https://your-actual-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   ```
 
-### Phase 4: Cloudflare WAF
-- [ ] Implement rules from `cloudflare_waf_rules.md`
-- [ ] Test CORS preflight for lead form
-- [ ] Verify rate limiting works
-- [ ] Test webhook protection rules
+### Step 2: Set up Database Schema
 
-### Phase 5: Email Deliverability
-- [ ] Set up domain email: `no-reply@callwaitingai.dev`
-- [ ] Configure SPF/DKIM/DMARC records
-- [ ] Test email delivery to inbox (not spam)
-- [ ] Update n8n workflows to use domain email
+1. **Go to Supabase SQL Editor**
+   - In your Supabase dashboard, go to **SQL Editor**
 
-### Phase 6: Frontend Updates
-- [ ] Deploy updated landing (`app/page.tsx` + components)
-- [ ] Test Flutterwave buttons (open in new tab, correct plan)
-- [ ] Verify Calendly CTA uses the latest link
-- [ ] Update hero embed link in `app/components/Hero.tsx` and refresh poster/OG assets in `public/`
+2. **Run the database schema**
+   - Copy the contents of `sql/schema.sql`
+   - Paste and run it in the SQL Editor
+   - Then copy and run `sql/dashboard-tables.sql`
 
-## 🧪 Testing Protocol
+3. **Enable Row Level Security (RLS)**
+   - Go to **Authentication** → **Policies**
+   - Ensure RLS is enabled for all tables
 
-### Payment Flow Test
-1. Make a $1 test payment via Flutterwave link
-2. Verify webhook fires within 30 seconds
-3. Check Supabase for payment record
-4. Confirm customer receives email with Calendly link
-5. Confirm founder receives alert email
-6. Test duplicate webhook (should not create duplicate record)
+### Step 3: Test the Configuration
 
-### Frontend Conversion Test
-1. Open the site on mobile and desktop
-2. Confirm sticky CTA appears only on mobile and links to Flutterwave Starter
-3. Play hero video (YouTube embed should autoplay muted)
-4. Validate Pricing CTAs and FAQ anchor links
+1. **Restart the development server**
+   ```bash
+   npm run dev
+   ```
 
-### Security Test
-1. Send webhook with wrong `verif-hash` → should be rejected
-2. Try non-POST requests to webhooks → should be blocked
-3. Test rate limiting → should block after 60 requests/minute
-4. Verify emails land in inbox (not spam)
+2. **Check the health status**
+   ```bash
+   curl http://localhost:3000/api/health
+   ```
+   Should return `"status": "healthy"`
 
-## 🚀 Production Deployment
+3. **Test authentication**
+   - Go to http://localhost:3000/login
+   - Try to sign up with a test email
+   - Should work without errors
 
-### Before Going Live
-- [ ] All tests pass
-- [ ] Service key rotated
-- [ ] Domain email configured
-- [ ] WAF rules active
-- [ ] Queue mode enabled
-- [ ] PITR backups enabled
+## 🧪 **After Configuration: Re-run TestSprite**
 
-### Monitoring
-- [ ] Set up webhook failure alerts
-- [ ] Monitor email deliverability
-- [ ] Track payment success rates
-- [ ] Watch for failed webhook signatures
+Once Supabase is configured, the authentication system should work and TestSprite should show a much higher success rate.
 
-## 🔧 Troubleshooting
+## 📊 **Current Test Results**
 
-### Common Issues
+| Feature | Status | Issue |
+|---------|--------|-------|
+| Landing Page | ✅ Working | None |
+| Authentication | ❌ Broken | Missing Supabase config |
+| Dashboard | ❌ Broken | Requires authentication |
+| Agent Management | ❌ Broken | Requires authentication |
+| Payment Processing | ❌ Broken | Requires authentication |
 
-**Webhook Timeouts**
-- Ensure "Respond to Webhook" node is early in flow
-- Use queue mode for reliability
+## 🎯 **Expected Results After Setup**
 
-**CORS Errors**
-- Verify Cloudflare allows OPTIONS for lead webhook
-- Check n8n webhook CORS headers
+| Feature | Expected Status |
+|---------|----------------|
+| Landing Page | ✅ Working |
+| Authentication | ✅ Working |
+| Dashboard | ✅ Working |
+| Agent Management | ✅ Working |
+| Payment Processing | ✅ Working |
+| **Overall Success Rate** | **>80%** |
 
-**Email in Spam**
-- Set up SPF/DKIM/DMARC for domain
-- Use domain email sender, not Gmail
+## 🚨 **Critical Issues to Fix**
 
-**Duplicate Payments**
-- Verify unique constraint on `flutterwave_id`
-- Check idempotency in Supabase upsert
+1. **Supabase Configuration** - Environment variables not set
+2. **Database Schema** - Tables and RLS policies not applied
+3. **Google OAuth** - Optional, but needs redirect URI configuration
 
-**Failed Signatures**
-- Verify `FLW_VERIF_HASH` matches Flutterwave dashboard
-- Check webhook payload structure
+## 📞 **Need Help?**
 
-## 📞 Support
+If you need help with any of these steps, please provide:
+1. Your Supabase project URL
+2. Any error messages you see
+3. Screenshots of the issues
 
-If issues persist:
-1. Check n8n execution logs
-2. Verify Supabase RLS policies
-3. Test Flutterwave webhook manually
-4. Contact: callwaitingai@gmail.com
-
-## 🎯 Success Metrics
-
-- Payment webhooks process within 30 seconds
-- Lead forms submit without CORS errors
-- Emails land in primary inbox
-- Zero duplicate payment records
-- 100% webhook signature verification
+The platform has a solid foundation - it just needs proper Supabase configuration to work!
