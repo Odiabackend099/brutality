@@ -27,18 +27,18 @@ export async function POST(req: NextRequest) {
           return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: any) {
-          cookieStore.set({ name, value, ...options })
+          try {
+            cookieStore.set({ name, value, ...options })
+          } catch {
+            // Cookie setting can fail during static generation - ignore
+          }
         },
         remove(name: string, options: any) {
-          cookieStore.set({ name, value: '', ...options })
-        },
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet: any[]) {
-          cookiesToSet.forEach(({ name, value, ...options }) => {
-            cookieStore.set({ name, value, ...options })
-          })
+          try {
+            cookieStore.set({ name, value: '', ...options })
+          } catch {
+            // Cookie removal can fail during static generation - ignore
+          }
         },
       },
     }
