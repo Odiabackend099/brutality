@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,155 +46,161 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on 'Log In' to go to login page
+        # -> Click on 'Log In' link to go to login page
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click on 'Log In' link to navigate to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click on 'Sign up' link to go to signup page
+        # -> Click on 'Sign up' link to navigate to signup page
         frame = context.pages[-1]
+        # Click on 'Sign up' link to navigate to signup page
         elem = frame.locator('xpath=html/body/div/div/div/div/div[3]/p/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Fill in Full Name, Email, Password fields and click Create Account button
+        # -> Fill in Full Name, Email, Password fields and submit the form to create a new account
         frame = context.pages[-1]
+        # Fill Full Name field with 'Test User'
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('John Doe')
+        await page.wait_for_timeout(3000); await elem.fill('Test User')
         
 
         frame = context.pages[-1]
+        # Fill Email Address field with 'testuser@example.com'
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[3]/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('john.doe.testing@example.com')
+        await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Fill Password field with 'TestPass123'
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[4]/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
+        await page.wait_for_timeout(3000); await elem.fill('TestPass123')
         
 
         frame = context.pages[-1]
+        # Click 'Create Account' button to submit signup form
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Clear the email field, input a new valid email address with a common domain, and submit the form again.
+        # -> Clear the email field and input a different valid email address, then resubmit the signup form
         frame = context.pages[-1]
+        # Clear the Email Address field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[3]/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('')
         
 
         frame = context.pages[-1]
+        # Input a different valid email address
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[3]/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('john.doe.testing@gmail.com')
+        await page.wait_for_timeout(3000); await elem.fill('validuser@validemail.com')
         
 
         frame = context.pages[-1]
+        # Click 'Create Account' button to submit signup form again
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click 'Go to Sign In' to navigate to the login page to test login flow.
+        # -> Click on 'Go to Sign In' link to navigate to login page for next steps
         frame = context.pages[-1]
+        # Click 'Go to Sign In' link to navigate to login page
         elem = frame.locator('xpath=html/body/div/div/div/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Fill in email and password fields with registered user credentials and click Sign In.
+        # -> Fill in email and password fields with registered user credentials and click Sign In
         frame = context.pages[-1]
+        # Input registered email address
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('john.doe.testing@gmail.com')
+        await page.wait_for_timeout(3000); await elem.fill('validuser@validemail.com')
         
 
         frame = context.pages[-1]
+        # Input registered password
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
+        await page.wait_for_timeout(3000); await elem.fill('TestPass123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit login form
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Logout if logged in (not applicable here), then create a new user with an email that is pre-verified or bypass email verification to test login flow without email confirmation blocking.
+        # -> Logout if logged in (not applicable here), then navigate to login page and check for any payment prompts or requirements during login or signup
         frame = context.pages[-1]
+        # Click 'Sign up' link to verify no payment prompt during signup
         elem = frame.locator('xpath=html/body/div/div/div/div/div[4]/p/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Fill in Full Name, Email, Password fields with new user data and submit the signup form.
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('Jane Tester')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[3]/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('jane.tester.testing@gmail.com')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[4]/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Click 'Go to Sign In' to navigate to login page to test login flow after verification.
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/a').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Input registered email and password for jane.tester.testing@gmail.com and attempt to sign in.
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('jane.tester.testing@gmail.com')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Since email verification is required and cannot be bypassed here, proceed to logout if possible, then verify no payment prompt appears during signup or login attempts.
-        frame = context.pages[-1]
+        # Click 'Back to Home' link to check homepage for payment prompts
         elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click 'Log In' to verify login flow again or 'Start Free Trial' to check signup flow for any payment prompts.
+        # -> Click on 'Log In' link to verify no payment prompt during login
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click on 'Log In' link to navigate to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input registered email and password for a verified user and click Sign In to test login flow without payment prompt.
+        # -> Click on 'Sign up' link to verify no payment prompt during signup
         frame = context.pages[-1]
+        # Click on 'Sign up' link to navigate to signup page
+        elem = frame.locator('xpath=html/body/div/div/div/div/div[3]/p/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Verify no payment prompt by filling in valid user details and submitting the signup form
+        frame = context.pages[-1]
+        # Fill Full Name field with 'Test User'
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('verified.user@example.com')
+        await page.wait_for_timeout(3000); await elem.fill('Test User')
         
 
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
+        # Fill Email Address field with 'validuser@validemail.com'
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[3]/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('validuser@validemail.com')
         
 
         frame = context.pages[-1]
+        # Fill Password field with 'TestPass123'
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[4]/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('TestPass123')
+        
+
+        frame = context.pages[-1]
+        # Click 'Create Account' button to submit signup form
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        assert False, 'Test plan execution failed: generic failure assertion.'
+        # -> Click 'Go to Sign In' to navigate to login page and continue testing login flow
+        frame = context.pages[-1]
+        # Click 'Go to Sign In' link to navigate to login page
+        elem = frame.locator('xpath=html/body/div/div/div/div/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        await expect(frame.locator('text=Welcome Back').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign in to your CallWaiting AI dashboard').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Email Address').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Password').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Forgot password?').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign In').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Or continue with').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign in with Google').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Don\'t have an account? Sign up').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=© 2025 CallWaiting AI. All rights reserved.').first).to_be_visible(timeout=30000)
         await asyncio.sleep(5)
     
     finally:

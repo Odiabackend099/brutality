@@ -4,13 +4,13 @@
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
   "executionArgs": {
-    "projectName": "callwaitingai-landing",
+    "projectName": "callwaitingai-mvp",
     "projectPath": "/Users/odiadev/callwaitingai.dev 2025",
     "testIds": [],
-    "additionalInstruction": "Test the local development server at http://localhost:3000 with all authentication flows and features working correctly. The server is properly configured with production Supabase credentials and running on port 3000.",
+    "additionalInstruction": "Test the local development server at http://localhost:3000 with CallWaitingAI MVP features including ODIADEV TTS, Twilio integration, lead capture, and all MVP functionality working correctly.",
     "envs": {
       "API_KEY": "sk-user-Zk4eDniWuiTnpmMYc75OaiVajaaxp8SfqOV6iBPP2ZcwZOl4MzLK-myiUIqeigWMcTlAYXSjMlRM7iioIKfsMmxkC77em4IpDLN5pbjLPL76F1X56jVuDTMJBijfGpY_x8s"
     }
   },
-  "proxy": "http://279cb4a2-6f1a-4886-b13b-b6ad331d7668:UPcsWUkSieq8ep7AZWULkzqcaBfmh5yB@tun.testsprite.com:8080"
+  "proxy": "http://39cd7e72-bee7-4536-928d-725052242628:DEEO2sZB345TTqtpgu1CeitaQK9Irpr0@tun.testsprite.com:8080"
 }

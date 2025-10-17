@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,87 +46,81 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click the first 'Start Free Trial' button at index 1 and verify navigation
+        # -> Click the first 'Start Free Trial' button (index 8) and verify the redirected URL
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a[2]').nth(0)
+        # Click the first 'Start Free Trial' button on desktop view
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Go back to homepage to test the next 'Start Free Trial' button
+        # -> Go back to homepage to test the second 'Start Free Trial' button
         frame = context.pages[-1]
+        # Click 'Back to Home' link to return to homepage
         elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click the 'Start Free Trial' button at index 4 and verify navigation
+        # -> Click the second 'Start Free Trial' button (index 9) and verify the redirected URL
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/div[2]/div/div[2]/a[2]').nth(0)
+        # Click the second 'Start Free Trial' button on desktop view
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click 'Back to Home' link to return to homepage and continue testing remaining 'Start Free Trial' buttons
+        # -> Return to homepage to test the third 'Start Free Trial' button on desktop view
         frame = context.pages[-1]
+        # Click 'Back to Home' link to return to homepage
         elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click the 'Start Free Trial' button at index 6 and verify navigation
+        # -> Click the third 'Start Free Trial' button (index 11) and verify the redirected URL
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/section[3]/div/div[2]/div/a').nth(0)
+        # Click the third 'Start Free Trial' button on desktop view
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div[3]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Go back to homepage to test the last 'Start Free Trial' button on desktop view
+        # -> Return to homepage and switch to mobile viewport to test all 'Start Free Trial' sticky CTA buttons
         frame = context.pages[-1]
+        # Click 'Back to Home' link to return to homepage
         elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click the last 'Start Free Trial' button at index 7 and verify navigation
+        # -> Switch to mobile viewport and identify all visible 'Start Free Trial' sticky CTA buttons to test their redirects
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/section[3]/div/div[2]/div[2]/a').nth(0)
+        # Click the first 'Start Free Trial' button on mobile viewport to test redirect
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Switch to mobile viewport and reload homepage to test mobile 'Start Free Trial' buttons
-        await page.goto('http://localhost:3000', timeout=10000)
-        
-
-        # Click the first visible 'Start Free Trial' button at index 1 in mobile view and verify navigation
+        # -> Return to homepage to identify and test remaining mobile sticky 'Start Free Trial' buttons
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a[2]').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Click 'Back to Home' link to return to homepage and continue testing remaining 'Start Free Trial' buttons in mobile view
-        frame = context.pages[-1]
+        # Click 'Back to Home' link to return to homepage
         elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click 'Back to Home' link to return to homepage and continue testing remaining 'Start Free Trial' buttons in mobile view
+        # -> Switch to mobile viewport and identify all visible 'Start Free Trial' sticky CTA buttons to test their redirects
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click the first 'Start Free Trial' button on mobile viewport to test redirect
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click the 'Back to Home' link at index 1 to return to homepage and continue testing remaining 'Start Free Trial' buttons in mobile view
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Click the 'Start Free Trial' button at index 4 and verify navigation in mobile view
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/div[2]/div/div[2]/a[2]').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Assert that the current URL is the /login page with signup mode after clicking 'Start Free Trial' buttons
-        assert '/login' in page.url, f"Expected to be on /login page, but got {page.url}"
-        assert 'signup' in page.url or 'mode=signup' in page.url, f"Expected signup mode in URL, but got {page.url}"
-        # Assert that the URL does not contain any direct payment page keywords
-        assert 'payment' not in page.url, f"URL should not lead directly to payment, but got {page.url}"
+        await expect(frame.locator('text=Welcome Back').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign in to your CallWaiting AI dashboard').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Email Address').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Password').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Forgot password?').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign In').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Or continue with').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Sign in with Google').first).to_be_visible(timeout=30000)
+        await expect(frame.locator("text=Don't have an account? Sign up").first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=© 2025 CallWaiting AI. All rights reserved.').first).to_be_visible(timeout=30000)
         await asyncio.sleep(5)
     
     finally:

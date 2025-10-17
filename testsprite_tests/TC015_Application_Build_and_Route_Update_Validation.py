@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,39 +46,50 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Verify routing and content for /login page
+        # -> Navigate to /login page to verify it loads correctly
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click on 'Log In' link to navigate to /login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Verify routing and content for /signup page
+        # -> Navigate to /signup page to verify it loads correctly
         frame = context.pages[-1]
+        # Click on 'Sign up' link to navigate to /signup page
         elem = frame.locator('xpath=html/body/div/div/div/div/div[3]/p/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Verify routing and content for /dashboard page
+        # -> Navigate to /dashboard page to verify it loads correctly
         await page.goto('http://localhost:3000/dashboard', timeout=10000)
+        await asyncio.sleep(3)
         
 
-        # Sign in to the application to access the /dashboard page and verify its content
+        # -> Input valid email and password, then click Sign In to authenticate and access the dashboard
         frame = context.pages[-1]
+        # Input valid email address for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input valid password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit login form
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        assert False, 'Test plan execution failed: generic failure assertion as expected result is unknown.'
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Build Successful').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: The application build process did not complete successfully or routing verification failed as per the test plan.")
         await asyncio.sleep(5)
     
     finally:

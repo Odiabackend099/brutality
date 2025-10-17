@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,29 +46,38 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on 'Start Free Trial' to initiate upgrade/payment process.
+        # -> Click on a 'Start Free Trial' button to initiate Flutterwave payment for a selected plan.
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a[2]').nth(0)
+        # Click on the first 'Start Free Trial' button to initiate payment process for upgrade plan.
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input email and password, then click Sign In to access dashboard and proceed to upgrade page.
+        # -> Input valid login credentials and sign in to access upgrade page and initiate Flutterwave payment.
         frame = context.pages[-1]
+        # Input email address for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click 'Sign In' button to authenticate user
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        assert False, 'Test plan execution failed: generic failure assertion as expected.'
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Payment Successful! Thank you for your purchase.').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: Payment failure scenarios from Flutterwave were not handled gracefully. User did not receive appropriate error messages or remained on the upgrade page with consistent state as required.")
         await asyncio.sleep(5)
     
     finally:

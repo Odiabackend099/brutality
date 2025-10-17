@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,13 +46,27 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Locate and access support ticket categorization data before feature rollout.
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/footer/div/div/a[3]').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        # -> Locate and review support ticket categorization data before feature rollout
+        await page.mouse.wheel(0, 600)
         
 
-        assert False, 'Test failed: Expected result unknown, generic failure assertion.'
+        # -> Confirm support requests related to free trial presence and payment confusion reduce to zero after rollout
+        await page.goto('http://localhost:3000/support-tickets', timeout=10000)
+        await asyncio.sleep(3)
+        
+
+        # -> Search for alternative navigation or links to support ticket data or reports on the site
+        await page.mouse.wheel(0, -await page.evaluate('() => window.innerHeight'))
+        
+
+        await page.mouse.wheel(0, await page.evaluate('() => window.innerHeight'))
+        
+
+        # --> Assertions to verify final state
+        try:
+            await expect(page.locator('text=Support tickets about free trial and payment confusion have been completely resolved').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError('Test case failed: Support tickets related to confusion about free trial and payment requirements did not drop to zero after launch of new user flows as expected.')
         await asyncio.sleep(5)
     
     finally:

@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,29 +46,38 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click the 'Log In' button to start login process
+        # -> Click the 'Log In' link to proceed to login page
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click the 'Log In' link to go to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input email and password, then click 'Sign In' button
+        # -> Input email and password, then click Sign In button to login
         frame = context.pages[-1]
+        # Input email address
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input password
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click the Sign In button to login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        assert False, "Test plan execution failed: generic failure assertion."
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Exclusive Platinum Membership Offer').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: 'Upgrade to Pro' menu item is either not visible, not styled correctly, or does not link to the upgrade page as per the test plan.")
         await asyncio.sleep(5)
     
     finally:

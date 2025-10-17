@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,30 +46,52 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on 'Log In' button to navigate to the login page and verify buttons there.
+        # -> Click 'Log In' button to navigate to login page and verify buttons there.
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click 'Log In' button on homepage to navigate to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Navigate to dashboard page by logging in or simulate login to check navigation elements there.
+        # -> Navigate back to homepage and then log in to access dashboard to verify navigation elements there.
         frame = context.pages[-1]
+        # Click 'Back to Home' link to return to homepage
+        elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Click 'Log In' button to navigate to login page and verify presence and behavior of navigation elements there.
+        frame = context.pages[-1]
+        # Click 'Log In' button on homepage to navigate to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Perform login by entering email and password, then click 'Sign In' to access dashboard and verify navigation elements there.
+        frame = context.pages[-1]
+        # Enter email for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Enter password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click 'Sign In' button to log in and navigate to dashboard
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Final generic failing assertion since expected result is unknown
-        assert False, 'Test plan execution failed: generic failure assertion'
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Upgrade to Enterprise Plan').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: Navigation elements 'Log In' and 'Start Free Trial' buttons did not appear distinctly and correctly on all relevant pages as per the test plan.")
         await asyncio.sleep(5)
     
     finally:

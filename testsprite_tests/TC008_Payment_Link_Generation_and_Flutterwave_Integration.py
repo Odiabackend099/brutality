@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,69 +46,45 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on Pricing link to go to upgrade page
+        # -> Navigate to the Pricing or Upgrade page to select the Starter plan and initiate payment.
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/footer/div/div/a').nth(0)
+        # Click on the Pricing link to go to the upgrade/pricing page
+        elem = frame.locator('xpath=html/body/footer/div/div/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click on Starter plan's Start Free Trial button to initiate payment
+        # -> Click the 'Start Free Trial' button for the Starter plan to initiate payment.
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/section[3]/div/div[2]/div/a').nth(0)
+        # Click 'Start Free Trial' button for the Starter plan to initiate payment
+        elem = frame.locator('xpath=html/body/section[5]/div/div[2]/div/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Fill in email and password fields and click Sign In button
+        # -> Input valid credentials and sign in to proceed with payment initiation for the Starter plan.
         frame = context.pages[-1]
+        # Input email address for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to authenticate and proceed
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Navigate back to pricing page to check if payment initiation can be tested without login or try alternative login methods.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Click on Pricing link to navigate to upgrade page again
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/footer/div/div/a').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Click on Starter plan's Start Free Trial button to initiate payment
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/section[3]/div/div[2]/div/a').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        # Input valid email and password, then click Sign In button
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('validuser@example.com')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('ValidPassword123')
-        
-
-        frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        
-
-        assert False, 'Test plan execution failed: generic failure assertion.'
+        try:
+            await expect(frame.locator('text=Payment Successful! Thank you for your purchase.').first).to_be_visible(timeout=30000)
+        except AssertionError:
+            raise AssertionError("Test case failed: The payment process did not complete successfully. The Flutterwave payment modal or page did not open correctly, or the user was not redirected to the success page as expected based on the test plan.")
         await asyncio.sleep(5)
     
     finally:

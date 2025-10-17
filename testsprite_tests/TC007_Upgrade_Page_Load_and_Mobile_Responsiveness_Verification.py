@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,28 +46,36 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Navigate to /dashboard/upgrade page on desktop
+        # -> Navigate to /dashboard/upgrade page on desktop
         await page.goto('http://localhost:3000/dashboard/upgrade', timeout=10000)
+        await asyncio.sleep(3)
         
 
-        # Input email and password to sign in and access upgrade page
+        # -> Input email and password to sign in and access the upgrade page
         frame = context.pages[-1]
+        # Input email address for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Final generic failing assertion since expected result is unknown
-        assert False, 'Test plan execution failed: generic failure assertion'
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Upgrade to Platinum Plan with Lifetime Benefits').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: The upgrade page did not load successfully with all required pricing plans, FAQs, and guarantee information as specified in the test plan.")
         await asyncio.sleep(5)
     
     finally:

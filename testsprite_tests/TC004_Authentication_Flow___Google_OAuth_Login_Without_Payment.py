@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,20 +46,33 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on the Log In button to navigate to the login page
+        # -> Click on the 'Log In' link to go to the login page
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click on the 'Log In' link to navigate to the login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Click on the 'Sign in with Google' button to initiate Google OAuth flow
+        # -> Click on the 'Sign in with Google' button to initiate Google OAuth authentication
         frame = context.pages[-1]
+        # Click on the 'Sign in with Google' button to initiate Google OAuth authentication
         elem = frame.locator('xpath=html/body/div/div/div/div/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Generic failing assertion since expected result is unknown
-        assert False, 'Test failed: Expected result unknown, forcing failure.'
+        # -> Click on the 'Sign in with Google' button to retry Google OAuth authentication
+        frame = context.pages[-1]
+        # Click on the 'Sign in with Google' button to retry Google OAuth authentication
+        elem = frame.locator('xpath=html/body/div/div/div/div/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Payment Required').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test case failed: User authentication via Google OAuth did not succeed or the dashboard was not accessed without upfront payment as expected.")
         await asyncio.sleep(5)
     
     finally:

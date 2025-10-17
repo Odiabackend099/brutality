@@ -98,19 +98,96 @@ export default function Page() {
             </p>
           </div>
 
-          {/* Hero Visual */}
+          {/* Demo Call Flow Visualization */}
           <div className="max-w-5xl mx-auto mt-16">
-            <div className="relative rounded-2xl border border-slate-800 bg-slate-900/40 p-1 shadow-2xl">
-              <div className="aspect-video bg-slate-800/50 rounded-xl flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Phone className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                  <p className="text-slate-500">
-                    [Video: Phone ringing → AI picks up → Caller speaks → AI responds → Lead captured]
-                  </p>
-                  <p className="text-xs text-slate-600 mt-2">
-                    Demo video placeholder - shows AI answering call in real-time
-                  </p>
+            <div className="relative rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-800 p-8 shadow-2xl">
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-white mb-2">See How It Works</h3>
+                <p className="text-slate-400">Watch AI answer a real customer call in seconds</p>
+              </div>
+
+              {/* Call Flow Steps */}
+              <div className="space-y-6 max-w-3xl mx-auto">
+                {/* Step 1: Call Comes In */}
+                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center border border-cyan-400/30">
+                    <Phone className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">📞 Call Comes In</h4>
+                    <p className="text-slate-400 text-sm">Customer calls your business number</p>
+                  </div>
+                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:00</div>
                 </div>
+
+                {/* Step 2: AI Answers */}
+                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center border border-blue-400/30">
+                    <MessageSquare className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">🤖 AI Answers Instantly</h4>
+                    <p className="text-slate-300 text-sm italic mb-2">&quot;Hello! Thank you for calling. How can I help you today?&quot;</p>
+                    <p className="text-slate-400 text-xs">Professional, human-like voice greets caller</p>
+                  </div>
+                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:02</div>
+                </div>
+
+                {/* Step 3: Customer Speaks */}
+                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-400/20 flex items-center justify-center border border-emerald-400/30">
+                    <span className="text-emerald-400 text-lg">👤</span>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">💬 Customer Shares Details</h4>
+                    <p className="text-slate-300 text-sm italic mb-2">&quot;Hi, I&apos;m interested in your pricing. My name is John and my email is john@example.com&quot;</p>
+                    <p className="text-slate-400 text-xs">AI listens and captures key information</p>
+                  </div>
+                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:15</div>
+                </div>
+
+                {/* Step 4: AI Responds */}
+                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-400/20 flex items-center justify-center border border-purple-400/30">
+                    <MessageSquare className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">💡 AI Provides Information</h4>
+                    <p className="text-slate-300 text-sm italic mb-2">&quot;Great! I&apos;ll send our pricing details to john@example.com right away. Anything else I can help with?&quot;</p>
+                    <p className="text-slate-400 text-xs">Answers questions naturally and helpfully</p>
+                  </div>
+                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:20</div>
+                </div>
+
+                {/* Step 5: Lead Captured */}
+                <div className="flex items-start gap-4 bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-xl p-4 border border-cyan-500/30">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/30 flex items-center justify-center border border-cyan-400/50">
+                    <CheckCircle className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">✅ Lead Delivered to You</h4>
+                    <p className="text-slate-300 text-sm mb-2">
+                      <strong className="text-cyan-400">Name:</strong> John •
+                      <strong className="text-cyan-400 ml-2">Email:</strong> john@example.com •
+                      <strong className="text-cyan-400 ml-2">Interest:</strong> Pricing
+                    </p>
+                    <p className="text-slate-400 text-xs">Instantly sent via WhatsApp, Email, or CRM</p>
+                  </div>
+                  <div className="text-xs text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full">0:25</div>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="text-center mt-8 pt-6 border-t border-slate-700">
+                <p className="text-slate-400 mb-4">Try it yourself - Call our demo AI now</p>
+                <a
+                  href={`tel:${demoPhone}`}
+                  className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all shadow-lg hover:shadow-xl"
+                >
+                  <Phone className="w-6 h-6" />
+                  Call {demoPhone}
+                </a>
+                <p className="text-xs text-slate-500 mt-3">Free demo • No signup required • Available 24/7</p>
               </div>
             </div>
           </div>

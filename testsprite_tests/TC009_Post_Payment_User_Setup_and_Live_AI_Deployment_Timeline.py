@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,36 +46,117 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on 'Start Free Trial' to begin the payment upgrade flow.
+        # -> Click on 'Log In' to access user account for payment upgrade
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a[2]').nth(0)
+        # Click on 'Log In' link to access user login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input email and password, then click 'Sign In' to authenticate.
+        # -> Input email and password, then click Sign In to log in
         frame = context.pages[-1]
+        # Input email address for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
         
 
         frame = context.pages[-1]
+        # Input password for login
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit login form
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Try to use 'Sign in with Google' button to authenticate or navigate to 'Forgot password?' to recover credentials.
+        # -> Try to reload the page to see if the issue resolves or check network/backend status
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/div/div/div/div/button').nth(0)
+        # Click 'Back to Home' to reload or reset the session
+        elem = frame.locator('xpath=html/body/div/nav/a[2]').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Generic failing assertion since expected result is unknown
-        assert False, 'Test plan execution failed: generic failure assertion'
+        # -> Click on 'Log In' to retry login for payment upgrade flow
+        frame = context.pages[-1]
+        # Click on 'Log In' link to retry login
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Input email and password, then click Sign In to retry login
+        frame = context.pages[-1]
+        # Input email address for login retry
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
+        
+
+        frame = context.pages[-1]
+        # Input password for login retry
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('TestPassword123')
+        
+
+        frame = context.pages[-1]
+        # Click Sign In button to submit login form for retry
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Request or reset valid user credentials or use alternative login method to proceed with payment upgrade flow
+        frame = context.pages[-1]
+        # Click 'Forgot password?' to initiate password reset or recovery process
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Input registered email address and click 'Send Reset Link' to request password reset
+        frame = context.pages[-1]
+        # Input registered email address for password reset
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
+        
+
+        frame = context.pages[-1]
+        # Click 'Send Reset Link' button to submit password reset request
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Click 'Back to Sign In' to return to login page after requesting password reset
+        frame = context.pages[-1]
+        # Click 'Back to Sign In' to return to login page
+        elem = frame.locator('xpath=html/body/div/div/div/div/a').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # -> Input new valid email and password, then click Sign In to log in and start payment upgrade flow
+        frame = context.pages[-1]
+        # Input email address for login after password reset
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('testuser@example.com')
+        
+
+        frame = context.pages[-1]
+        # Input new password for login after password reset
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('NewTestPassword123')
+        
+
+        frame = context.pages[-1]
+        # Click Sign In button to submit login form with new credentials
+        elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        try:
+            await expect(frame.locator('text=Live AI deployment completed successfully').first).to_be_visible(timeout=1000)
+        except AssertionError:
+            raise AssertionError("Test failed: The live AI deployment setup was not triggered or completed within the expected 48-hour SLA after successful payment.")
         await asyncio.sleep(5)
     
     finally:

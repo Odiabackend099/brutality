@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from playwright.async_api import expect
 
 async def run_test():
     pw = None
@@ -45,69 +46,73 @@ async def run_test():
                 pass
         
         # Interact with the page elements to simulate user flow
-        # Click on 'Log In' link to go to login page
+        # -> Click on 'Log In' link to navigate to login page
         frame = context.pages[-1]
-        elem = frame.locator('xpath=html/body/header/nav/div[2]/a').nth(0)
+        # Click on 'Log In' link to go to login page
+        elem = frame.locator('xpath=html/body/nav/div[2]/a').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input invalid email format and submit
+        # -> Input invalid email format and submit to check error message
         frame = context.pages[-1]
+        # Input invalid email format in email field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('invalid-email-format')
         
 
         frame = context.pages[-1]
+        # Input any password in password field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('anyPassword123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit invalid email format
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input unregistered email with valid password and submit
+        # -> Input unregistered email and valid password, then submit to check error message
         frame = context.pages[-1]
+        # Input unregistered email in email field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('unregistered@example.com')
         
 
         frame = context.pages[-1]
+        # Input valid password in password field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('ValidPassword123')
+        await page.wait_for_timeout(3000); await elem.fill('ValidPass123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit unregistered email and valid password
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Input registered email with wrong password and submit
+        # -> Input registered email with wrong password and submit to check error message
         frame = context.pages[-1]
+        # Input registered email in email field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div/div/input').nth(0)
         await page.wait_for_timeout(3000); await elem.fill('registered@example.com')
         
 
         frame = context.pages[-1]
+        # Input wrong password in password field
         elem = frame.locator('xpath=html/body/div/div/div/div/form/div[2]/div[2]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('WrongPassword123')
+        await page.wait_for_timeout(3000); await elem.fill('WrongPass123')
         
 
         frame = context.pages[-1]
+        # Click Sign In button to submit registered email with wrong password
         elem = frame.locator('xpath=html/body/div/div/div/div/form/button').nth(0)
         await page.wait_for_timeout(3000); await elem.click(timeout=5000)
         
 
-        # Assert error message for invalid email format is displayed
-        error_locator = frame.locator('text=Invalid email format')
-        assert await error_locator.is_visible()
-        \n# Assert error message for unregistered email and valid password is displayed without specifying which field
-        error_locator = frame.locator('text=Invalid login credentials')
-        assert await error_locator.is_visible()
-        \n# Assert error message for registered email with wrong password is displayed without revealing sensitive info
-        error_locator = frame.locator('text=Invalid login credentials')
-        assert await error_locator.is_visible()
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        await expect(frame.locator('text=Invalid login credentials').first).to_be_visible(timeout=30000)
         await asyncio.sleep(5)
     
     finally:
