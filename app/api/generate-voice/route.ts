@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
-import { generateTTS, VoiceId, estimateDuration } from '@/lib/minimax'
+import { generateTTS, VoiceId, estimateDuration } from '@/lib/odiadev-tts'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
 
 // Force dynamic rendering since we use cookies for auth

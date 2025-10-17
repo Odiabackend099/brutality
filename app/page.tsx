@@ -10,6 +10,9 @@ export default function Page() {
   const [whatsapp, setWhatsapp] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  // Demo phone number from environment variable
+  const demoPhone = process.env.NEXT_PUBLIC_DEMO_PHONE || '+14156876510';
+
   const handleEarlyAccess = async (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Connect to your email/CRM system
@@ -81,11 +84,11 @@ export default function Page() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </a>
               <a
-                href="tel:+14156876510"
+                href={`tel:${demoPhone}`}
                 className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-lg border-2 border-slate-700 text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
               >
                 <Phone className="w-5 h-5 mr-2" />
-                Try Live Demo
+                Try Live Demo ({demoPhone})
               </a>
             </div>
 
@@ -201,11 +204,11 @@ export default function Page() {
             {/* Call CTA */}
             <div className="text-center">
               <a
-                href="tel:+14156876510"
+                href={`tel:${demoPhone}`}
                 className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-xl bg-white text-slate-900 hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl"
               >
                 <Phone className="w-6 h-6" />
-                Call +1 (415) 687-6510
+                Call {demoPhone}
               </a>
               <p className="mt-4 text-sm text-slate-500">Available 24/7 • Average wait time: 0 seconds</p>
             </div>

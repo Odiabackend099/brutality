@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceSupabase } from '@/lib/supabase-server'
-import { generateTTS } from '@/lib/minimax'
+import { generateTTS } from '@/lib/odiadev-tts'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
 import OpenAI from 'openai'
 
