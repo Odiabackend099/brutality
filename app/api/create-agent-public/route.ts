@@ -51,15 +51,12 @@ export async function POST(request: NextRequest) {
       // This bypasses the need for Supabase auth
       userId = `public_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       
-      // Create user profile directly
+      // Create user profile with minimal required fields
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
           id: userId,
-          email: email,
-          plan: 'free',
-          minutes_quota: 1000, // Give generous quota
-          minutes_used: 0
+          email: email
         })
       
       if (profileError) {
