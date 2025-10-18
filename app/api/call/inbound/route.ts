@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isTestModeEnabled, logTestModeActivity } from '@/lib/test-mode'
 import { createServerSupabase } from '@/lib/supabase-server'
 import { FreeTrialManager } from '@/lib/free-trial'
+import { createConversationSession } from '@/lib/services/conversation-manager'
+import { generateGreeting } from '@/lib/services/agent-orchestrator'
 
 // Force dynamic rendering for webhook
 export const dynamic = 'force-dynamic'
@@ -81,23 +83,60 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Get app URL for WebSocket connection
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://callwaitingai.dev'
-    const wsUrl = appUrl.replace('https://', 'wss://').replace('http://', 'ws://')
+    // Create conversation session for this call
+    let sessionId: string;
+    try {
+      const session = await createConversationSession({
+        agentId: phoneNumber.agent_id,
+        callSid,
+        phoneNumber: from,
+        context: {
+          to,
+          callStatus,
+          timestamp: new Date().toISOString()
+        }
+      });
+      sessionId = session.id;
+      console.log(`[Twilio Inbound] Created conversation session ${sessionId} for call ${callSid}`);
+    } catch (error) {
+      console.error(`[Twilio Inbound] Failed to create conversation session:`, error);
+      const errorTwiml = `<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="Polly.Joanna">
+    We're sorry, but we're experiencing technical difficulties. Please try again later.
+  </Say>
+  <Hangup />
+</Response>`
+      return new NextResponse(errorTwiml, {
+        status: 200,
+        headers: { 'Content-Type': 'text/xml' },
+      })
+    }
 
-    // Generate TwiML response with Media Stream
+    // Generate greeting using ODIADEV TTS
+    let greetingUrl: string;
+    try {
+      greetingUrl = await generateGreeting(phoneNumber.agent_id);
+      console.log(`[Twilio Inbound] Generated greeting URL: ${greetingUrl}`);
+    } catch (error) {
+      console.error(`[Twilio Inbound] Failed to generate greeting:`, error);
+      // Fallback to Twilio's built-in voice
+      greetingUrl = '';
+    }
+
+    // Generate TwiML response with AI-powered greeting and conversation loop
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna" language="en-US">
-    Hello! Welcome to CallWaiting AI. Please hold while we connect you to our voice assistant.
-  </Say>
-  <Start>
-    <Stream name="ai-assistant-stream" url="${wsUrl}/api/call/stream">
-      <Parameter name="callSid" value="${callSid}" />
-      <Parameter name="from" value="${from}" />
-    </Stream>
-  </Start>
-  <Pause length="60" />
+  ${greetingUrl ? `<Play>${greetingUrl}</Play>` : `<Say voice="Polly.Joanna" language="en-US">Hello! Welcome to CallWaiting AI. How can I help you today?</Say>`}
+  <Gather input="speech" action="/api/call/process-speech" method="POST" speechTimeout="3" timeout="10" numDigits="0">
+    <Say voice="Polly.Joanna" language="en-US">Please speak after the tone.</Say>
+  </Gather>
+  <Say voice="Polly.Joanna" language="en-US">I didn't hear anything. Let me try again.</Say>
+  <Gather input="speech" action="/api/call/process-speech" method="POST" speechTimeout="3" timeout="10" numDigits="0">
+    <Say voice="Polly.Joanna" language="en-US">Please tell me how I can help you.</Say>
+  </Gather>
+  <Say voice="Polly.Joanna" language="en-US">Thank you for calling. Have a great day!</Say>
+  <Hangup />
 </Response>`
 
     return new NextResponse(twiml, {
