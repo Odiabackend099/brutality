@@ -71,7 +71,7 @@ export default function CallFlowsPage() {
       const formattedData = data?.map(item => ({
         id: item.id,
         agent_id: item.agent_id,
-        agent_name: item.agents.name,
+        agent_name: item.agents?.[0]?.name || 'Unknown Agent',
         flow_name: item.flow_name,
         greeting_message: item.flow_config?.greeting || '',
         max_duration: item.flow_config?.max_duration || 300,
