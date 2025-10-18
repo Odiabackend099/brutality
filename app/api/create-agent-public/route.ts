@@ -34,40 +34,63 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create a proper user in auth.users first, then create agent
-    const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-      email: email,
-      email_confirm: true, // Skip email verification
-      user_metadata: {
-        full_name: name.split(' ')[0] || 'User',
-        created_via: 'public_agent_creation'
-      }
-    })
+    // Try to find existing user first
+    let userId: string
     
-    if (createError || !newUser.user) {
-      console.error('Failed to create user:', createError)
+    try {
+      // Try to find existing user by querying profiles table
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .single()
+      
+      if (existingProfile) {
+        userId = existingProfile.id
+        console.log('Using existing user:', userId)
+      } else {
+        // Create new user if doesn't exist
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: email,
+          email_confirm: true,
+          user_metadata: {
+            full_name: name.split(' ')[0] || 'User',
+            created_via: 'public_agent_creation'
+          }
+        })
+        
+        if (createError || !newUser.user) {
+          console.error('Failed to create user:', createError)
+          return NextResponse.json(
+            { error: 'Failed to create user account: ' + createError?.message },
+            { status: 500 }
+          )
+        }
+        
+        userId = newUser.user.id
+        
+        // Create user profile
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: userId,
+            email: email,
+            plan: 'free',
+            minutes_quota: 1000,
+            minutes_used: 0
+          })
+        
+        if (profileError) {
+          console.error('Failed to create profile:', profileError)
+          // Continue anyway - agent creation might still work
+        }
+      }
+    } catch (error) {
+      console.error('Error finding/creating user:', error)
       return NextResponse.json(
-        { error: 'Failed to create user account: ' + createError?.message },
+        { error: 'Failed to find or create user account' },
         { status: 500 }
       )
-    }
-    
-    const userId = newUser.user.id
-    
-    // Create user profile
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: userId,
-        email: email,
-        plan: 'free',
-        minutes_quota: 1000,
-        minutes_used: 0
-      })
-    
-    if (profileError) {
-      console.error('Failed to create profile:', profileError)
-      // Continue anyway - agent creation might still work
     }
 
     // Generate API key and webhook secret
