@@ -140,7 +140,7 @@ const UpgradePage: React.FC = () => {
               <div className="flex items-center gap-4 text-sm text-slate-400">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  <span>{trialStatus.minutesUsed.toFixed(1)} / {trialStatus.totalMinutes} minutes used</span>
+                  <span>{trialStatus.minutesUsed.toFixed(1)} / {(trialStatus.minutesUsed + trialStatus.minutesRemaining).toFixed(1)} minutes used</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4" />
