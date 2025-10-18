@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Minimize2, Mic, Volume2 } from 'lucide-react';
+import { MessageCircle, X, Send, Minimize2, Mic } from 'lucide-react';
 import { ChatMessage, getPageContext } from '@/lib/groq-chat-widget';
 
 interface ChatWidgetProps {
@@ -56,11 +56,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
-  const [ttsSupported, setTtsSupported] = useState(false);
   // Check browser support for speech APIs
   useEffect(() => {
-  setSpeechSupported(!!(window as any)?.webkitSpeechRecognition || !!(window as any)?.SpeechRecognition);
-    setTtsSupported(!!window?.speechSynthesis);
+    setSpeechSupported(!!(window as any)?.webkitSpeechRecognition || !!(window as any)?.SpeechRecognition);
   }, []);
   // Speech-to-text logic
   const recognitionRef = useRef<any>(null);
@@ -92,13 +90,6 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
     recognitionRef.current = recognition;
     recognition.start();
     setIsRecording(true);
-  };
-  // Text-to-speech for AI responses
-  const speak = (text: string) => {
-    if (!ttsSupported || !text) return;
-    const utter = new window.SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    window.speechSynthesis.speak(utter);
   };
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -295,25 +286,14 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
           {isTyping && (
             <>
               {streamingMessage ? (
-                <div className="flex items-center">
-                  <MessageBubble 
-                    message={{
-                      role: 'assistant',
-                      content: streamingMessage,
-                      timestamp: new Date()
-                    }}
-                    isTyping={true}
-                  />
-                  {ttsSupported && (
-                    <button
-                      className="ml-2 p-1 rounded hover:bg-slate-200"
-                      title="Play response"
-                      onClick={() => speak(streamingMessage)}
-                    >
-                      <Volume2 size={16} />
-                    </button>
-                  )}
-                </div>
+                <MessageBubble 
+                  message={{
+                    role: 'assistant',
+                    content: streamingMessage,
+                    timestamp: new Date()
+                  }}
+                  isTyping={true}
+                />
               ) : (
                 <TypingIndicator />
               )}
