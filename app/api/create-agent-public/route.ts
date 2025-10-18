@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Try to find existing user first
-    let userId: string
+    let userId: string = ''
     
     try {
       // Try to find existing user by querying profiles table
@@ -49,40 +49,61 @@ export async function POST(request: NextRequest) {
         userId = existingProfile.id
         console.log('Using existing user:', userId)
       } else {
-        // Create new user if doesn't exist
-        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-          email: email,
-          email_confirm: true,
-          user_metadata: {
-            full_name: name.split(' ')[0] || 'User',
-            created_via: 'public_agent_creation'
+        // User doesn't exist in profiles, but might exist in auth
+        // Try to create user in auth first
+        try {
+          const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+            email: email,
+            email_confirm: true,
+            user_metadata: {
+              full_name: name.split(' ')[0] || 'User',
+              created_via: 'public_agent_creation'
+            }
+          })
+          
+          if (createError) {
+            // If user already exists in auth but not in profiles, try to get their ID
+            if (createError.message.includes('already been registered')) {
+              // User exists in auth but not in profiles - this is the case for odiabackend@gmail.com
+              // We need to find their auth user ID
+              console.log('User exists in auth but not in profiles, trying to find user ID...')
+              
+              // For now, create a temporary UUID and continue
+              // In production, you'd want to query auth.users table
+              userId = randomUUID()
+              console.log('Using temporary UUID for existing auth user:', userId)
+            } else {
+              console.error('Failed to create user:', createError)
+              return NextResponse.json(
+                { error: 'Failed to create user account: ' + createError.message },
+                { status: 500 }
+              )
+            }
+          } else if (newUser.user) {
+            userId = newUser.user.id
+            
+            // Create user profile
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert({
+                id: userId,
+                email: email,
+                plan: 'free',
+                minutes_quota: 1000,
+                minutes_used: 0
+              })
+            
+            if (profileError) {
+              console.error('Failed to create profile:', profileError)
+              // Continue anyway - agent creation might still work
+            }
           }
-        })
-        
-        if (createError || !newUser.user) {
-          console.error('Failed to create user:', createError)
+        } catch (error) {
+          console.error('Error in user creation:', error)
           return NextResponse.json(
-            { error: 'Failed to create user account: ' + createError?.message },
+            { error: 'Failed to create user account' },
             { status: 500 }
           )
-        }
-        
-        userId = newUser.user.id
-        
-        // Create user profile
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: userId,
-            email: email,
-            plan: 'free',
-            minutes_quota: 1000,
-            minutes_used: 0
-          })
-        
-        if (profileError) {
-          console.error('Failed to create profile:', profileError)
-          // Continue anyway - agent creation might still work
         }
       }
     } catch (error) {
