@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, AlertTriangle, CreditCard, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+
 
 interface TrialStatus {
   isActive: boolean;
@@ -162,7 +161,7 @@ const UpgradePage: React.FC = () => {
               <div 
                 className="bg-gradient-to-r from-cyan-500 to-blue-500 h-3 rounded-full transition-all duration-300"
                 style={{ 
-                  width: `${Math.min(100, (trialStatus.minutesUsed / trialStatus.totalMinutes) * 100)}%` 
+                  width: `${Math.min(100, (trialStatus.minutesUsed / trialSummary.totalMinutes) * 100)}%` 
                 }}
               ></div>
             </div>

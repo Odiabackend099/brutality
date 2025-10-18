@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Phone, Settings, Trash2, Mic, Play, Pause } from 'lucide-react';
+import { Plus, Trash2, Mic, Play, Pause } from 'lucide-react';
 import CallAgentButton from '@/components/CallAgentButton';
 import { createClient } from '@supabase/supabase-js';
 
@@ -17,7 +17,6 @@ interface Agent {
 const AgentsPage: React.FC = () => {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
 
   useEffect(() => {
     fetchAgents();

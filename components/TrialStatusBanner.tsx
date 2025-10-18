@@ -154,7 +154,7 @@ const TrialStatusBanner: React.FC = () => {
                         : 'bg-green-500'
                   }`}
                   style={{ 
-                    width: `${Math.min(100, (trialStatus.minutesUsed / trialStatus.totalMinutes) * 100)}%` 
+                    width: `${Math.min(100, (trialStatus.minutesUsed / trialSummary.totalMinutes) * 100)}%` 
                   }}
                 ></div>
               </div>
