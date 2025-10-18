@@ -34,39 +34,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Find or create user by email
-    let userId: string
-    
-    // First, try to find existing user by querying profiles table
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .single()
-    
-    if (existingProfile) {
-      userId = existingProfile.id
-    } else {
-      // For now, create a simple user ID and profile without auth
-      // This bypasses the need for Supabase auth
-      userId = randomUUID()
-      
-      // Create user profile with minimal required fields
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: userId,
-          email: email
-        })
-      
-      if (profileError) {
-        console.error('Failed to create profile:', profileError)
-        return NextResponse.json(
-          { error: 'Failed to create user profile: ' + profileError.message },
-          { status: 500 }
-        )
-      }
-    }
+    // Use a simple approach - create agent without user profile
+    // Just use email as identifier
+    const userId = `public_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`
 
     // Generate API key and webhook secret
     const apiKey = `agt_${randomBytes(24).toString('hex')}`
