@@ -34,9 +34,41 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Use a simple approach - create agent without user profile
-    // Just use email as identifier with proper UUID
-    const userId = randomUUID()
+    // Create a proper user in auth.users first, then create agent
+    const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+      email: email,
+      email_confirm: true, // Skip email verification
+      user_metadata: {
+        full_name: name.split(' ')[0] || 'User',
+        created_via: 'public_agent_creation'
+      }
+    })
+    
+    if (createError || !newUser.user) {
+      console.error('Failed to create user:', createError)
+      return NextResponse.json(
+        { error: 'Failed to create user account: ' + createError?.message },
+        { status: 500 }
+      )
+    }
+    
+    const userId = newUser.user.id
+    
+    // Create user profile
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({
+        id: userId,
+        email: email,
+        plan: 'free',
+        minutes_quota: 1000,
+        minutes_used: 0
+      })
+    
+    if (profileError) {
+      console.error('Failed to create profile:', profileError)
+      // Continue anyway - agent creation might still work
+    }
 
     // Generate API key and webhook secret
     const apiKey = `agt_${randomBytes(24).toString('hex')}`
