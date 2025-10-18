@@ -11,7 +11,13 @@ interface Agent {
   id: string
   name: string
   system_prompt: string
-  voice_id: string
+  tts_provider: string
+  tts_voice_id: string
+  llm_provider: string
+  llm_model: string
+  llm_temperature: number
+  llm_max_tokens: number
+  greeting_message: string
   api_key: string
   webhook_url: string
   is_active: boolean
@@ -311,7 +317,12 @@ export default function AgentTestPage() {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm text-slate-400 block mb-1">Voice</label>
-                  <p className="text-white font-medium">{agent?.voice_id}</p>
+                  <p className="text-white font-medium">{agent?.tts_voice_id} ({agent?.tts_provider})</p>
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-400 block mb-1">LLM Model</label>
+                  <p className="text-white font-medium">{agent?.llm_model} ({agent?.llm_provider})</p>
                 </div>
 
                 <div>

@@ -10,17 +10,17 @@ interface CreateAgentModalProps {
 }
 
 const VOICE_OPTIONS = [
-  { id: 'professional_f', name: 'Professional Female', description: 'Clear and confident' },
-  { id: 'professional_m', name: 'Professional Male', description: 'Authoritative and warm' },
-  { id: 'friendly_f', name: 'Friendly Female', description: 'Warm and approachable' },
-  { id: 'friendly_m', name: 'Friendly Male', description: 'Casual and engaging' }
+  { id: 'marcus', name: 'Marcus (US Male)', description: 'Professional and clear' },
+  { id: 'marcy', name: 'Marcy (US Female)', description: 'Friendly and warm' },
+  { id: 'austyn', name: 'Austyn (African Male)', description: 'Authoritative and confident' },
+  { id: 'joslyn', name: 'Joslyn (African Female)', description: 'Warm and approachable' }
 ]
 
 export function CreateAgentModal({ isOpen, onClose }: CreateAgentModalProps) {
   const router = useRouter()
   const [name, setName] = useState('')
   const [systemPrompt, setSystemPrompt] = useState('')
-  const [voiceId, setVoiceId] = useState('professional_f')
+  const [voiceId, setVoiceId] = useState('marcus')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 

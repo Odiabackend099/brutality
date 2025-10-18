@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate voice ID
-    const validVoiceIds = ['professional_f', 'professional_m', 'soft_f', 'warm_m']
+    const validVoiceIds = ['marcus', 'marcy', 'austyn', 'joslyn']
     if (!validVoiceIds.includes(voiceId)) {
       return NextResponse.json(
         { error: 'Invalid voiceId. Must be one of: ' + validVoiceIds.join(', ') },
@@ -51,7 +51,13 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         name,
         system_prompt: systemPrompt,
-        voice_id: voiceId,
+        tts_provider: 'odiadev',
+        tts_voice_id: voiceId,
+        llm_provider: 'groq',
+        llm_model: 'llama-3.1-70b-versatile',
+        llm_temperature: 0.6,
+        llm_max_tokens: 400,
+        greeting_message: 'Hello! Welcome to CallWaiting AI. How can I help you today?',
         api_key: apiKey,
         webhook_secret: webhookSecret,
         is_active: true

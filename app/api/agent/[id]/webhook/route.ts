@@ -1,29 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceSupabase } from '@/lib/supabase-server'
-import { generateTTS } from '@/lib/odiadev-tts'
+import { GroqLLM } from '@/lib/services/llm/groq'
+import { OdiaDevTTS } from '@/lib/services/tts/odiadev'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
-import OpenAI from 'openai'
 
 // Force dynamic rendering for webhook
 export const dynamic = 'force-dynamic'
 
-// Lazy initialization to prevent build-time errors when env vars are missing
-let openai: OpenAI | null = null
-
-function getOpenAIClient(): OpenAI {
-  if (!openai) {
-    const apiKey = process.env.OPENAI_API_KEY
-
-    if (!apiKey) {
-      throw new Error(
-        'OPENAI_API_KEY must be set in environment variables'
-      )
-    }
-
-    openai = new OpenAI({ apiKey })
-  }
-  return openai
-}
+// Initialize services
+const llm = new GroqLLM()
+const tts = new OdiaDevTTS()
 
 export async function POST(
   request: NextRequest,
@@ -87,21 +73,20 @@ export async function POST(
       )
     }
 
-    // Generate AI response using OpenAI
+    // Generate AI response using Groq
     const startTime = Date.now()
-    const client = getOpenAIClient()
-
-    const completion = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: agent.system_prompt },
+    
+    const response = await llm.respond({
+      history: [
         { role: 'user', content: message }
       ],
-      temperature: 0.7,
-      max_tokens: 150
+      systemPrompt: agent.system_prompt || 'You are a professional AI receptionist. Be concise and helpful. Capture caller details when relevant.',
+      model: agent.llm_model || 'llama-3.1-70b-versatile',
+      temperature: agent.llm_temperature || 0.6,
+      maxTokens: agent.llm_max_tokens || 400
     })
 
-    const replyText = completion.choices[0]?.message?.content || 'I apologize, I could not generate a response.'
+    const replyText = response.content || 'I apologize, I could not generate a response.'
     const inferenceTime = Math.ceil((Date.now() - startTime) / 1000)
 
     // Log inference usage
@@ -111,22 +96,19 @@ export async function POST(
       meta: { 
         message_length: message.length,
         reply_length: replyText.length,
-        model: 'gpt-4o-mini'
+        model: agent.llm_model || 'llama-3.1-70b-versatile',
+        provider: 'groq'
       }
     })
 
-    // Generate TTS for response
+    // Generate TTS for response using ODIADEV TTS
     const ttsStartTime = Date.now()
-    const ttsResult = await generateTTS(replyText, agent.voice_id)
+    const ttsResult = await tts.synthesize({
+      text: replyText,
+      voiceId: agent.tts_voice_id || 'marcus'
+    })
 
-    if (ttsResult.error) {
-      return NextResponse.json(
-        { error: 'Failed to generate audio' },
-        { status: 500 }
-      )
-    }
-
-    const ttsTime = ttsResult.duration || Math.ceil((Date.now() - ttsStartTime) / 1000)
+    const ttsTime = Math.ceil((Date.now() - ttsStartTime) / 1000)
 
     // Log TTS usage
     await addUsage(agent.user_id, agent.id, {
@@ -134,14 +116,15 @@ export async function POST(
       kind: 'tts',
       meta: { 
         reply_length: replyText.length,
-        voice_id: agent.voice_id
+        voice_id: agent.tts_voice_id || 'marcus',
+        provider: 'odiadev'
       }
     })
 
     return NextResponse.json({
       replyText,
       audioUrl: ttsResult.audioUrl,
-      duration: ttsResult.duration
+      duration: ttsTime
     })
 
   } catch (error) {
