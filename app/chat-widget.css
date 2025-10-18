@@ -1,0 +1,20 @@
+/* Animation delay classes for the chat widget typing indicators */
+.animation-delay-100 {
+  animation-delay: 100ms !important;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms !important;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms !important;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms !important;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms !important;
+}

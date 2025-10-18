@@ -81,6 +81,7 @@ export const metadata = {
 };
 
 import './globals.css';
+import './chat-widget.css';
 import ChatWidget from '@/components/ChatWidget';
 import TestAdminPanel from '@/components/TestAdminPanel';
 

@@ -1,45 +1,119 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
-import { sendChatMessage, getPageContext, type ChatMessage } from '@/lib/groq-chat';
+import { MessageCircle, X, Send, Minimize2, Mic, Volume2 } from 'lucide-react';
+import { ChatMessage, getPageContext } from '@/lib/groq-chat-widget';
+
+interface ChatWidgetProps {
+  className?: string;
+}
 
 interface MessageBubbleProps {
   message: ChatMessage;
-  isStreaming?: boolean;
+  isTyping?: boolean;
 }
 
-function MessageBubble({ message, isStreaming = false }: MessageBubbleProps) {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isTyping = false }) => {
+  const isUser = message.role === 'user';
+  
   return (
-    <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`}>
       <div
         className={`max-w-[80%] px-4 py-2 rounded-2xl ${
-          message.role === 'user'
-            ? 'bg-cyan-500 text-white'
-            : 'bg-slate-700 text-slate-100'
+          isUser
+            ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white ml-4'
+            : 'bg-slate-100 text-slate-800 mr-4 border border-slate-200'
         }`}
       >
         <p className="text-sm leading-relaxed">
           {message.content}
-          {isStreaming && (
-            <span className="inline-block w-2 h-4 bg-current animate-pulse ml-1" />
+          {isTyping && (
+            <span className="inline-block ml-1">
+              <span className="animate-pulse">●</span>
+              <span className="animate-pulse animation-delay-200">●</span>
+              <span className="animate-pulse animation-delay-400">●</span>
+            </span>
           )}
         </p>
       </div>
     </div>
   );
-}
+};
 
-export default function ChatWidget() {
+const TypingIndicator: React.FC = () => (
+  <div className="flex justify-start mb-3">
+    <div className="bg-slate-100 border border-slate-200 px-4 py-3 rounded-2xl mr-4">
+      <div className="flex space-x-1">
+        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce animation-delay-100"></div>
+        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce animation-delay-200"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [ttsSupported, setTtsSupported] = useState(false);
+  // Check browser support for speech APIs
+  useEffect(() => {
+  setSpeechSupported(!!(window as any)?.webkitSpeechRecognition || !!(window as any)?.SpeechRecognition);
+    setTtsSupported(!!window?.speechSynthesis);
+  }, []);
+  // Speech-to-text logic
+  const recognitionRef = useRef<any>(null);
+  const handleMicClick = () => {
+    if (!speechSupported) return;
+    if (isRecording) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+      setIsRecording(false);
+      inputRef.current?.focus();
+    };
+    recognition.onerror = () => {
+      setIsRecording(false);
+    };
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+  };
+  // Text-to-speech for AI responses
+  const speak = (text: string) => {
+    if (!ttsSupported || !text) return;
+    const utter = new window.SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    window.speechSynthesis.speak(utter);
+  };
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      role: 'assistant',
+      content: 'Hi! I\'m your CallWaitingAI assistant. How can I help you today? 😊',
+      timestamp: new Date()
+    }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [currentStreamingMessage, setCurrentStreamingMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -47,52 +121,119 @@ export default function ChatWidget() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, currentStreamingMessage]);
+  }, [messages, isTyping, streamingMessage]);
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  const getCurrentPage = (): string => {
+    if (typeof window !== 'undefined') {
+      return getPageContext(window.location.pathname);
+    }
+    return 'unknown';
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       role: 'user',
-      content: input.trim()
+      content: input.trim(),
+      timestamp: new Date()
     };
 
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput('');
     setIsLoading(true);
-    setIsStreaming(true);
-    setCurrentStreamingMessage('');
+    setIsTyping(true);
+    setStreamingMessage('');
+
+    // Set timeout fallback
+    timeoutRef.current = setTimeout(() => {
+      if (isLoading) {
+        setIsTyping(false);
+        setIsLoading(false);
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'Apologies, there\'s a delay. Let me retry that for you...',
+          timestamp: new Date()
+        }]);
+        // Retry logic could be added here
+      }
+    }, 10000);
 
     try {
-      const pageContext = getPageContext(pathname);
-      const stream = sendChatMessage(newMessages, pageContext);
+      const response = await fetch('/api/chat/widget', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: newMessages.slice(-5), // Keep last 5 messages for context
+          page: getCurrentPage()
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      let assistantResponse = '';
       
-      let assistantContent = '';
-      
-      for await (const chunk of stream) {
-        if (chunk.done) {
-          // Add the complete assistant message to the conversation
-          setMessages(prev => [...prev, {
-            role: 'assistant',
-            content: assistantContent
-          }]);
-          setCurrentStreamingMessage('');
-          setIsStreaming(false);
-        } else {
-          assistantContent = chunk.content;
-          setCurrentStreamingMessage(assistantContent);
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+        
+        const chunk = new TextDecoder().decode(value);
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.content) {
+                assistantResponse += data.content;
+                setStreamingMessage(assistantResponse);
+              }
+              if (data.done) {
+                setIsTyping(false);
+                setMessages(prev => [...prev, {
+                  role: 'assistant',
+                  content: assistantResponse,
+                  timestamp: new Date()
+                }]);
+                setStreamingMessage('');
+              }
+            } catch (e) {
+              // Ignore parsing errors for incomplete chunks
+            }
+          }
         }
       }
     } catch (error) {
       console.error('Chat error:', error);
+      setIsTyping(false);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: 'Oops, something went wrong. Please try again later.',
+        timestamp: new Date()
       }]);
+      setStreamingMessage('');
     } finally {
       setIsLoading(false);
-      setIsStreaming(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     }
   };
 
@@ -103,102 +244,119 @@ export default function ChatWidget() {
     }
   };
 
-  const clearChat = () => {
-    setMessages([]);
-    setCurrentStreamingMessage('');
-  };
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      {isOpen ? (
-        <div className="w-80 h-96 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-slate-700">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                <MessageCircle className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-white">ODIADEV AI Assistant</h3>
-                <p className="text-xs text-slate-400">Powered by GROQ</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={clearChat}
-                className="text-slate-400 hover:text-slate-200 transition-colors text-xs"
-              >
-                Clear
-              </button>
-            <button
-              onClick={() => setIsOpen(false)}
-                className="text-slate-400 hover:text-slate-200 transition-colors"
-            >
-                <X className="w-4 h-4" />
-            </button>
-          </div>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {messages.length === 0 && (
-              <div className="text-center text-slate-400 text-sm py-8">
-                <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p>Hi! I'm your ODIADEV AI Assistant.</p>
-                <p>How can I help you today?</p>
-              </div>
-            )}
-
-            {messages.map((message, index) => (
-              <MessageBubble key={index} message={message} />
-            ))}
-            
-            {isStreaming && currentStreamingMessage && (
-              <MessageBubble 
-                message={{ role: 'assistant', content: currentStreamingMessage }} 
-                isStreaming={true}
-              />
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="p-4 border-t border-slate-700">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me anything about CallWaiting AI..."
-                className="flex-1 bg-slate-800 text-white placeholder-slate-400 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                disabled={isLoading}
-              />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || isLoading}
-                className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-slate-600 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
+  if (!isOpen) {
+    return (
+      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 hover:from-purple-600 hover:via-blue-600 hover:to-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group"
+          className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2 group"
         >
-          <MessageCircle className="w-5 h-5" />
-          <span className="font-medium">Chat with us</span>
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+          <MessageCircle size={20} className="text-cyan-400" />
+          <span className="text-sm font-medium">Chat with us</span>
         </button>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-80 h-96 flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <MessageCircle size={20} className="text-cyan-400" />
+            <div>
+              <h3 className="font-semibold text-sm">ODIADEV Assistant</h3>
+              <p className="text-xs text-slate-300">Always here to help</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-slate-300 hover:text-white transition-colors p-1 rounded"
+            >
+              <Minimize2 size={16} />
+            </button>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-slate-300 hover:text-white transition-colors p-1 rounded"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+          {messages.map((message, index) => (
+            <MessageBubble key={index} message={message} />
+          ))}
+          
+          {isTyping && (
+            <>
+              {streamingMessage ? (
+                <div className="flex items-center">
+                  <MessageBubble 
+                    message={{
+                      role: 'assistant',
+                      content: streamingMessage,
+                      timestamp: new Date()
+                    }}
+                    isTyping={true}
+                  />
+                  {ttsSupported && (
+                    <button
+                      className="ml-2 p-1 rounded hover:bg-slate-200"
+                      title="Play response"
+                      onClick={() => speak(streamingMessage)}
+                    >
+                      <Volume2 size={16} />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <TypingIndicator />
+              )}
+            </>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <div className="p-4 border-t border-slate-200 bg-white">
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={handleMicClick}
+              disabled={!speechSupported || isLoading}
+              className={`p-2 rounded-lg border ${isRecording ? 'bg-cyan-100 border-cyan-500' : 'bg-slate-100 border-slate-300'} transition-colors`}
+              title={isRecording ? 'Stop recording' : 'Speak'}
+            >
+              <Mic size={16} className={isRecording ? 'animate-pulse text-cyan-500' : 'text-slate-500'} />
+            </button>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me anything..."
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm"
+              disabled={isLoading}
+            />
+            <button
+              onClick={handleSend}
+              disabled={isLoading || !input.trim()}
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 disabled:from-slate-300 disabled:to-slate-400 text-white p-2 rounded-lg transition-all duration-200 flex items-center justify-center min-w-[40px]"
+            >
+              <Send size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default ChatWidget;
