@@ -61,7 +61,7 @@ export default function CallsPage() {
         twilio_call_sid: item.twilio_call_sid,
         from_number: item.from_number,
         to_number: item.to_number,
-        agent_name: item.agents.name,
+        agent_name: item.agents?.[0]?.name || 'Unknown Agent',
         duration_seconds: item.duration_seconds,
         status: item.status,
         transcript: item.transcript,

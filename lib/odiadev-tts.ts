@@ -111,7 +111,7 @@ export async function generateTTS(text: string, voiceId: VoiceId): Promise<TTSRe
  * @param voiceId - Voice preset to use
  * @returns Audio data with duration
  */
-export async function generateTTSFallback(text: string, voiceId: VoiceId): Promise<TTSResponse> {
+export async function generateTTSFallback(_text: string, _voiceId: VoiceId): Promise<TTSResponse> {
   // This is a client-side fallback - would need to be implemented in the frontend
   // For now, return an error indicating fallback is needed
   return {
