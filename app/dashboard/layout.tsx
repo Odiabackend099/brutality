@@ -245,7 +245,6 @@ export default function DashboardLayout({
 
         {/* Page content */}
         <main className="p-6">
-          <TrialStatusBanner />
           <ErrorBoundary>
             {children}
           </ErrorBoundary>
