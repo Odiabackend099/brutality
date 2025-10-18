@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Logo from '@/components/Logo'
 
 export const metadata = {
   title: 'Contact Us — CallWaiting AI',
@@ -11,8 +12,8 @@ export default function ContactPage() {
       {/* Header */}
       <header className="border-b border-slate-800">
         <div className="container mx-auto px-6 py-4">
-          <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition">
-            CallWaiting AI
+          <Link href="/">
+            <Logo size="lg" showText={true} />
           </Link>
         </div>
       </header>

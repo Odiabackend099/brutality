@@ -5,6 +5,7 @@ import { getUsageStats, getCalls } from '@/lib/api-client'
 import { getUser } from '@/lib/auth-helpers'
 import { UsageQuota, QuotaGrid } from '@/components/UsageQuota'
 import { CreateAgentModal } from '@/components/CreateAgentModal'
+import QuickAgentTest from '@/components/QuickAgentTest'
 import {
   Phone,
   Users,
@@ -183,6 +184,9 @@ export default function DashboardPage() {
           />
         </QuotaGrid>
       </div>
+
+      {/* Agent Testing */}
+      <QuickAgentTest />
 
       {/* Activity Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
 import { createPaymentLink, PLANS, PlanType } from '@/lib/flutterwave'
+import { shouldBypassPayment, logTestModeActivity } from '@/lib/test-mode'
 import { randomBytes } from 'crypto'
 
 // Force dynamic rendering since we use cookies for auth
@@ -23,6 +24,24 @@ export async function POST(request: NextRequest) {
     // Parse request body
     const body = await request.json()
     const { plan } = body
+
+    // Check if user is test admin (bypass payment)
+    if (shouldBypassPayment(user)) {
+      logTestModeActivity('Payment bypassed for test admin', user.id, { plan });
+      
+      return NextResponse.json({
+        success: true,
+        test_mode: true,
+        message: 'Payment bypassed for test admin user',
+        data: {
+          plan: plan || 'test-admin',
+          amount: 0,
+          currency: 'USD',
+          status: 'active',
+          test_mode: true
+        }
+      });
+    }
 
     // Validate plan
     if (!plan || !PLANS[plan as PlanType]) {

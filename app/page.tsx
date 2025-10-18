@@ -2,8 +2,8 @@
 
 import { ArrowRight, Phone, Clock, MessageSquare, CheckCircle, Mail } from 'lucide-react';
 import { useState } from 'react';
-import { ChatWidget } from '@/components/ChatWidget';
 import PricingSection from '@/components/PricingSection';
+import Logo from '@/components/Logo';
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -29,10 +29,7 @@ export default function Page() {
     <>
       {/* Navigation */}
       <nav className="max-w-7xl mx-auto px-6 pt-6 flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-3">
-          <Phone className="w-6 h-6 text-cyan-400" />
-          <span className="font-bold text-lg">CallWaiting AI</span>
-        </div>
+        <Logo size="md" showText={true} />
         <div className="flex items-center gap-3">
           <a
             href="/login"
@@ -64,14 +61,14 @@ export default function Page() {
 
             {/* Main Headline */}
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6">
-              Let AI Answer Your Calls
+              Never Miss Another Call
               <br />
-              <span className="text-cyan-400">When You Can&apos;t</span>
+              <span className="text-cyan-400">Your 24/7 AI Receptionist</span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Never miss a lead, client, or customer. Our voice AI picks up, speaks clearly, and gets the job done—even when you&apos;re busy.
+              Powered by ODIADEV AI TTS — featuring voices Marcus, Marcy, Austyn & Joslyn.
             </p>
 
             {/* CTA Buttons */}
@@ -106,75 +103,32 @@ export default function Page() {
                 <p className="text-slate-400">Watch AI answer a real customer call in seconds</p>
               </div>
 
-              {/* Call Flow Steps */}
-              <div className="space-y-6 max-w-3xl mx-auto">
-                {/* Step 1: Call Comes In */}
-                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center border border-cyan-400/30">
-                    <Phone className="w-5 h-5 text-cyan-400" />
+              {/* AI Demo Video */}
+              <div className="relative rounded-xl overflow-hidden bg-slate-800/50">
+                <video
+                  className="w-full h-auto max-w-4xl mx-auto"
+                  controls
+                  preload="metadata"
+                >
+                  <source src="/animations/ai-demo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Video Overlay with Call Info */}
+                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2 text-white text-sm">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span>Live Demo: +1 (218) 400-3410</span>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold mb-1">📞 Call Comes In</h4>
-                    <p className="text-slate-400 text-sm">Customer calls your business number</p>
-                  </div>
-                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:00</div>
                 </div>
+              </div>
 
-                {/* Step 2: AI Answers */}
-                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center border border-blue-400/30">
-                    <MessageSquare className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold mb-1">🤖 AI Answers Instantly</h4>
-                    <p className="text-slate-300 text-sm italic mb-2">&quot;Hello! Thank you for calling. How can I help you today?&quot;</p>
-                    <p className="text-slate-400 text-xs">Professional, human-like voice greets caller</p>
-                  </div>
-                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:02</div>
-                </div>
-
-                {/* Step 3: Customer Speaks */}
-                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-400/20 flex items-center justify-center border border-emerald-400/30">
-                    <span className="text-emerald-400 text-lg">👤</span>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold mb-1">💬 Customer Shares Details</h4>
-                    <p className="text-slate-300 text-sm italic mb-2">&quot;Hi, I&apos;m interested in your pricing. My name is John and my email is john@example.com&quot;</p>
-                    <p className="text-slate-400 text-xs">AI listens and captures key information</p>
-                  </div>
-                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:15</div>
-                </div>
-
-                {/* Step 4: AI Responds */}
-                <div className="flex items-start gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-400/20 flex items-center justify-center border border-purple-400/30">
-                    <MessageSquare className="w-5 h-5 text-purple-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold mb-1">💡 AI Provides Information</h4>
-                    <p className="text-slate-300 text-sm italic mb-2">&quot;Great! I&apos;ll send our pricing details to john@example.com right away. Anything else I can help with?&quot;</p>
-                    <p className="text-slate-400 text-xs">Answers questions naturally and helpfully</p>
-                  </div>
-                  <div className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full">0:20</div>
-                </div>
-
-                {/* Step 5: Lead Captured */}
-                <div className="flex items-start gap-4 bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-xl p-4 border border-cyan-500/30">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/30 flex items-center justify-center border border-cyan-400/50">
-                    <CheckCircle className="w-5 h-5 text-cyan-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-semibold mb-1">✅ Lead Delivered to You</h4>
-                    <p className="text-slate-300 text-sm mb-2">
-                      <strong className="text-cyan-400">Name:</strong> John •
-                      <strong className="text-cyan-400 ml-2">Email:</strong> john@example.com •
-                      <strong className="text-cyan-400 ml-2">Interest:</strong> Pricing
-                    </p>
-                    <p className="text-slate-400 text-xs">Instantly sent via WhatsApp, Email, or CRM</p>
-                  </div>
-                  <div className="text-xs text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full">0:25</div>
-                </div>
+              {/* Video Description */}
+              <div className="mt-6 text-center">
+                <p className="text-slate-400 text-sm">
+                  This is a real demonstration of CallWaiting AI answering a customer call. 
+                  The AI responds instantly with natural, human-like speech powered by ODIADEV technology.
+                </p>
               </div>
 
               {/* Call to Action */}
@@ -430,10 +384,7 @@ export default function Page() {
       <footer className="border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <Phone className="w-6 h-6 text-cyan-400" />
-              <span className="font-bold text-lg">CallWaiting AI</span>
-            </div>
+            <Logo size="md" showText={true} />
             <div className="flex gap-8 text-sm text-slate-400">
               <a href="#pricing" className="hover:text-white transition-colors">
                 Pricing
@@ -441,13 +392,14 @@ export default function Page() {
               <a href="#faq" className="hover:text-white transition-colors">
                 FAQ
               </a>
-              <a href="mailto:callwaitingai@gmail.com" className="hover:text-white transition-colors">
+              <a href="mailto:support@callwaitingai.dev" className="hover:text-white transition-colors">
                 Contact
               </a>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
             <p>&copy; {new Date().getFullYear()} CallWaiting AI. All rights reserved.</p>
+            <p className="mt-2 text-slate-600">Powered by ODIADEV AI TTS</p>
           </div>
         </div>
       </footer>
@@ -461,9 +413,6 @@ export default function Page() {
           Get Early Access
         </a>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </>
   );
 }

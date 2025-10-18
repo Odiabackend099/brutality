@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getUser, signOut } from '@/lib/auth-helpers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import Logo from '@/components/Logo'
+import TrialStatusBanner from '@/components/TrialStatusBanner'
 import Link from 'next/link'
 import {
   Phone,
@@ -19,7 +21,9 @@ import {
   AlertCircle,
   CheckCircle,
   Mail,
-  Sparkles
+  Sparkles,
+  Play,
+  Mic
 } from 'lucide-react'
 
 export default function DashboardLayout({
@@ -81,7 +85,10 @@ export default function DashboardLayout({
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Phone Numbers', href: '/dashboard/phone', icon: Phone },
+    { name: 'Call Flows', href: '/dashboard/flows', icon: Play },
     { name: 'Call Logs', href: '/dashboard/calls', icon: MessageSquare },
+    { name: 'Agents', href: '/dashboard/agents', icon: Mic },
     { name: 'Payments', href: '/dashboard/payments', icon: CreditCard },
     { name: 'Leads', href: '/dashboard/leads', icon: Users },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
@@ -111,9 +118,8 @@ export default function DashboardLayout({
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between p-6 border-b border-slate-800">
-            <Link href="/" className="flex items-center gap-3">
-              <Phone className="w-6 h-6 text-cyan-300" />
-              <span className="font-bold text-lg">CallWaiting AI</span>
+            <Link href="/">
+              <Logo size="md" showText={true} />
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -239,6 +245,7 @@ export default function DashboardLayout({
 
         {/* Page content */}
         <main className="p-6">
+          <TrialStatusBanner />
           <ErrorBoundary>
             {children}
           </ErrorBoundary>

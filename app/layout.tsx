@@ -1,26 +1,88 @@
 export const metadata = {
   metadataBase: new URL('https://www.callwaitingai.dev'),
-  title: 'CallWaiting AI — Let AI Answer Your Calls When You Cannot',
+  title: 'CallWaiting AI — Never Miss Another Call | Your 24/7 AI Receptionist',
   description:
-    'Never miss a lead, client, or customer. Our voice AI picks up, speaks clearly, and gets the job done—even when you are busy. Setup in 48 hours.',
+    'Never miss a lead, client, or customer. Our voice AI picks up, speaks clearly, and gets the job done—even when you are busy. Powered by ODIADEV AI TTS technology.',
+  keywords: [
+    'AI receptionist',
+    'call answering service',
+    'voice AI',
+    'ODIADEV AI TTS',
+    'business phone system',
+    'lead capture',
+    'customer service AI',
+    'automated call handling'
+  ],
+  authors: [{ name: 'ODIADEV AI LTD' }],
+  creator: 'ODIADEV AI LTD',
+  publisher: 'CallWaiting AI',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: 'CallWaiting AI — Let AI Answer Your Calls When You Cannot',
+    title: 'CallWaiting AI — Never Miss Another Call | Your 24/7 AI Receptionist',
     description:
-      'Never miss a lead, client, or customer. Voice AI that picks up when you cannot. Human-like conversations, instant responses.',
+      'Never miss a lead, client, or customer. Voice AI that picks up when you cannot. Human-like conversations powered by ODIADEV AI TTS technology.',
     url: 'https://www.callwaitingai.dev',
     siteName: 'CallWaiting AI',
-    images: [{ url: '/og.jpg', width: 1200, height: 630 }],
-    type: 'website'
+    images: [
+      { 
+        url: '/og.jpg', 
+        width: 1200, 
+        height: 630,
+        alt: 'CallWaiting AI - 24/7 AI Receptionist'
+      }
+    ],
+    type: 'website',
+    locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CallWaiting AI — AI Answers When You Cannot',
-    description: 'Voice AI that sounds human. Answers calls instantly. Never miss a lead.',
-    images: ['/og.jpg']
+    title: 'CallWaiting AI — Never Miss Another Call',
+    description: 'Voice AI that sounds human. Answers calls instantly. Never miss a lead. Powered by ODIADEV AI TTS.',
+    images: ['/og.jpg'],
+    creator: '@callwaitingai',
+    site: '@callwaitingai'
+  },
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico'
+  },
+  appleWebApp: {
+    title: 'CallWaiting AI',
+    statusBarStyle: 'default',
+    capable: true
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'msapplication-TileColor': '#0F172A',
+    'theme-color': '#06B6D4'
   }
 };
 
 import './globals.css';
+import ChatWidget from '@/components/ChatWidget';
+import TestAdminPanel from '@/components/TestAdminPanel';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // JSON-LD structured data for SEO
@@ -95,9 +157,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full bg-slate-950 text-slate-100 antialiased">
         {children}
+        <ChatWidget />
+        <TestAdminPanel isVisible={process.env.TEST_MODE === 'true'} />
       </body>
     </html>
   );
