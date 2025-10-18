@@ -57,12 +57,9 @@ export async function POST(request: NextRequest) {
         .insert({
           id: userId,
           email: email,
-          full_name: name.split(' ')[0] || 'User',
           plan: 'free',
           minutes_quota: 1000, // Give generous quota
-          minutes_used: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          minutes_used: 0
         })
       
       if (profileError) {
