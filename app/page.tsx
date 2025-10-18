@@ -38,10 +38,10 @@ export default function Page() {
             Log In
           </a>
           <a
-            href="/login"
+            href="/signup"
             className="inline-flex items-center justify-center rounded-full px-5 py-2.5 font-semibold bg-white text-slate-900 hover:bg-slate-100 transition-colors"
           >
-            Get Early Access
+            Sign Up Free
           </a>
         </div>
       </nav>
@@ -74,10 +74,10 @@ export default function Page() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <a
-                href="#early-access"
+                href="/signup"
                 className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-lg bg-white text-slate-900 hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl"
               >
-                Get Early Access
+                Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </a>
               <a
@@ -233,15 +233,24 @@ export default function Page() {
             </div>
 
             {/* Call CTA */}
-            <div className="text-center">
-              <a
-                href={`tel:${demoPhone}`}
-                className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-xl bg-white text-slate-900 hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl"
-              >
-                <Phone className="w-6 h-6" />
-                Call {demoPhone}
-              </a>
-              <p className="mt-4 text-sm text-slate-500">Available 24/7 • Average wait time: 0 seconds</p>
+            <div className="text-center space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a
+                  href={`tel:${demoPhone}`}
+                  className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-xl bg-white text-slate-900 hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl"
+                >
+                  <Phone className="w-6 h-6" />
+                  Call {demoPhone}
+                </a>
+                <a
+                  href="/signup"
+                  className="inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 font-bold text-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all shadow-lg hover:shadow-xl"
+                >
+                  <ArrowRight className="w-6 h-6" />
+                  Get Your AI Now
+                </a>
+              </div>
+              <p className="text-sm text-slate-500">Available 24/7 • Average wait time: 0 seconds</p>
             </div>
           </div>
         </div>
@@ -268,69 +277,48 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Early Access / Waitlist Form */}
-      <section id="early-access" className="py-16 md:py-24">
-        <div className="max-w-2xl mx-auto px-6">
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-8 md:p-12">
+      {/* Ready to Start Section */}
+      <section id="get-started" className="py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/40 to-slate-800/40 p-8 md:p-12">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Get Early Access
+                Ready to Never Miss Another Call?
               </h2>
-              <p className="text-lg text-slate-400">
-                Be among the first to try CallWaiting AI. We&apos;ll notify you when we launch.
+              <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                Join hundreds of businesses already using CallWaiting AI. Start your free trial today and experience the future of call handling.
               </p>
             </div>
 
-            {submitted ? (
-              <div className="text-center py-8">
-                <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">You&apos;re on the list!</h3>
-                <p className="text-slate-400">We&apos;ll reach out soon with next steps.</p>
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-400/10 border border-cyan-400/20 mb-4">
+                  <CheckCircle className="w-8 h-8 text-cyan-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">5 Minutes Free</h3>
+                <p className="text-slate-400">Test our AI with no commitment. See how it works with your actual calls.</p>
               </div>
-            ) : (
-              <form onSubmit={handleEarlyAccess} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
-                  />
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 mb-4">
+                  <Clock className="w-8 h-8 text-emerald-400" />
                 </div>
+                <h3 className="text-xl font-bold mb-2">48-Hour Setup</h3>
+                <p className="text-slate-400">We configure everything for you. Just provide your phone number and preferences.</p>
+              </div>
+            </div>
 
-                <div>
-                  <label htmlFor="whatsapp" className="block text-sm font-medium text-slate-300 mb-2">
-                    WhatsApp Number <span className="text-slate-500">(Optional)</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="whatsapp"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    placeholder="+1 (555) 000-0000"
-                    className="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-lg bg-white text-slate-900 hover:bg-slate-100 transition-colors shadow-lg"
-                >
-                  <Mail className="w-5 h-5 mr-2" />
-                  Request Early Access
-                </button>
-
-                <p className="text-xs text-slate-500 text-center">
-                  We respect your privacy. We&apos;ll only use this to notify you when we launch. No spam, ever.
-                </p>
-              </form>
-            )}
+            <div className="text-center space-y-4">
+              <a
+                href="/signup"
+                className="inline-flex items-center justify-center gap-3 rounded-full px-12 py-5 font-bold text-2xl bg-white text-slate-900 hover:bg-slate-100 transition-all shadow-xl hover:shadow-2xl"
+              >
+                <ArrowRight className="w-6 h-6" />
+                Start Free Trial Now
+              </a>
+              <p className="text-sm text-slate-500">
+                No credit card required • 5 minutes free • Setup in 48 hours
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -407,10 +395,22 @@ export default function Page() {
       {/* Mobile CTA */}
       <div className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
         <a
-          href="#early-access"
-          className="inline-flex w-full items-center justify-center rounded-full px-6 py-4 font-semibold bg-white text-slate-900 hover:bg-slate-100 transition-colors shadow-2xl"
+          href="/signup"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all shadow-2xl"
         >
-          Get Early Access
+          <ArrowRight className="w-5 h-5" />
+          Start Free Trial
+        </a>
+      </div>
+
+      {/* Desktop Floating CTA */}
+      <div className="fixed bottom-6 right-6 z-50 hidden md:block">
+        <a
+          href="/signup"
+          className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-4 font-bold text-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all shadow-xl hover:shadow-2xl animate-pulse"
+        >
+          <ArrowRight className="w-5 h-5" />
+          Start Free Trial
         </a>
       </div>
     </>
