@@ -34,46 +34,13 @@ function LoginForm() {
         return
       }
 
-      // Poll session endpoint until session is confirmed (max 10 attempts)
-      console.log('🔵 Waiting for session sync...')
-      const maxAttempts = 10
-      let attempts = 0
-      let sessionConfirmed = false
+      // Simple session sync - just wait a moment for cookies to set
+      console.log('🔵 Syncing session...')
+      await new Promise(resolve => setTimeout(resolve, 500))
 
-      while (attempts < maxAttempts && !sessionConfirmed) {
-        await new Promise(resolve => setTimeout(resolve, 300 * (attempts + 1))) // Exponential backoff: 300ms, 600ms, 900ms...
-
-        try {
-          const response = await fetch('/api/auth/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ action: 'refresh' }),
-          })
-
-          if (response.ok) {
-            const result = await response.json()
-            if (result.ok && result.user) {
-              sessionConfirmed = true
-              console.log('✅ Session confirmed:', result.user.email)
-            }
-          }
-        } catch (syncError) {
-          console.warn('Session sync attempt failed:', syncError)
-        }
-
-        attempts++
-      }
-
-      if (sessionConfirmed) {
-        // Successful sign in with confirmed session - redirect
-        console.log('✅ Sign in successful, redirecting to', redirect)
-        window.location.href = redirect
-      } else {
-        console.warn('⚠️ Session sync timeout after', attempts, 'attempts')
-        setError('Login successful but session sync timed out. Please try refreshing the page.')
-        setLoading(false)
-      }
+      // Successful sign in - redirect immediately
+      console.log('✅ Sign in successful, redirecting to', redirect)
+      window.location.href = redirect
     } catch (err: any) {
       console.error('🔴 Sign in exception:', err)
       setError(err.message || 'Failed to sign in')

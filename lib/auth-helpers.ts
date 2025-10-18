@@ -59,13 +59,21 @@ export async function signIn(data: SignInData): Promise<AuthResponse> {
 
     // Sync session cookies on server so middleware sees session
     try {
-      await fetch('/api/auth/session', {
+      const syncResponse = await fetch('/api/auth/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ action: 'refresh' }),
       })
-    } catch {}
+      
+      if (!syncResponse.ok) {
+        console.warn('Session sync returned:', syncResponse.status)
+      }
+    } catch (syncError) {
+      console.warn('Session sync failed:', syncError)
+      // Don't fail the login if sync fails - cookies might already be set
+    }
+    
     return { data: authData }
   } catch (err: any) {
     return { error: { message: err.message || 'Sign in failed' } }
