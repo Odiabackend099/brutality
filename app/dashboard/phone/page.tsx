@@ -61,7 +61,7 @@ export default function PhoneNumbersPage() {
         id: item.id,
         phone_number: item.phone_number,
         agent_id: item.agent_id,
-        agent_name: item.agents.name,
+        agent_name: item.agents?.[0]?.name || 'Unknown Agent',
         is_active: item.is_active,
         created_at: item.created_at
       })) || [];
