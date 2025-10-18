@@ -21,7 +21,7 @@ export async function GET() {
       !supabaseUrl.includes('your-project')
 
     const status = {
-      status: missingVars.length === 0 && isSupabaseConfigured ? 'healthy' : 'unhealthy',
+      status: missingVars.length === 0 && isSupabaseConfigured ? 'ok' : 'error',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV,
       version: '1.0.0',
@@ -44,7 +44,7 @@ export async function GET() {
   } catch {
     return NextResponse.json(
       { 
-        status: 'unhealthy', 
+        status: 'error', 
         error: 'Health check failed',
         timestamp: new Date().toISOString()
       },

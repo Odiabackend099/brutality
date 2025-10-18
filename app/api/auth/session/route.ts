@@ -6,6 +6,79 @@ import { randomUUID } from 'crypto'
 // Force dynamic rendering since we use cookies
 export const dynamic = 'force-dynamic'
 
+// Get current session status
+export async function GET() {
+  const requestId = randomUUID()
+  const timestamp = new Date().toISOString()
+
+  console.log(`[${requestId}] Auth session check started`, {
+    timestamp
+  })
+
+  const cookieStore = cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          try {
+            cookieStore.set({ name, value, ...options })
+          } catch {
+            // Cookie setting can fail during static generation - ignore
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.set({ name, value: '', ...options })
+          } catch {
+            // Cookie removal can fail during static generation - ignore
+          }
+        },
+      },
+    }
+  )
+
+  try {
+    // Use getUser() for security - validates the session with Supabase
+    const { data, error } = await supabase.auth.getUser()
+
+    if (error) {
+      console.log(`[${requestId}] No active session`)
+      return NextResponse.json(
+        { authenticated: false, session: null, requestId },
+        { status: 401 }
+      )
+    }
+
+    console.log(`[${requestId}] ✅ Active session for user:`, {
+      email: data.user.email,
+      userId: data.user.id
+    })
+
+    return NextResponse.json({ 
+      authenticated: true, 
+      user: {
+        id: data.user.id,
+        email: data.user.email
+      },
+      requestId 
+    })
+  } catch (e: any) {
+    console.error(`[${requestId}] ❌ Session check exception:`, {
+      error: e?.message || 'Unknown error'
+    })
+
+    return NextResponse.json(
+      { authenticated: false, error: e?.message || 'Internal server error', requestId },
+      { status: 500 }
+    )
+  }
+}
+
 // Sync client-side session to server cookies after sign-in/sign-out
 export async function POST(req: NextRequest) {
   const requestId = randomUUID()
