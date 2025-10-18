@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Mic, Play, Pause } from 'lucide-react';
 import CallAgentButton from '@/components/CallAgentButton';
-import { createClient } from '@supabase/supabase-js';
+import { getUser } from '@/lib/auth-helpers';
+import { supabase } from '@/lib/supabase-client';
 
 interface Agent {
   id: string;
@@ -17,6 +18,7 @@ interface Agent {
 const AgentsPage: React.FC = () => {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     fetchAgents();
@@ -24,18 +26,20 @@ const AgentsPage: React.FC = () => {
 
   const fetchAgents = async () => {
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
+      // Get user using the same auth helper as other dashboard pages
+      const { data: userData, error: userError } = await getUser();
+      if (userError || !userData?.user) {
+        console.error('User not authenticated:', userError);
+        return;
+      }
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      setUser(userData.user);
 
+      // Fetch agents using the authenticated user's ID
       const { data, error } = await supabase
         .from('agents')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userData.user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -43,6 +47,7 @@ const AgentsPage: React.FC = () => {
         return;
       }
 
+      console.log('Fetched agents:', data);
       setAgents(data || []);
     } catch (error) {
       console.error('Error fetching agents:', error);
@@ -53,12 +58,6 @@ const AgentsPage: React.FC = () => {
 
   const createAgent = async () => {
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await supabase
@@ -90,11 +89,6 @@ const AgentsPage: React.FC = () => {
     if (!confirm('Are you sure you want to delete this agent?')) return;
 
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-
       const { error } = await supabase
         .from('agents')
         .delete()
@@ -113,11 +107,6 @@ const AgentsPage: React.FC = () => {
 
   const toggleAgentStatus = async (agentId: string, currentStatus: boolean) => {
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-
       const { error } = await supabase
         .from('agents')
         .update({ is_active: !currentStatus })
