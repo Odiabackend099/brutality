@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Use a simple approach - create agent without user profile
-    // Just use email as identifier
-    const userId = `public_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`
+    // Just use email as identifier with proper UUID
+    const userId = randomUUID()
 
     // Generate API key and webhook secret
     const apiKey = `agt_${randomBytes(24).toString('hex')}`
