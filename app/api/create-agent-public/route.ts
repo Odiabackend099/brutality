@@ -47,28 +47,12 @@ export async function POST(request: NextRequest) {
     if (existingProfile) {
       userId = existingProfile.id
     } else {
-      // Create new user without email verification
-      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-        email: email,
-        email_confirm: true, // Skip email verification
-        user_metadata: {
-          full_name: name.split(' ')[0] || 'User',
-          created_via: 'public_agent_creation'
-        }
-      })
+      // For now, create a simple user ID and profile without auth
+      // This bypasses the need for Supabase auth
+      userId = `public_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       
-      if (createError || !newUser.user) {
-        console.error('Failed to create user:', createError)
-        return NextResponse.json(
-          { error: 'Failed to create user account' },
-          { status: 500 }
-        )
-      }
-      
-      userId = newUser.user.id
-      
-      // Create user profile
-      await supabase
+      // Create user profile directly
+      const { error: profileError } = await supabase
         .from('profiles')
         .insert({
           id: userId,
@@ -80,6 +64,14 @@ export async function POST(request: NextRequest) {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
+      
+      if (profileError) {
+        console.error('Failed to create profile:', profileError)
+        return NextResponse.json(
+          { error: 'Failed to create user profile: ' + profileError.message },
+          { status: 500 }
+        )
+      }
     }
 
     // Generate API key and webhook secret
