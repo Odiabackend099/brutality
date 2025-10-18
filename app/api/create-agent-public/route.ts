@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { randomBytes } from 'crypto'
+import { randomBytes, randomUUID } from 'crypto'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     } else {
       // For now, create a simple user ID and profile without auth
       // This bypasses the need for Supabase auth
-      userId = `public_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      userId = randomUUID()
       
       // Create user profile with minimal required fields
       const { error: profileError } = await supabase
