@@ -9,7 +9,7 @@ export default function CallScriptGenerator() {
   const [formData, setFormData] = useState({
     industry: '',
     services: '',
-    questions: []
+    questions: [] as string[]
   });
   
   const [generatedScript, setGeneratedScript] = useState('');
@@ -90,7 +90,7 @@ confirmation text and email shortly. Is there anything else I can help with?"
     alert('Script copied to clipboard!');
   };
 
-  const handleEmailSubmit = async (e) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {

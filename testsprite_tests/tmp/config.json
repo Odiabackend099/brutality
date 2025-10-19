@@ -7,10 +7,10 @@
     "projectName": "brutality",
     "projectPath": "/Users/odiadev/Desktop/cwai/brutality",
     "testIds": [],
-    "additionalInstruction": "Test the CallWaiting AI application thoroughly, focusing on the landing page, authentication flow, dashboard functionality, agent management, and chat widget features. Pay special attention to the AI receptionist capabilities and voice/chat interactions.",
+    "additionalInstruction": "Test the CallWaitingAI frontend application focusing on the free tools (Missed Call ROI Calculator and Call Script Generator), user authentication, and core functionality. Ensure all interactive elements work correctly and forms submit properly.",
     "envs": {
       "API_KEY": "sk-user-gm6IG1zOwxVwRDF7lI9f1QYUUdkeJO8AnFYoipWVZUT-rnHBvDJKCdjcQ9K_lIdnqs_jusbgRmWNo3oymj0u4CJjO-btGW87R09oB4um_oYJGQlrGHXs0dORWOJK5_k5etU"
     }
   },
-  "proxy": "http://70a2889b-d339-4905-927d-3cc8908a110f:Slq8ewBwdgx0kiEPMDBgEBQ35dHYMMV8@tun.testsprite.com:8080"
+  "proxy": "http://dd4ee687-aa8d-42ff-a5a8-7b573666c447:xu1WoYBDV1E6ApAe9dPCWqyhWj71lPSv@tun.testsprite.com:8080"
 }

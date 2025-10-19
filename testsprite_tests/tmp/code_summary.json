@@ -1,123 +1,133 @@
 {
   "tech_stack": [
     "TypeScript",
-    "Next.js 14",
-    "React 18",
-    "Tailwind CSS",
+    "Next.js 14.2.3",
+    "React 18.2.0",
+    "Tailwind CSS 3.4.10",
     "Supabase",
-    "Twilio",
     "Groq SDK",
-    "Deepgram",
+    "Twilio",
     "Flutterwave",
+    "Deepgram",
     "OpenAI",
-    "Lucide React",
-    "n8n"
+    "SendGrid",
+    "Airtable"
   ],
   "features": [
     {
-      "name": "Landing Page",
-      "description": "Main marketing landing page with hero section, pricing, and conversion elements",
-      "files": ["app/page.tsx", "app/layout.tsx", "app/globals.css", "components/PricingSection.tsx"]
+      "name": "AI Receptionist Landing Page",
+      "description": "Main landing page with hero section, features, pricing, and call-to-action",
+      "files": ["app/page.tsx", "app/layout.tsx"]
     },
     {
-      "name": "Authentication System",
-      "description": "User authentication with signup, login, password reset, and session management",
-      "files": ["app/login/page.tsx", "app/signup/page.tsx", "app/forgot-password/page.tsx", "app/auth/reset-password/page.tsx", "lib/auth-helpers.ts", "lib/supabase-client.ts", "lib/supabase-server.ts", "middleware.ts"]
+      "name": "Free Tools - Missed Call ROI Calculator",
+      "description": "Interactive calculator to show lost revenue from missed calls with email capture",
+      "files": ["app/tools/missed-call-calculator/page.tsx", "app/tools/missed-call-calculator/layout.tsx"]
     },
     {
-      "name": "Dashboard",
-      "description": "Main user dashboard with navigation and various management sections",
-      "files": ["app/dashboard/layout.tsx", "app/dashboard/page.tsx", "components/TrialStatusBanner.tsx", "components/UsageQuota.tsx"]
+      "name": "Free Tools - Call Script Generator",
+      "description": "AI-powered call script generator with industry-specific templates",
+      "files": ["app/tools/call-script-generator/page.tsx"]
+    },
+    {
+      "name": "Pricing Page",
+      "description": "Comprehensive pricing plans with feature comparison and FAQ",
+      "files": ["app/pricing/page.tsx"]
+    },
+    {
+      "name": "Dashboard System",
+      "description": "User dashboard with agents, calls, leads, payments, and settings management",
+      "files": ["app/dashboard/page.tsx", "app/dashboard/layout.tsx", "app/dashboard/agents/page.tsx", "app/dashboard/calls/page.tsx", "app/dashboard/leads/page.tsx", "app/dashboard/payments/page.tsx", "app/dashboard/settings/page.tsx"]
     },
     {
       "name": "Agent Management",
-      "description": "AI agent creation, configuration, and management system",
-      "files": ["app/dashboard/agents/page.tsx", "app/create-agent/page.tsx", "components/CreateAgentModal.tsx", "components/CallAgentButton.tsx", "components/VoiceChat.tsx", "app/api/create-agent/route.ts", "app/api/agents/[id]/configure-llm/route.ts", "app/api/agents/[id]/configure-tts/route.ts"]
+      "description": "Create and configure AI agents with LLM and TTS settings",
+      "files": ["app/create-agent/page.tsx", "app/api/create-agent/route.ts", "app/api/agents/[id]/configure-llm/route.ts", "app/api/agents/[id]/configure-tts/route.ts"]
     },
     {
-      "name": "Call Management",
-      "description": "Phone call handling, inbound calls, call status tracking, and speech processing",
-      "files": ["app/dashboard/calls/page.tsx", "app/dashboard/phone/page.tsx", "app/api/call/inbound/route.ts", "app/api/call/process-speech/route.ts", "app/api/call/complete/route.ts", "app/api/call/check-trial/route.ts", "app/api/twilio/call-status/route.ts", "app/api/twilio/transcript/route.ts"]
+      "name": "Voice Chat Interface",
+      "description": "Real-time voice chat with AI agents using WebRTC and speech recognition",
+      "files": ["components/VoiceChat.tsx", "components/ChatWidget.tsx", "components/ChatInterface.tsx"]
     },
     {
-      "name": "Lead Management",
-      "description": "Lead capture, extraction, and delivery system",
-      "files": ["app/dashboard/leads/page.tsx", "app/api/leads/extract/route.ts", "app/api/leads/deliver/route.ts"]
+      "name": "Call Processing System",
+      "description": "Inbound call handling with Twilio integration and AI response generation",
+      "files": ["app/api/call/inbound/route.ts", "app/api/call/process-speech/route.ts", "app/api/call/complete/route.ts"]
     },
     {
-      "name": "Payment System",
-      "description": "Payment processing with Flutterwave integration and billing management",
-      "files": ["app/dashboard/payments/page.tsx", "app/dashboard/billing/page.tsx", "app/dashboard/upgrade/page.tsx", "app/api/create-payment-link/route.ts", "app/api/flutterwave-webhook/route.ts", "lib/flutterwave.ts"]
+      "name": "Payment Integration",
+      "description": "Flutterwave payment processing with webhook handling and billing management",
+      "files": ["lib/flutterwave.ts", "app/api/flutterwave-webhook/route.ts", "app/api/create-payment-link/route.ts", "app/billing/page.tsx"]
     },
     {
-      "name": "TTS/Voice Generation",
-      "description": "Text-to-speech generation and voice management",
-      "files": ["app/api/generate-voice/route.ts", "app/api/tts/voices/route.ts", "app/api/tts/test-voice/route.ts", "lib/services/tts/odiadev.ts", "lib/odiadev-tts.ts"]
+      "name": "Lead Generation & CRM",
+      "description": "Lead capture, qualification, and delivery to external CRM systems",
+      "files": ["app/api/leads/deliver/route.ts", "app/api/leads/extract/route.ts", "app/dashboard/leads/page.tsx"]
     },
     {
-      "name": "Chat Widget",
-      "description": "Floating chat widget with voice and text capabilities",
-      "files": ["components/ChatWidget.tsx", "app/api/chat/widget/route.ts", "lib/groq-chat-widget.ts", "components/support/float-chat.tsx"]
+      "name": "Authentication System",
+      "description": "User authentication with Supabase Auth and session management",
+      "files": ["app/login/page.tsx", "app/signup/page.tsx", "app/auth/callback/route.ts", "lib/auth-helpers.ts", "lib/supabase-client.ts"]
+    },
+    {
+      "name": "TTS Voice Generation",
+      "description": "Text-to-speech voice generation and testing with multiple providers",
+      "files": ["lib/odiadev-tts.ts", "app/api/generate-voice/route.ts", "app/api/tts/test-voice/route.ts", "app/api/tts/voices/route.ts"]
     },
     {
       "name": "LLM Integration",
-      "description": "Large Language Model integration with Groq SDK",
-      "files": ["lib/services/llm/groq.ts"]
+      "description": "Large Language Model integration with Groq for AI responses",
+      "files": ["lib/services/llm/groq.ts", "lib/services/agent-orchestrator.ts"]
     },
     {
-      "name": "Speech-to-Text",
-      "description": "Speech recognition and transcription services",
+      "name": "Speech Recognition",
+      "description": "Speech-to-text conversion using Deepgram",
       "files": ["lib/services/stt/deepgram.ts"]
     },
     {
-      "name": "Agent Orchestration",
-      "description": "Core agent orchestration and conversation management",
-      "files": ["lib/services/agent-orchestrator.ts", "lib/services/conversation-manager.ts"]
+      "name": "Free Trial System",
+      "description": "Free trial management with usage tracking and limits",
+      "files": ["lib/free-trial.ts", "app/api/trial/status/route.ts", "app/api/trial/record-usage/route.ts", "components/TrialStatusBanner.tsx"]
     },
     {
-      "name": "Free Trial System",
-      "description": "Free trial management and usage tracking",
-      "files": ["app/api/trial/status/route.ts", "app/api/trial/record-usage/route.ts", "lib/free-trial.ts", "lib/usage.ts"]
+      "name": "Usage Analytics",
+      "description": "Usage tracking and reporting for billing and analytics",
+      "files": ["lib/usage.ts", "app/api/usage-report/route.ts", "components/UsageQuota.tsx"]
     },
     {
       "name": "WhatsApp Integration",
-      "description": "WhatsApp messaging capabilities",
+      "description": "WhatsApp messaging integration for lead communication",
       "files": ["app/api/whatsapp/send/route.ts"]
     },
     {
       "name": "Support System",
-      "description": "Customer support and assistant functionality",
-      "files": ["app/api/support/assistant/route.ts"]
+      "description": "AI-powered support assistant and help system",
+      "files": ["app/api/support/assistant/route.ts", "components/support/float-chat.tsx"]
     },
     {
-      "name": "Data Export",
-      "description": "Data export utilities for CSV and JSON formats",
-      "files": ["lib/exportData.ts"]
+      "name": "Legal & Compliance Pages",
+      "description": "Terms of service, privacy policy, and GDPR compliance pages",
+      "files": ["app/terms/page.tsx", "app/privacy/page.tsx"]
     },
     {
-      "name": "Test Mode",
-      "description": "Testing and development mode functionality",
-      "files": ["lib/test-mode.ts", "components/TestAdminPanel.tsx"]
+      "name": "Marketing Pages",
+      "description": "About, contact, FAQ, use cases, integrations, and resources pages",
+      "files": ["app/about/page.tsx", "app/contact/page.tsx", "app/faq/page.tsx", "app/use-cases/page.tsx", "app/integrations/page.tsx", "app/resources/page.tsx"]
     },
     {
-      "name": "Health Monitoring",
-      "description": "API health checks and monitoring",
-      "files": ["app/api/health/route.ts", "app/api/usage-report/route.ts"]
+      "name": "Security Middleware",
+      "description": "Rate limiting, security headers, and bot protection",
+      "files": ["middleware.ts"]
     },
     {
-      "name": "Static Pages",
-      "description": "Static content pages for legal and informational content",
-      "files": ["app/contact/page.tsx", "app/privacy/page.tsx", "app/terms/page.tsx", "app/success/page.tsx"]
+      "name": "Email Automation",
+      "description": "Email sending and automation with SendGrid integration",
+      "files": ["app/api/generate-report/route.ts", "app/api/save-script/route.ts"]
     },
     {
-      "name": "UI Components",
-      "description": "Reusable UI components and utilities",
-      "files": ["components/LoadingSkeleton.tsx", "components/ErrorBoundary.tsx", "components/Logo.tsx", "components/QuickAgentTest.tsx", "hooks/useChat.ts"]
-    },
-    {
-      "name": "Configuration",
-      "description": "Application configuration and environment setup",
-      "files": ["next.config.js", "tailwind.config.ts", "tsconfig.json", "vercel.json", "package.json"]
+      "name": "Test & Development Tools",
+      "description": "Testing utilities and development tools for debugging",
+      "files": ["app/test-recaptcha/page.tsx", "test-recaptcha.html", "components/TestAdminPanel.tsx", "lib/test-mode.ts"]
     }
   ]
 }

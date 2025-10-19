@@ -1,55 +1,64 @@
 [
   {
     "id": "TC001",
-    "title": "Chat Bubble Rendering and Toggle",
-    "description": "Verify that the floating chat bubble appears correctly on the web page and toggles the expandable chat window with smooth animations when clicked.",
-    "category": "functional",
+    "title": "Load and display chat bubble button",
+    "description": "Verify that the floating chat bubble button loads correctly on the landing page without UI glitches or errors.",
+    "category": "ui",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Load the web page containing the CallWaiting AI Chat Widget."
+        "description": "Open the website homepage in supported browsers."
       },
       {
         "type": "assertion",
-        "description": "Check that the floating chat bubble is visible and positioned correctly on the screen."
-      },
-      {
-        "type": "action",
-        "description": "Click the floating chat bubble."
+        "description": "Check that the floating chat bubble button is visible and positioned correctly."
       },
       {
         "type": "assertion",
-        "description": "Verify that the chat window expands smoothly with animation and displays the input options."
-      },
-      {
-        "type": "action",
-        "description": "Click the chat bubble again to toggle the chat window."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that the chat window collapses smoothly and the bubble returns to initial state."
+        "description": "Ensure no console errors or warnings related to chat bubble rendering."
       }
     ]
   },
   {
     "id": "TC002",
-    "title": "Text Chat Input and AI Response",
-    "description": "Check that the text input accepts user messages, triggers AI response generation via webhook, and displays the AI text reply with a loading indicator.",
+    "title": "Expand chat window on bubble click",
+    "description": "Verify that clicking the chat bubble expands the chat window interface with text and voice input modes available.",
+    "category": "ui",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Click the floating chat bubble button."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that the chat window expands smoothly."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm presence of text input box and microphone toggle."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the chat window is responsive and the UI elements are functional."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Send text message and receive AI response",
+    "description": "Verify sending a text message results in an AI-generated text response and audio playback within 3 seconds on average.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Open the chat window from the chat bubble."
+        "description": "Expand the chat window."
       },
       {
         "type": "action",
-        "description": "Select text input mode if not already selected."
-      },
-      {
-        "type": "action",
-        "description": "Type a valid text message in the input field."
+        "description": "Type a valid user message into the text input box."
       },
       {
         "type": "action",
@@ -57,382 +66,351 @@
       },
       {
         "type": "assertion",
-        "description": "Observe that a loading indicator appears while waiting for the AI response."
+        "description": "Check that a loading indicator appears promptly after sending."
       },
       {
         "type": "assertion",
-        "description": "Verify that the AI-generated text reply is displayed in the chat window upon response."
+        "description": "Verify that AI-generated text response is displayed within 3 seconds."
       },
       {
         "type": "assertion",
-        "description": "Confirm that the AI response text is context-aware, professional in tone, and concise (~100 words)."
-      }
-    ]
-  },
-  {
-    "id": "TC003",
-    "title": "Voice Chat Mode Activation and Microphone Permission",
-    "description": "Validate that the voice chat mode activates microphone access properly and shows visual recording timer upon starting voice input.",
-    "category": "functional",
-    "priority": "High",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Open the chat window."
-      },
-      {
-        "type": "action",
-        "description": "Toggle voice chat mode."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that the browser prompts for microphone permissions."
-      },
-      {
-        "type": "action",
-        "description": "Allow microphone permission."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that the recording UI is displayed with a visual timer counting the recording duration."
+        "description": "Confirm that the corresponding AI-generated audio response is played automatically."
       }
     ]
   },
   {
     "id": "TC004",
-    "title": "Voice Recording, Sending and AI Response with Audio Playback",
-    "description": "Test full flow of recording a voice message, sending it via the webhook, receiving AI text and audio response, and automatic playback of audio.",
+    "title": "Start, stop, and send voice recording input",
+    "description": "Verify voice recording starts, stops, and sends correctly with speech recognition converting input to text and receiving AI response.",
     "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Ensure voice chat mode is active with microphone permission granted."
+        "description": "Expand the chat window."
       },
       {
         "type": "action",
-        "description": "Press record button to start voice recording."
+        "description": "Toggle to voice input mode."
       },
       {
         "type": "action",
-        "description": "Speak a short message clearly for a few seconds."
+        "description": "Start recording voice message using the microphone toggle."
       },
       {
         "type": "action",
-        "description": "Stop the recording."
+        "description": "Stop recording after a valid voice input."
       },
       {
         "type": "assertion",
-        "description": "Verify the voice message is sent to the webhook via HTTP POST."
+        "description": "Verify the speech recognition converts the audio to text accurately."
+      },
+      {
+        "type": "action",
+        "description": "Send the voice input message."
       },
       {
         "type": "assertion",
-        "description": "Verify that a loading indicator appears while awaiting the response."
-      },
-      {
-        "type": "assertion",
-        "description": "Check that the chat window displays the AI-generated text reply."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm that the audio response URL is received and the MP3 audio plays automatically with clear and natural sound."
+        "description": "Confirm AI response text and audio are received and displayed/played automatically."
       }
     ]
   },
   {
     "id": "TC005",
-    "title": "Webhook Valid JSON Response Validation",
-    "description": "Ensure that the configured n8n cloud webhook returns valid JSON responses containing both required 'text' and 'audio_url' fields for given valid inputs.",
+    "title": "Verify webhook response format and integration",
+    "description": "Ensure HTTP POST requests to configured n8n webhook endpoint return valid JSON including 'text' and 'audio_url' fields.",
     "category": "integration",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Send a test POST request with a valid text payload to the webhook URL."
+        "description": "Send a valid input message or voice transcription to the n8n webhook via HTTP POST."
       },
       {
         "type": "assertion",
-        "description": "Verify the webhook response is valid JSON."
+        "description": "Verify the webhook response is a valid JSON object."
       },
       {
         "type": "assertion",
-        "description": "Verify the response contains non-empty 'text' and 'audio_url' fields."
-      },
-      {
-        "type": "action",
-        "description": "Send a test POST request with a valid voice payload to the webhook."
+        "description": "Check that response contains both 'text' and 'audio_url' fields."
       },
       {
         "type": "assertion",
-        "description": "Verify webhook returns valid JSON including 'text' and 'audio_url' fields."
+        "description": "Confirm 'text' is a non-empty string and 'audio_url' is a valid URL."
       }
     ]
   },
   {
     "id": "TC006",
-    "title": "Error Handling and User Feedback on Webhook Failures",
-    "description": "Verify that the chat widget correctly displays user-friendly error messages and logs debug information when errors occur during webhook calls or AI/TTS processing.",
-    "category": "error handling",
+    "title": "Validate AI response quality and relevance",
+    "description": "Verify AI text responses are relevant to user input, professional in tone, context-aware, and concise (~100 words).",
+    "category": "functional",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Simulate webhook error by sending invalid payload or disconnecting webhook endpoint."
+        "description": "Send a variety of typical user queries covering different conversational contexts."
       },
       {
         "type": "assertion",
-        "description": "Verify that the chat widget displays an informative error message to the user."
+        "description": "Manually review AI text responses for relevance and appropriateness."
       },
       {
         "type": "assertion",
-        "description": "Confirm that debug information is logged to the in-browser console for troubleshooting."
-      },
-      {
-        "type": "action",
-        "description": "Simulate TTS API failure response."
+        "description": "Ensure response length is concise and captures key information within about 100 words."
       },
       {
         "type": "assertion",
-        "description": "Verify appropriate error message and fallback behavior in chat widget."
+        "description": "Check for professional tone and absence of irrelevant or inappropriate content."
       }
     ]
   },
   {
     "id": "TC007",
-    "title": "UI Responsiveness and Accessibility",
-    "description": "Test that the chat widget UI components (bubble, chat window, buttons, timers, text input) render and function correctly across different viewport sizes and support accessibility standards.",
-    "category": "ui",
-    "priority": "Medium",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Load the chat widget on various screen sizes including desktop, tablet, and mobile."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that UI layouts adapt responsively without overflow or cutoff."
-      },
-      {
-        "type": "assertion",
-        "description": "Check that all interactive elements have appropriate ARIA labels and keyboard focusable."
-      },
-      {
-        "type": "action",
-        "description": "Navigate the widget using keyboard only and operate chat input and toggles."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm smooth keyboard navigation and accessibility compliance."
-      }
-    ]
-  },
-  {
-    "id": "TC008",
-    "title": "Import and Validation of Ready n8n Workflows",
-    "description": "Verify that all provided n8n workflows (simple echo test, full AI + TTS, production optimizations) import into n8n cloud without errors and respond correctly to test payloads.",
-    "category": "integration",
-    "priority": "Medium",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Import the simple echo test workflow into n8n cloud."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm there are no import errors and the workflow is deployed."
-      },
-      {
-        "type": "action",
-        "description": "Trigger the workflow with a test message."
-      },
-      {
-        "type": "assertion",
-        "description": "Validate the workflow returns an echo response correctly."
-      },
-      {
-        "type": "action",
-        "description": "Import the full AI + TTS workflow."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify successful deployment and correct response generation for text and audio URL."
-      },
-      {
-        "type": "action",
-        "description": "Import the production-optimized workflow and test similarly."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm robust response handling under typical load conditions."
-      }
-    ]
-  },
-  {
-    "id": "TC009",
-    "title": "Security Practices Enforcement",
-    "description": "Validate that API key management, environment variable usage, CORS restrictions, HTTPS enforcement, and rate limiting are implemented as per security requirements.",
+    "title": "Verify API key security and rate limiting",
+    "description": "Ensure requests require valid API key; invalid or missing keys are rejected, and rate limiting prevents abuse.",
     "category": "security",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Verify API keys and secrets are not exposed in client-side code."
+        "description": "Send API request with valid API key."
       },
       {
         "type": "assertion",
-        "description": "Confirm environment variables are used for sensitive information."
+        "description": "Verify the request is accepted and processed successfully."
       },
       {
         "type": "action",
-        "description": "Attempt cross-origin requests disallowed by CORS policy."
+        "description": "Send API request with invalid or missing API key."
       },
       {
         "type": "assertion",
-        "description": "Verify server rejects unauthorized cross-origin requests."
+        "description": "Confirm the request is rejected with appropriate error message/status."
       },
       {
         "type": "action",
-        "description": "Access the chat widget over HTTP (non-HTTPS)."
+        "description": "Rapidly send multiple valid requests to exceed rate limit."
       },
       {
         "type": "assertion",
-        "description": "Confirm connection is redirected/enforced to use HTTPS."
+        "description": "Verify that rate limiting is enforced and further requests are rejected with rate limit error."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Validate secure communication protocols (HTTPS enforcement)",
+    "description": "Ensure all API and webhook communications are only accepted over HTTPS connections and HTTP is blocked or redirected.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to send API/webhook requests over HTTP."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify requests are rejected or redirected to HTTPS."
       },
       {
         "type": "action",
-        "description": "Send multiple rapid requests to API endpoints."
+        "description": "Send requests over HTTPS."
       },
       {
         "type": "assertion",
-        "description": "Verify rate limiting triggers and blocks excessive usage."
+        "description": "Verify requests are accepted and processed successfully."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Test CORS restrictions for security",
+    "description": "Verify that the chat widget enforces CORS policies restricting requests only from authorized domains.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send cross-origin request from an authorized domain."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the request is accepted by the server."
+      },
+      {
+        "type": "action",
+        "description": "Send cross-origin request from an unauthorized domain."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the request is blocked by CORS policy."
       }
     ]
   },
   {
     "id": "TC010",
-    "title": "Performance Testing of AI Response Time",
-    "description": "Ensure that AI responses are generated and returned within 3 seconds under typical load to meet performance requirements.",
-    "category": "performance",
+    "title": "Validate input sanitization and handling of invalid inputs",
+    "description": "Ensure the system correctly handles empty, malformed, or malicious input data without breaking or exposing vulnerabilities.",
+    "category": "error handling",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Send multiple chat input requests sequentially and concurrently via text and voice."
+        "description": "Send empty text message input."
       },
       {
         "type": "assertion",
-        "description": "Measure and record response times from request to AI text response receipt."
+        "description": "Confirm input is rejected with validation error and no processing occurs."
+      },
+      {
+        "type": "action",
+        "description": "Send malformed or excessively long text input."
       },
       {
         "type": "assertion",
-        "description": "Verify that at least 90% of responses return within 3 seconds under typical load."
+        "description": "Verify input is sanitized or rejected appropriately without system crashes."
+      },
+      {
+        "type": "action",
+        "description": "Send inputs containing script tags or potential XSS attacks."
       },
       {
         "type": "assertion",
-        "description": "Check that audio synthesis and playback latency is acceptable for real-time conversation."
+        "description": "Confirm input is sanitized to prevent XSS and safe rendering in UI."
       }
     ]
   },
   {
     "id": "TC011",
-    "title": "Documentation Completeness and Accuracy",
-    "description": "Confirm that comprehensive documentation is available covering setup, troubleshooting, deployment, and testing of the CallWaiting AI Chat Widget.",
-    "category": "documentation",
+    "title": "Test local testing tools functionality",
+    "description": "Verify command-line webhook tester and local UI testing server operate correctly and allow development debugging.",
+    "category": "functional",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Review setup guide for installation, configuration, and environment requirements."
+        "description": "Run command-line webhook tester with a sample message input."
       },
       {
         "type": "assertion",
-        "description": "Verify the setup guide provides clear step-by-step instructions and examples."
+        "description": "Verify webhook tester successfully sends and receives correct responses."
       },
       {
         "type": "action",
-        "description": "Review troubleshooting section for common errors and debugging tools."
+        "description": "Start local UI testing server."
       },
       {
         "type": "assertion",
-        "description": "Confirm troubleshooting guidance is comprehensive and actionable."
-      },
-      {
-        "type": "action",
-        "description": "Inspect deployment guide for security, scalability, and monitoring considerations."
+        "description": "Confirm chat widget UI loads and operates as expected in local environment."
       },
       {
         "type": "assertion",
-        "description": "Verify best practices are documented and easy to follow."
-      },
-      {
-        "type": "action",
-        "description": "Check availability of test scripts and usage instructions."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm test procedures enable quick and reliable validation of integration and performance."
+        "description": "Test interactive features including text and voice chat functionality locally."
       }
     ]
   },
   {
     "id": "TC012",
-    "title": "Multi-turn Conversation Continuity",
-    "description": "Validate that the chat widget maintains conversation context across multiple user inputs and AI responses for coherent multi-turn dialogs.",
-    "category": "functional",
-    "priority": "High",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Send an initial message via text input."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify AI response is contextually accurate and relevant."
-      },
-      {
-        "type": "action",
-        "description": "Send a follow-up message referring to the previous response."
-      },
-      {
-        "type": "assertion",
-        "description": "Confirm AI response correctly maintains context from the conversation history."
-      },
-      {
-        "type": "action",
-        "description": "Repeat for multiple turns to test conversation memory and relevance."
-      },
-      {
-        "type": "assertion",
-        "description": "Ensure no loss of context or unrelated answers."
-      }
-    ]
-  },
-  {
-    "id": "TC013",
-    "title": "Audio Playback Configuration Testing",
-    "description": "Verify that the MiniMax TTS female voice is correctly configured and that auto-playback of AI audio responses works with proper volume and clarity settings.",
+    "title": "Validate voice playback configuration and multiple voice options",
+    "description": "Test that MiniMax TTS audio responses play automatically and correspond to selected configurable voice options.",
     "category": "functional",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Send a chat message to trigger an audio response."
+        "description": "Send input triggering AI response."
       },
       {
         "type": "assertion",
-        "description": "Confirm the audio response uses the configured female voice."
-      },
-      {
-        "type": "assertion",
-        "description": "Verify that the audio plays automatically upon response."
-      },
-      {
-        "type": "assertion",
-        "description": "Check audio clarity, volume, and absence of artifacts."
+        "description": "Verify audio playback starts automatically."
       },
       {
         "type": "action",
-        "description": "Change TTS voice configuration and repeat test to validate voice switching."
+        "description": "Change TTS voice option to an alternate voice setting."
+      },
+      {
+        "type": "action",
+        "description": "Send another input triggering AI response."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify audio playback matches the changed voice configuration."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Verify user experience consistency across devices and browsers",
+    "description": "Ensure the chat widget user experience, UI layout, and functionality are consistent and responsive across supported browsers and device types, including mobile.",
+    "category": "ui",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the chat widget on desktop browsers (Chrome, Firefox, Safari, Edge)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI elements render correctly and interactions work as expected."
+      },
+      {
+        "type": "action",
+        "description": "Open the chat widget on mobile devices and responsive simulation."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm layout adjusts appropriately to different screen sizes."
+      },
+      {
+        "type": "assertion",
+        "description": "Test all input modes and features function correctly on all devices tested."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Test error handling on webhook failure",
+    "description": "Simulate webhook endpoint failures or timeouts and verify graceful error handling and user notifications in the chat interface.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send a chat input causing webhook endpoint to return error or timeout."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify chat widget shows appropriate error message to the user."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm system does not crash and allows user to retry or continue conversation."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Test documentation completeness for setup and troubleshooting",
+    "description": "Verify that the provided setup and troubleshooting guides enable a new user to configure, deploy and debug the chat widget successfully.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Follow the quick start guide to set up the chat widget in a test environment."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all configuration steps can be completed without issues."
+      },
+      {
+        "type": "action",
+        "description": "Use troubleshooting guide to diagnose and fix simulated common issues."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify troubleshooting instructions effectively help resolve issues."
       }
     ]
   }

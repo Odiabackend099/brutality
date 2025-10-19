@@ -68,7 +68,7 @@ export default function TestRecaptcha() {
       setResponse(JSON.stringify(result, null, 2));
     } catch (error) {
       console.error('Error testing webhook:', error);
-      setResponse('Error: ' + error.message);
+      setResponse('Error: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsLoading(false);
     }

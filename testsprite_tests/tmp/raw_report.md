@@ -13,278 +13,150 @@
 ## 2️⃣ Requirement Validation Summary
 
 #### Test TC001
-- **Test Name:** Chat Bubble Rendering and Toggle
-- **Test Code:** [TC001_Chat_Bubble_Rendering_and_Toggle.py](./TC001_Chat_Bubble_Rendering_and_Toggle.py)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/38133b22-1086-44e3-a693-bea195c34415
+- **Test Name:** Load and display chat bubble button
+- **Test Code:** [TC001_Load_and_display_chat_bubble_button.py](./TC001_Load_and_display_chat_bubble_button.py)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/ed2eeafc-d3e4-499e-84b7-a01a463b9678
 - **Status:** ✅ Passed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC002
-- **Test Name:** Text Chat Input and AI Response
-- **Test Code:** [TC002_Text_Chat_Input_and_AI_Response.py](./TC002_Text_Chat_Input_and_AI_Response.py)
-- **Test Error:** The chat window failed to open after clicking the chat bubble buttons, blocking further testing of the AI chat input and response features. Issue reported for resolution.
-Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/page.js:0:0)
-[ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] The above error occurred in the <ServerRoot> component:
-
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
-
-Consider adding an error boundary to your tree to customize error handling behavior.
-Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/2063df58-6c7c-4ee4-bcc0-d814c8f3f7b4
-- **Status:** ❌ Failed
+- **Test Name:** Expand chat window on bubble click
+- **Test Code:** [TC002_Expand_chat_window_on_bubble_click.py](./TC002_Expand_chat_window_on_bubble_click.py)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/7c05198b-fd82-41e7-9fb7-f5d114dd2093
+- **Status:** ✅ Passed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC003
-- **Test Name:** Voice Chat Mode Activation and Microphone Permission
-- **Test Code:** [TC003_Voice_Chat_Mode_Activation_and_Microphone_Permission.py](./TC003_Voice_Chat_Mode_Activation_and_Microphone_Permission.py)
-- **Test Error:** Reported the issue that the chat window does not open after clicking the chat button, preventing further testing of voice chat mode. Stopping the test here.
-Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/f226fa6f-7b53-48ca-aef5-33ffde69aa36
+- **Test Name:** Send text message and receive AI response
+- **Test Code:** [TC003_Send_text_message_and_receive_AI_response.py](./TC003_Send_text_message_and_receive_AI_response.py)
+- **Test Error:** The message sending functionality in the chat window is broken. Clicking send clears the input but does not send the message or produce any AI response or audio playback. The task to verify AI-generated text response and audio playback cannot be completed. Please fix this issue.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/e5a8a2fc-d5a8-4709-b8f7-d564f7b29a65
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC004
-- **Test Name:** Voice Recording, Sending and AI Response with Audio Playback
-- **Test Code:** [TC004_Voice_Recording_Sending_and_AI_Response_with_Audio_Playback.py](./TC004_Voice_Recording_Sending_and_AI_Response_with_Audio_Playback.py)
-- **Test Error:** 
-Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/animations/ai-demo.mp4:0:0)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/2bac565c-2a7f-43cd-950e-1d6122273ea7
+- **Test Name:** Start, stop, and send voice recording input
+- **Test Code:** [TC004_Start_stop_and_send_voice_recording_input.py](./TC004_Start_stop_and_send_voice_recording_input.py)
+- **Test Error:** Voice recording feature test failed. The voice input mode toggle and stop recording buttons did not work as expected. Voice input mode did not activate, and no speech recognition occurred. Further testing is stopped due to this critical issue.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/e401527e-4856-4754-921a-3e56c9735b85
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC005
-- **Test Name:** Webhook Valid JSON Response Validation
-- **Test Code:** [TC005_Webhook_Valid_JSON_Response_Validation.py](./TC005_Webhook_Valid_JSON_Response_Validation.py)
-- **Test Error:** The webhook URL cannot be accessed because the admin password for the test admin panel is invalid. No alternative webhook URL or instructions are visible on the main page or demo sections. Therefore, I cannot send test POST requests or verify the webhook responses. Please provide the correct admin password or the webhook URL to continue testing.
+- **Test Name:** Verify webhook response format and integration
+- **Test Code:** [TC005_Verify_webhook_response_format_and_integration.py](./TC005_Verify_webhook_response_format_and_integration.py)
+- **Test Error:** Reported the missing API page and webhook endpoint issue. Cannot proceed with testing the webhook response without access to the correct endpoint. Stopping further actions.
 Browser Console Logs:
-[WARNING] [Fast Refresh] performing full reload
-
-Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
-You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
-Consider migrating the non-React component export to a separate file and importing it into both files.
-
-It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
-Fast Refresh requires at least one parent function component in your React tree. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:112:24)
-[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/api/webhook:0:0)
-[ERROR] Warning: Extra attributes from the server: %s%s style 
-    at input
-    at div
-    at div
-    at div
-    at TestAdminPanel (webpack-internal:///(app-pages-browser)/./components/TestAdminPanel.tsx:19:11)
-    at body
-    at html
-    at RootLayout (Server)
-    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
-    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
-    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
-    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
-    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
-    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
-    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
-    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
-    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
-    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
-    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11) (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) (at http://localhost:3000/api/admin/test-create:0:0)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/5169bf2f-ce9a-4444-a277-75e236343db6
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/api/webhook/test:0:0)
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/api:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/2ef5c517-c697-421c-830c-ce8ac816df33
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC006
-- **Test Name:** Error Handling and User Feedback on Webhook Failures
-- **Test Code:** [TC006_Error_Handling_and_User_Feedback_on_Webhook_Failures.py](./TC006_Error_Handling_and_User_Feedback_on_Webhook_Failures.py)
-- **Test Error:** Testing stopped due to chat widget not opening on user interaction, which is critical for verifying error handling. Reported the issue for developer attention.
+- **Test Name:** Validate AI response quality and relevance
+- **Test Code:** [TC006_Validate_AI_response_quality_and_relevance.py](./TC006_Validate_AI_response_quality_and_relevance.py)
+- **Test Error:** Testing completed with most features working except user authentication. Registration fails with database error and login fails with invalid credentials error. Backend issues need urgent resolution to enable full functionality.
 Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/page.js:0:0)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/23440795-21a6-4ead-9e26-91bd05724220
+[WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. (at https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdXOu8rAAAAAL8XoGeb1_Oe9QaErrtLLOlPWBkp&co=aHR0cDovL2xvY2FsaG9zdDozMDAw&hl=en&v=KmpMK968ITgSdSG_2lbUmd1o&size=invisible&anchor-ms=20000&execute-ms=15000&cb=haxkgw31hu8k:0:0)
+[ERROR] Failed to load resource: the server responded with a status of 500 () (at https://bcufohulqrceytkrqpgd.supabase.co/auth/v1/signup?redirect_to=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fcallback:0:0)
+[ERROR] Failed to load resource: the server responded with a status of 400 () (at https://bcufohulqrceytkrqpgd.supabase.co/auth/v1/token?grant_type=password:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/34ca5f43-e69d-41f1-a3cd-7449a8420af8
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC007
-- **Test Name:** UI Responsiveness and Accessibility
-- **Test Code:** [null](./null)
-- **Test Error:** Test execution timed out after 15 minutes
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/1cf4a718-2a3b-4cde-96ef-47874b996c32
+- **Test Name:** Verify API key security and rate limiting
+- **Test Code:** [TC007_Verify_API_key_security_and_rate_limiting.py](./TC007_Verify_API_key_security_and_rate_limiting.py)
+- **Test Error:** Testing cannot proceed because the API page is missing (404 error). Reported the issue and stopped further actions.
+Browser Console Logs:
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/api:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/4aa5d16f-7560-4f0a-926a-85d9e292d665
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC008
-- **Test Name:** Import and Validation of Ready n8n Workflows
-- **Test Code:** [TC008_Import_and_Validation_of_Ready_n8n_Workflows.py](./TC008_Import_and_Validation_of_Ready_n8n_Workflows.py)
-- **Test Error:** Testing stopped due to inability to log in or create test account. The 'Create Test Account' button does not respond or change the page after entering the admin password. Unable to proceed with workflow import and testing. Please fix the login issue to continue testing.
+- **Test Name:** Validate secure communication protocols (HTTPS enforcement)
+- **Test Code:** [TC008_Validate_secure_communication_protocols_HTTPS_enforcement.py](./TC008_Validate_secure_communication_protocols_HTTPS_enforcement.py)
+- **Test Error:** The task to ensure all API and webhook communications are only accepted over HTTPS and HTTP is blocked or redirected cannot be fully completed due to missing HTTPS configuration, inaccessible admin panel, and broken API documentation. HTTP requests to API endpoints return 404 without redirection. HTTPS requests fail due to lack of configuration. Reporting these issues for resolution.
 Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/animations/ai-demo.mp4:0:0)
-[ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] The above error occurred in the <NotFoundErrorBoundary> component:
-
-    at Lazy
-    at body
-    at html
-    at RootLayout (Server)
-    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
-    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
-    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
-    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
-    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
-    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
-    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
-    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
-    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
-    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
-    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
-
-React will try to recreate this component tree from scratch using the error boundary you provided, ReactDevOverlay. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/5b8bbffa-560d-4aa5-93d2-ddf4a304fd77
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/api/test-webhook:0:0)
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) (at http://localhost:3000/api/admin/test-create:0:0)
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/docs/api:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/ad5ea4d2-d5a8-4519-b017-4a9832090c9b
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC009
-- **Test Name:** Security Practices Enforcement
-- **Test Code:** [TC009_Security_Practices_Enforcement.py](./TC009_Security_Practices_Enforcement.py)
-- **Test Error:** Security validation halted. The 'Create Test Account' button is non-functional and prevents further testing of environment variable usage and other security features. Please fix this issue to proceed.
-Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/animations/ai-demo.mp4:0:0)
-[ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] The above error occurred in the <NotFoundErrorBoundary> component:
-
-    at Lazy
-    at body
-    at html
-    at RootLayout (Server)
-    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
-    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
-    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
-    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
-    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
-    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
-    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
-    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
-    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
-    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
-    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
-
-React will try to recreate this component tree from scratch using the error boundary you provided, ReactDevOverlay. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/57e5ed6c-8596-456b-93ed-2871b79ca2b0
+- **Test Name:** Test CORS restrictions for security
+- **Test Code:** [TC009_Test_CORS_restrictions_for_security.py](./TC009_Test_CORS_restrictions_for_security.py)
+- **Test Error:** The chat widget UI does not allow sending or observing cross-origin requests necessary to verify CORS policy enforcement. Manual backend or developer intervention is required to test CORS policies. Task stopped.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/eb115432-20f5-4c8b-9922-af6d83760d65
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC010
-- **Test Name:** Performance Testing of AI Response Time
-- **Test Code:** [TC010_Performance_Testing_of_AI_Response_Time.py](./TC010_Performance_Testing_of_AI_Response_Time.py)
-- **Test Error:** Testing stopped due to inaccessible chat input field in the chat widget. Cannot proceed with performance testing of AI responses. Issue reported for developer investigation.
+- **Test Name:** Validate input sanitization and handling of invalid inputs
+- **Test Code:** [TC010_Validate_input_sanitization_and_handling_of_invalid_inputs.py](./TC010_Validate_input_sanitization_and_handling_of_invalid_inputs.py)
+- **Test Error:** Testing of input validation for empty, malformed, and malicious inputs on the Missed Call ROI Calculator is incomplete due to input restrictions and lack of validation. The system does not reject empty inputs and retains previous values, and it blocks malformed or malicious inputs from being entered. This indicates a lack of proper input validation and sanitization, which could expose vulnerabilities. Further testing is halted and the issue is reported for developer attention.
 Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/animations/ai-demo.mp4:0:0)
-[ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] The above error occurred in the <NotFoundErrorBoundary> component:
-
-    at Lazy
-    at body
-    at html
-    at RootLayout (Server)
-    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
-    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
-    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
-    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
-    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
-    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
-    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
-    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
-    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
-    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
-    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
-
-React will try to recreate this component tree from scratch using the error boundary you provided, ReactDevOverlay. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/ac3cb53c-4c2a-41e3-811e-600dbd05b351
+[WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. (at https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdXOu8rAAAAAL8XoGeb1_Oe9QaErrtLLOlPWBkp&co=aHR0cDovL2xvY2FsaG9zdDozMDAw&hl=en&v=KmpMK968ITgSdSG_2lbUmd1o&size=invisible&anchor-ms=20000&execute-ms=15000&cb=9i9jt8v56a7u:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/de527204-d6d7-4b7c-98e3-c3f02249d224
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC011
-- **Test Name:** Documentation Completeness and Accuracy
-- **Test Code:** [TC011_Documentation_Completeness_and_Accuracy.py](./TC011_Documentation_Completeness_and_Accuracy.py)
-- **Test Error:** Comprehensive documentation covering setup, troubleshooting, deployment, and testing of the CallWaiting AI Chat Widget is not accessible on the website. The FAQ section provides only summary information, and attempts to access Contact or support pages did not reveal detailed guides. Task is stopped due to lack of available documentation.
-Browser Console Logs:
-[ERROR] An unknown error occurred when fetching the script. (at :0:0)
-[ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr' failed: Error in connection establishment: net::ERR_EMPTY_RESPONSE (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/use-websocket.js:41:0)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/f4d6d487-7866-4a1a-970c-669d6e4d9765
-- **Status:** ❌ Failed
+- **Test Name:** Test local testing tools functionality
+- **Test Code:** [TC011_Test_local_testing_tools_functionality.py](./TC011_Test_local_testing_tools_functionality.py)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/f4417ccd-0649-47f7-bfb4-f061cf376fd7
+- **Status:** ✅ Passed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC012
-- **Test Name:** Multi-turn Conversation Continuity
-- **Test Code:** [TC012_Multi_turn_Conversation_Continuity.py](./TC012_Multi_turn_Conversation_Continuity.py)
-- **Test Error:** The chat widget was tested for maintaining conversation context across multiple user inputs and AI responses. Initial message received a relevant response, but subsequent follow-up messages about agent configuration resulted in repeated connection error messages from the AI assistant. This indicates the chat widget does not maintain conversation context properly in multi-turn dialogs. Test concluded with failure to maintain context.
+- **Test Name:** Validate voice playback configuration and multiple voice options
+- **Test Code:** [TC012_Validate_voice_playback_configuration_and_multiple_voice_options.py](./TC012_Validate_voice_playback_configuration_and_multiple_voice_options.py)
+- **Test Error:** Testing of MiniMax TTS audio responses could not be completed because login credentials for accessing user settings are invalid. No TTS audio playback or voice option configuration could be verified. Please provide valid credentials or alternative access to proceed.
 Browser Console Logs:
-[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) (at http://localhost:3000/api/support/assistant:0:0)
-[ERROR] Error sending message: Error: Failed to get response
-    at sendMessage (webpack-internal:///(app-pages-browser)/./components/support/float-chat.tsx:61:23) (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) (at http://localhost:3000/api/support/assistant:0:0)
-[ERROR] Error sending message: Error: Failed to get response
-    at sendMessage (webpack-internal:///(app-pages-browser)/./components/support/float-chat.tsx:61:23) (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/daa49915-9411-4c8b-80db-4b29b2d72ef8
+[ERROR] Failed to load resource: the server responded with a status of 400 () (at https://bcufohulqrceytkrqpgd.supabase.co/auth/v1/token?grant_type=password:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/dbdc45a2-38b6-4244-ba20-874fd2cce8c2
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC013
-- **Test Name:** Audio Playback Configuration Testing
-- **Test Code:** [TC013_Audio_Playback_Configuration_Testing.py](./TC013_Audio_Playback_Configuration_Testing.py)
-- **Test Error:** Testing stopped due to critical runtime error preventing chat widget interaction and audio response testing. The MiniMax TTS female voice and auto-playback verification could not be completed.
+- **Test Name:** Verify user experience consistency across devices and browsers
+- **Test Code:** [TC013_Verify_user_experience_consistency_across_devices_and_browsers.py](./TC013_Verify_user_experience_consistency_across_devices_and_browsers.py)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/7ca32893-2e63-4d45-8df5-501987f5f7b2
+- **Status:** ✅ Passed
+- **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
+---
+
+#### Test TC014
+- **Test Name:** Test error handling on webhook failure
+- **Test Code:** [TC014_Test_error_handling_on_webhook_failure.py](./TC014_Test_error_handling_on_webhook_failure.py)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/40a203d0-fddd-433d-90fb-3712bcc3d423
+- **Status:** ✅ Passed
+- **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
+---
+
+#### Test TC015
+- **Test Name:** Test documentation completeness for setup and troubleshooting
+- **Test Code:** [TC015_Test_documentation_completeness_for_setup_and_troubleshooting.py](./TC015_Test_documentation_completeness_for_setup_and_troubleshooting.py)
+- **Test Error:** The setup guide for the chat widget is not accessible due to a broken link leading to a 404 error page. This prevents verification of the setup and troubleshooting guides as required. Please fix the documentation link to proceed.
 Browser Console Logs:
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/app/layout.js:0:0)
-[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/animations/ai-demo.mp4:0:0)
-[ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-[ERROR] The above error occurred in the <NotFoundErrorBoundary> component:
-
-    at Lazy
-    at body
-    at html
-    at RootLayout (Server)
-    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
-    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
-    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
-    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
-    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
-    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
-    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
-    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
-    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
-    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
-    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
-    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
-    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
-
-React will try to recreate this component tree from scratch using the error boundary you provided, ReactDevOverlay. (at webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32:21)
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/7389d2a4-fadc-488e-aec0-f2d549097a47/6a988a2e-5383-478b-819f-a12d64807886
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) (at http://localhost:3000/docs/quick-start:0:0)
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/cbf5e6b5-8d13-47f0-9281-55c8097693bf/a1745d7f-b04a-401d-a880-e730cda7183f
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -292,7 +164,7 @@ React will try to recreate this component tree from scratch using the error boun
 
 ## 3️⃣ Coverage & Matching Metrics
 
-- **7.69** of tests passed
+- **33.33** of tests passed
 
 | Requirement        | Total Tests | ✅ Passed | ❌ Failed  |
 |--------------------|-------------|-----------|------------|

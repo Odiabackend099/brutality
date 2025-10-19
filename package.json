@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@deepgram/sdk": "^4.11.2",
+    "@ricky0123/vad-web": "^0.0.27",
     "@sendgrid/mail": "^8.1.6",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-ui-react": "^0.4.7",
@@ -29,6 +30,7 @@
     "groq-sdk": "^0.33.0",
     "lucide-react": "^0.294.0",
     "next": "^14.2.3",
+    "onnxruntime-web": "^1.23.0",
     "openai": "^6.3.0",
     "postcss": "^8.4.33",
     "react": "^18.2.0",

@@ -8,6 +8,7 @@ import Logo from '@/components/Logo';
 declare global {
   interface Window {
     grecaptcha: any;
+    gtag?: (...args: any[]) => void;
   }
 }
 
@@ -20,7 +21,17 @@ export default function MissedCallCalculator() {
     industry: ''
   });
   
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<{
+    missedCallsPerYear: number;
+    lostOpportunities: number;
+    lostRevenue: number;
+    callwaitingCost: number;
+    callwaitingAnnual: number;
+    capturedRevenue: number;
+    netGain: number;
+    roi: number;
+    roiMultiple: number;
+  } | null>(null);
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -75,7 +86,8 @@ export default function MissedCallCalculator() {
       callwaitingAnnual,
       capturedRevenue: Math.round(capturedRevenue),
       netGain: Math.round(netGain),
-      roi: Math.round(roi)
+      roi: Math.round(roi),
+      roiMultiple: callwaitingAnnual > 0 ? Math.round(netGain / callwaitingAnnual) : 0
     });
     
     setShowEmailForm(true);
@@ -101,7 +113,7 @@ export default function MissedCallCalculator() {
     }
   };
 
-  const handleEmailSubmit = async (e) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!consent) {
@@ -130,7 +142,7 @@ export default function MissedCallCalculator() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name || '',
+           name: '',
           email: email,
           tool_type: 'missed_call_calculator',
           tool_data: reportData,
@@ -152,7 +164,7 @@ export default function MissedCallCalculator() {
         if (typeof window !== 'undefined') {
           window.gtag?.('event', 'email_captured', {
             tool_name: 'missed_call_calculator',
-            lost_revenue: results.lostRevenue,
+             lost_revenue: results?.lostRevenue || 0,
             industry: formData.industry,
             email_domain: email.split('@')[1]
           });

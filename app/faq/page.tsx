@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'FAQ - CallWaitingAI | Frequently Asked Questions',
-  description: 'Find answers to common questions about CallWaitingAI. Setup, pricing, features, integrations, and more.',
-};
+'use client';
 
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Logo from '@/components/Logo';
