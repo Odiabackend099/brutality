@@ -65,7 +65,7 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl p-6 max-w-md">
+    <div className="fixed top-4 right-4 z-30 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl p-6 max-w-md">
       <div className="flex items-center gap-2 mb-4">
         <Settings className="w-5 h-5 text-cyan-400" />
         <h3 className="text-lg font-semibold text-white">Test Admin Panel</h3>

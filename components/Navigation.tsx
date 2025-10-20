@@ -2,7 +2,7 @@ import Logo from './Logo';
 
 export default function Navigation() {
   return (
-    <nav className="max-w-7xl mx-auto px-6 pt-6 flex items-center justify-between relative z-10">
+    <nav className="max-w-7xl mx-auto px-6 pt-6 flex items-center justify-between relative z-50">
       <Logo size="md" showText={true} />
       <div className="flex items-center gap-6">
         <a

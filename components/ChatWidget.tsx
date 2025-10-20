@@ -392,7 +392,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
   if (!mounted) {
     // Return a placeholder with the same dimensions to prevent layout shift
     return (
-      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <div className={`fixed bottom-6 right-6 z-40 ${className}`}>
         <div className="w-40 h-12"></div>
       </div>
     );
@@ -400,7 +400,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
 
   if (!isOpen) {
     return (
-      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <div className={`fixed bottom-6 right-6 z-40 ${className}`}>
         <button
           onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2 group"

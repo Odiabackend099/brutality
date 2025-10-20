@@ -24,19 +24,42 @@ const nextConfig = {
         tls: false,
       };
       
-      // Configure ONNX runtime for client-side
+      // Configure ONNX runtime for client-side with optimizations
       config.module.rules.push({
         test: /\.wasm$/,
         type: 'asset/resource',
       });
       
-      // Ignore ONNX runtime warnings
+      // Note: Removed ONNX runtime alias to fix build error
+      
+      // Ignore ONNX runtime warnings and optimize performance
       config.ignoreWarnings = [
         {
           module: /node_modules\/onnxruntime-web/,
           message: /Critical dependency: require function/,
         },
+        {
+          module: /node_modules\/@ricky0123\/vad-web/,
+          message: /Critical dependency/,
+        },
       ];
+      
+      // Performance optimizations for ONNX runtime
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            onnx: {
+              test: /[\\/]node_modules[\\/](onnxruntime-web|@ricky0123\/vad-web)[\\/]/,
+              name: 'onnx',
+              chunks: 'all',
+              priority: 20,
+            },
+          },
+        },
+      };
     }
     return config;
   },

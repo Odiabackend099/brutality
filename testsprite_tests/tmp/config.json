@@ -2,14 +2,5 @@
   "status": "commited",
   "type": "frontend",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:3000",
-  "executionArgs": {
-    "projectName": "brutality",
-    "projectPath": "/Users/odiadev/Desktop/cwai/brutality",
-    "testIds": [],
-    "additionalInstruction": "Test the CallWaitingAI voice AI platform including homepage, voice AI functionality, dashboard, free tools, and API endpoints. Focus on core functionality and user experience.",
-    "envs": {
-      "API_KEY": "sk-user-Ad9gkTy2tYkmV7ErhM9CcSAX2lZ2g5h43G8iTT8mGN7a1jFGpNkYXEegp45stY9xuZSmLd8O3agPcU4ohXaOvnzKFju4atkY_cYFFXGvAsRqf3ZklRtA0LZfjWK9Ehg-WFQ"
-    }
-  }
+  "localEndpoint": "http://localhost:3000"
 }

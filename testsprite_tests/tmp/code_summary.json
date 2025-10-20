@@ -2,7 +2,7 @@
   "tech_stack": [
     "TypeScript",
     "Next.js 14",
-    "React",
+    "React 18",
     "Tailwind CSS",
     "Supabase",
     "PostgreSQL",
@@ -16,7 +16,9 @@
     "WebRTC",
     "ONNX Runtime",
     "Silero VAD",
-    "Playwright Testing"
+    "Playwright Testing",
+    "n8n Automation",
+    "Vercel Deployment"
   ],
   "features": [
     {
@@ -35,69 +37,49 @@
     },
     {
       "name": "Voice Activity Detection",
-      "description": "Advanced VAD system using Silero for speech detection and interruption handling",
+      "description": "Real-time voice activity detection using Silero VAD and ONNX runtime",
       "files": [
         "lib/vad-processor.ts",
         "lib/enhanced-vad-processor.ts",
-        "app/test-voice-ai/page.tsx",
+        "app/test-voice-ai/page.tsx"
+      ]
+    },
+    {
+      "name": "Streaming Audio Processing",
+      "description": "Ultra-low latency streaming audio with interruption handling and buffering",
+      "files": [
+        "lib/streaming-audio-player.ts",
+        "lib/audio-player.ts",
         "app/test-streaming-voice-ai/page.tsx"
       ]
     },
     {
-      "name": "Audio Processing Pipeline",
-      "description": "Real-time audio processing with streaming and buffering capabilities",
+      "name": "Agent Management System",
+      "description": "Create and manage AI agents with configuration options",
       "files": [
-        "lib/audio-player.ts",
-        "lib/streaming-audio-player.ts",
-        "lib/deepgram-stt.ts",
-        "lib/groq-llm.ts",
-        "lib/custom-tts.ts"
+        "app/api/create-agent/route.ts",
+        "app/api/create-agent-public/route.ts",
+        "app/api/agents/[id]/configure-llm/route.ts",
+        "app/api/agents/[id]/configure-tts/route.ts",
+        "app/create-agent/page.tsx",
+        "components/CreateAgentModal.tsx",
+        "components/CallAgentButton.tsx"
       ]
     },
     {
-      "name": "Authentication & Authorization",
-      "description": "Enterprise-grade authentication with OAuth2, MFA, and session management",
+      "name": "Call Processing Pipeline",
+      "description": "Inbound call handling with speech processing and response generation",
       "files": [
-        "lib/auth.ts",
-        "app/api/auth/[...nextauth]/route.ts",
-        "app/auth/signin/page.tsx",
-        "lib/auth-helpers.ts"
-      ]
-    },
-    {
-      "name": "API Security Framework",
-      "description": "Comprehensive API security with rate limiting, encryption, and bot detection",
-      "files": [
-        "lib/api-security.ts",
-        "lib/encryption.ts",
-        "middleware.ts"
-      ]
-    },
-    {
-      "name": "Monitoring & Observability",
-      "description": "Real-time system monitoring with health checks, performance tracking, and alerting",
-      "files": [
-        "lib/logger.ts",
-        "lib/monitoring.ts",
-        "app/api/health/route.ts",
-        "app/api/monitoring/dashboard/route.ts",
-        "app/api/monitoring/test/route.ts"
-      ]
-    },
-    {
-      "name": "Admin Panel",
-      "description": "Administrative interface for managing users, agents, and system configuration",
-      "files": [
-        "app/api/admin/test-create/route.ts",
-        "app/api/admin/test-auth/route.ts",
-        "app/api/admin/create-test-user/route.ts",
-        "app/api/admin/status/route.ts",
-        "components/TestAdminPanel.tsx"
+        "app/api/call/inbound/route.ts",
+        "app/api/call/process-speech/route.ts",
+        "app/api/call/complete/route.ts",
+        "app/api/call/check-trial/route.ts",
+        "app/api/agent/[id]/webhook/route.ts"
       ]
     },
     {
       "name": "Dashboard System",
-      "description": "User dashboard for managing agents, calls, leads, and phone numbers",
+      "description": "User dashboard with agent management, call logs, leads, and billing",
       "files": [
         "app/dashboard/page.tsx",
         "app/dashboard/agents/page.tsx",
@@ -106,12 +88,12 @@
         "app/dashboard/phone/page.tsx",
         "app/dashboard/flows/page.tsx",
         "app/dashboard/settings/page.tsx",
-        "app/dashboard/upgrade/page.tsx"
+        "app/dashboard/layout.tsx"
       ]
     },
     {
-      "name": "Free Tools System",
-      "description": "Lead generation tools including ROI calculator and call script generator",
+      "name": "Free Tools Suite",
+      "description": "Interactive tools for lead generation including ROI calculator and script generator",
       "files": [
         "app/tools/page.tsx",
         "app/tools/missed-call-calculator/page.tsx",
@@ -121,62 +103,67 @@
       ]
     },
     {
-      "name": "Payment Processing",
-      "description": "Flutterwave payment integration for subscriptions and billing",
+      "name": "Authentication System",
+      "description": "User authentication with Supabase and NextAuth.js integration",
       "files": [
-        "lib/flutterwave.ts",
+        "lib/auth-helpers.ts",
+        "lib/auth.ts",
+        "app/auth/callback/route.ts",
+        "app/login/page.tsx",
+        "app/signup/page.tsx",
+        "app/forgot-password/page.tsx",
+        "app/auth/reset-password/page.tsx"
+      ]
+    },
+    {
+      "name": "Payment Integration",
+      "description": "Flutterwave payment processing with subscription management",
+      "files": [
         "app/api/create-payment-link/route.ts",
         "app/api/flutterwave-webhook/route.ts",
         "app/billing/page.tsx",
-        "components/PricingSection.tsx"
+        "lib/flutterwave.ts"
       ]
     },
     {
-      "name": "Telephony Integration",
-      "description": "Twilio voice API integration for call handling and management",
+      "name": "Chat Widget System",
+      "description": "Floating chat widget with voice and text capabilities",
       "files": [
-        "app/api/twilio/call-status/route.ts",
-        "app/api/twilio/transcript/route.ts",
-        "app/api/call/inbound/route.ts",
-        "app/api/call/process-speech/route.ts",
-        "app/api/call/complete/route.ts"
+        "components/ChatWidget.tsx",
+        "components/support/float-chat.tsx",
+        "app/api/chat/widget/route.ts",
+        "hooks/useChat.ts"
       ]
     },
     {
-      "name": "Agent Management",
-      "description": "AI agent creation, configuration, and management system",
+      "name": "Admin Panel",
+      "description": "Administrative interface for system management and monitoring",
       "files": [
-        "app/api/create-agent/route.ts",
-        "app/api/create-agent-public/route.ts",
-        "app/api/agents/[id]/configure-llm/route.ts",
-        "app/api/agents/[id]/configure-tts/route.ts",
-        "app/create-agent/page.tsx",
-        "components/CreateAgentModal.tsx"
+        "app/api/admin/status/route.ts",
+        "app/api/admin/test-create/route.ts",
+        "app/api/admin/test-auth/route.ts",
+        "components/TestAdminPanel.tsx"
       ]
     },
     {
-      "name": "Lead Management",
-      "description": "Lead capture, processing, and delivery system",
+      "name": "Monitoring & Logging",
+      "description": "System monitoring with Winston logging and health checks",
       "files": [
-        "app/api/leads/extract/route.ts",
-        "app/api/leads/deliver/?route.ts",
-        "app/api/whatsapp/send/route.ts"
+        "lib/logger.ts",
+        "lib/monitoring.ts",
+        "app/api/health/route.ts",
+        "app/api/monitoring/dashboard/route.ts",
+        "app/api/usage-report/route.ts"
       ]
     },
     {
-      "name": "Content Management",
-      "description": "Static pages and content management system",
+      "name": "Security Framework",
+      "description": "Comprehensive security with rate limiting, encryption, and bot detection",
       "files": [
-        "app/page.tsx",
-        "app/about/page.tsx",
-        "app/pricing/page.tsx",
-        "app/contact/page.tsx",
-        "app/faq/page.tsx",
-        "app/resources/page.tsx",
-        "app/terms/page.tsx",
-        "app/privacy/page.tsx",
-        "components/Footer.tsx",
-        "components/Navigation.tsx"
+        "middleware.ts",
+        "lib/api-security.ts",
+        "lib/encryption.ts",
+        "app/api/trial/record-usage/route.ts"
       ]
     },
     {
@@ -184,51 +171,76 @@
       "description": "Comprehensive documentation and help system",
       "files": [
         "app/docs/page.tsx",
-        "app/docs/quick-start/page.tsx"
-      ]
-    },
-    {
-      "name": "Trial System",
-      "description": "Free trial management and usage tracking",
-      "files": [
-        "lib/free-trial.ts",
-        "lib/usage.ts",
-        "app/api/trial/status/route.ts",
-        "app/api/trial/record-usage/route.ts",
-        "app/api/call/check-trial/route.ts",
-        "components/TrialStatusBanner.tsx",
-        "components/UsageQuota.tsx"
-      ]
-    },
-    {
-      "name": "Chat Widget",
-      "description": "Embeddable chat widget for customer support",
-      "files": [
-        "components/ChatWidget.tsx",
-        "components/support/float-chat.tsx",
-        "app/api/chat/widget/route.ts",
-        "app/api/support/assistant/route.ts",
-        "app/chat-widget.css"
+        "app/docs/quick-start/page.tsx",
+        "app/about/page.tsx",
+        "app/contact/page.tsx",
+        "app/faq/page.tsx",
+        "app/resources/page.tsx"
       ]
     },
     {
       "name": "Testing Framework",
-      "description": "Comprehensive testing system with Playwright integration",
+      "description": "Comprehensive testing suite with Playwright and TestSprite integration",
       "files": [
-        "testsprite_tests/TC001_Chat_Bubble_Rendering_and_Toggle.py",
         "test_simple_functionality.py",
-        "test_homepage_content.py"
+        "test_mobile_performance.py",
+        "test_voice_ai_microphone.py",
+        "testsprite_tests/",
+        "scripts/test-voice-ai-system.js"
       ]
     },
     {
-      "name": "Configuration Management",
-      "description": "Environment configuration and deployment management",
+      "name": "Content Management",
+      "description": "Static content pages with SEO optimization",
       "files": [
-        "next.config.js",
-        "tailwind.config.ts",
-        "tsconfig.json",
-        "package.json",
-        "vercel.json"
+        "app/page.tsx",
+        "app/pricing/page.tsx",
+        "app/terms/page.tsx",
+        "app/privacy/page.tsx",
+        "app/use-cases/page.tsx",
+        "app/integrations/page.tsx",
+        "components/PricingSection.tsx",
+        "components/Footer.tsx",
+        "components/Navigation.tsx"
+      ]
+    },
+    {
+      "name": "WhatsApp Integration",
+      "description": "WhatsApp messaging integration for lead delivery",
+      "files": [
+        "app/api/whatsapp/send/route.ts",
+        "app/api/leads/deliver/route.ts",
+        "app/api/leads/extract/route.ts"
+      ]
+    },
+    {
+      "name": "TTS Voice System",
+      "description": "Text-to-speech voice generation and management",
+      "files": [
+        "app/api/generate-voice/route.ts",
+        "app/api/tts/voices/route.ts",
+        "app/api/tts/test-voice/route.ts",
+        "lib/odiadev-tts.ts"
+      ]
+    },
+    {
+      "name": "Trial Management",
+      "description": "Free trial system with usage tracking and limits",
+      "files": [
+        "app/api/trial/status/route.ts",
+        "app/api/trial/record-usage/route.ts",
+        "components/TrialStatusBanner.tsx",
+        "components/UsageQuota.tsx",
+        "lib/free-trial.ts",
+        "lib/usage.ts"
+      ]
+    },
+    {
+      "name": "Twilio Integration",
+      "description": "Twilio voice API integration for call handling",
+      "files": [
+        "app/api/twilio/call-status/route.ts",
+        "app/api/twilio/transcript/route.ts"
       ]
     }
   ]

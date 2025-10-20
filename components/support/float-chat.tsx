@@ -92,7 +92,7 @@ export default function FloatChat({ className = '' }: FloatChatProps) {
   };
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
+    <div className={`fixed bottom-4 right-4 z-30 ${className}`}>
       {/* Chat Button */}
       {!isOpen && (
         <button

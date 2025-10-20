@@ -70,15 +70,20 @@ async def test_mobile_core_functionality():
             # Test 5: Test calculator functionality
             print("🧮 Testing calculator inputs...")
             try:
-                # Find input fields and fill them
-                inputs = await page.locator('input[type="number"], input[placeholder*="calls"], input[placeholder*="minutes"], input[placeholder*="£"], input[placeholder*="%"]').all()
+                # Find input fields and select elements
+                inputs = await page.locator('input[type="number"], input[placeholder*="calls"], input[placeholder*="minutes"], input[placeholder*="£"], input[placeholder*="%"], select').all()
                 
                 if len(inputs) >= 5:
-                    await inputs[0].fill('100')  # calls per day
-                    await inputs[1].fill('5')    # minutes per call
-                    await inputs[2].fill('50')   # value per call
+                    await inputs[0].fill('25')   # calls per day
+                    await inputs[1].fill('30')   # miss rate
+                    await inputs[2].fill('800')  # average job value
                     await inputs[3].fill('20')   # conversion rate
-                    await inputs[4].fill('80')   # capture rate
+                    # Handle select element for industry
+                    element_type = await inputs[4].evaluate('el => el.tagName')
+                    if element_type == 'SELECT':
+                        await inputs[4].select_option(index=1)
+                    else:
+                        await inputs[4].fill('Construction')  # fallback for input field
                     
                     await page.wait_for_timeout(1000)
                     results['calculator_inputs_work'] = True
