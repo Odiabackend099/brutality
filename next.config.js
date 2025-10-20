@@ -23,6 +23,20 @@ const nextConfig = {
         net: false,
         tls: false,
       };
+      
+      // Configure ONNX runtime for client-side
+      config.module.rules.push({
+        test: /\.wasm$/,
+        type: 'asset/resource',
+      });
+      
+      // Ignore ONNX runtime warnings
+      config.ignoreWarnings = [
+        {
+          module: /node_modules\/onnxruntime-web/,
+          message: /Critical dependency: require function/,
+        },
+      ];
     }
     return config;
   },

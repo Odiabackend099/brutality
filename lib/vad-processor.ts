@@ -34,12 +34,9 @@ export class VADProcessor {
         },
         positiveSpeechThreshold: 0.8,
         negativeSpeechThreshold: 0.75,
-        redemptionFrames: 8,
-        frameSamples: 1536,
-        preSpeechPadFrames: 1,
-        minSpeechFrames: 3,
+        redemptionMs: 128, // Convert frames to ms (8 * 16)
         submitUserSpeechOnPause: true,
-        onnxWASMBasePath: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/',
+        onnxWASMBasePath: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/',
         baseAssetPath: 'https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.27/dist/',
       });
       

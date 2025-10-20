@@ -4,7 +4,6 @@ import { ArrowRight, Phone, Clock, MessageSquare, CheckCircle, Mail } from 'luci
 import { useState } from 'react';
 import PricingSection from '@/components/PricingSection';
 import Navigation from '@/components/Navigation';
-import Logo from '@/components/Logo';
 
 export default function Page() {
   const [email, setEmail] = useState('');

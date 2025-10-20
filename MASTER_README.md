@@ -99,7 +99,7 @@ Open: http://localhost:3002 and test the chat widget!
 
 ### **2. Add AI Intelligence** (5 Minutes)
 
-1. Go to: https://callwaitingai.app.n8n.cloud
+1. Go to: https://cwai.app.n8n.cloud
 2. Import: `n8n-workflow-openai-http.json`
 3. Activate workflow
 4. Test:
@@ -359,7 +359,7 @@ You have:
 | Resource | Link |
 |----------|------|
 | Dev Server | http://localhost:3002 |
-| n8n Instance | https://callwaitingai.app.n8n.cloud |
+| n8n Instance | https://cwai.app.n8n.cloud |
 | Test Tool | `node test-webhook.js` |
 | Start Here | [README_CHAT_WIDGET.md](README_CHAT_WIDGET.md) |
 | Deploy Guide | [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) |

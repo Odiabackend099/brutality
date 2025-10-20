@@ -7,10 +7,9 @@
     "projectName": "brutality",
     "projectPath": "/Users/odiadev/Desktop/cwai/brutality",
     "testIds": [],
-    "additionalInstruction": "Test the CallWaitingAI frontend application focusing on the free tools (Missed Call ROI Calculator and Call Script Generator), user authentication, and core functionality. Ensure all interactive elements work correctly and forms submit properly.",
+    "additionalInstruction": "Test the CallWaitingAI voice AI platform including homepage, voice AI functionality, dashboard, free tools, and API endpoints. Focus on core functionality and user experience.",
     "envs": {
-      "API_KEY": "sk-user-gm6IG1zOwxVwRDF7lI9f1QYUUdkeJO8AnFYoipWVZUT-rnHBvDJKCdjcQ9K_lIdnqs_jusbgRmWNo3oymj0u4CJjO-btGW87R09oB4um_oYJGQlrGHXs0dORWOJK5_k5etU"
+      "API_KEY": "sk-user-Ad9gkTy2tYkmV7ErhM9CcSAX2lZ2g5h43G8iTT8mGN7a1jFGpNkYXEegp45stY9xuZSmLd8O3agPcU4ohXaOvnzKFju4atkY_cYFFXGvAsRqf3ZklRtA0LZfjWK9Ehg-WFQ"
     }
-  },
-  "proxy": "http://dd4ee687-aa8d-42ff-a5a8-7b573666c447:xu1WoYBDV1E6ApAe9dPCWqyhWj71lPSv@tun.testsprite.com:8080"
+  }
 }

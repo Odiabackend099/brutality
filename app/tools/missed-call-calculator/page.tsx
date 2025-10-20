@@ -138,7 +138,7 @@ export default function MissedCallCalculator() {
       };
       
       // Send to N8N webhook
-      const response = await fetch('https://callwaitingai.app.n8n.cloud/webhook/free-tools-webhook', {
+      const response = await fetch('https://cwai.app.n8n.cloud/webhook/tool-submission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

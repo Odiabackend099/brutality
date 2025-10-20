@@ -122,7 +122,7 @@ Remember: You're having a voice conversation. Be natural, brief, and helpful.`;
 
     } catch (error) {
       console.error('❌ Voice AI Manager connection failed:', error);
-      this.handleError('Failed to connect voice AI system');
+      this.handleError('Failed to connect voice AI system: ' + (error instanceof Error ? error.message : 'Unknown error'));
       this.setState('error');
     }
   }
@@ -156,25 +156,28 @@ Remember: You're having a voice conversation. Be natural, brief, and helpful.`;
       try {
         // Generate AI response using Groq
         const response = await this.groqLLM.generateResponse(text, this.systemPrompt);
+        console.log('🤖 AI Response:', response);
         
         // Convert response to speech using custom TTS
         await this.generateAndPlaySpeech(response);
         
       } catch (error) {
         console.error('❌ Error processing transcript:', error);
-        this.handleError('Failed to process your message');
+        this.handleError('Failed to process your message: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
     }
   }
 
   private async generateAndPlaySpeech(text: string) {
     try {
-      console.log('🔊 Generating speech for AI response');
-      const audioBuffer = await this.customTTS.generateSpeech(text);
+      console.log('🔊 Generating speech for AI response:', text.substring(0, 50) + '...');
+      const audioBuffer = await this.customTTS.generateSpeech(text, 'marcus');
+      console.log('🔊 Adding audio chunk to player');
       await this.audioPlayer.addAudioChunk(audioBuffer);
+      console.log('✅ Audio chunk added successfully');
     } catch (error) {
       console.error('❌ Error generating speech:', error);
-      this.handleError('Failed to generate speech response');
+      this.handleError('Failed to generate speech response: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 

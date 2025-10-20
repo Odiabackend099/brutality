@@ -94,10 +94,23 @@ confirmation text and email shortly. Is there anything else I can help with?"
     e.preventDefault();
     
     try {
-      await fetch('/api/save-script', {
+      await fetch('https://cwai.app.n8n.cloud/webhook/tool-submission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, script: generatedScript, industry: formData.industry })
+        body: JSON.stringify({
+          name: '',
+          email: email,
+          tool_type: 'call_script_generator',
+          tool_data: {
+            script: generatedScript,
+            industry: formData.industry,
+            services: formData.services,
+            questions: formData.questions
+          },
+          gdpr_consent: true,
+          source: 'free_tools',
+          timestamp: new Date().toISOString()
+        })
       });
       
       alert('Script library sent to your email!');

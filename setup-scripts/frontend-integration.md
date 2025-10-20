@@ -19,7 +19,7 @@ const response = await fetch('/api/generate-report', {
 });
 
 // NEW CODE (use this instead)
-const response = await fetch('https://your-n8n-instance.com/webhook/free-tools-webhook', {
+const response = await fetch('https://cwai.app.n8n.cloud/webhook/tool-submission', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -52,7 +52,7 @@ const response = await fetch('/api/save-script', {
 });
 
 // NEW CODE (use this instead)
-const response = await fetch('https://your-n8n-instance.com/webhook/free-tools-webhook', {
+const response = await fetch('https://cwai.app.n8n.cloud/webhook/tool-submission', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -138,7 +138,7 @@ export default function MissedCallCalculator() {
       // Get user IP (you'll need to implement this)
       const userIP = await getUserIP();
       
-      const response = await fetch('https://your-n8n-instance.com/webhook/free-tools-webhook', {
+      const response = await fetch('https://cwai.app.n8n.cloud/webhook/tool-submission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -263,7 +263,7 @@ NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LcZAb4pAAAA...
 RECAPTCHA_SECRET_KEY=6LcZAb4pAAAA...
 
 # N8N Webhook
-NEXT_PUBLIC_N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/free-tools-webhook
+NEXT_PUBLIC_N8N_WEBHOOK_URL=https://cwai.app.n8n.cloud/webhook/tool-submission
 
 # Mixpanel
 NEXT_PUBLIC_MIXPANEL_TOKEN=xxx-xxx
@@ -285,8 +285,8 @@ Create a test version of your tools:
 const isTestMode = process.env.NODE_ENV === 'development';
 
 const webhookUrl = isTestMode 
-  ? 'https://your-n8n-instance.com/webhook/test-free-tools-webhook'
-  : 'https://your-n8n-instance.com/webhook/free-tools-webhook';
+  ? 'https://cwai.app.n8n.cloud/webhook/test-tool-submission'
+  : 'https://cwai.app.n8n.cloud/webhook/tool-submission';
 ```
 
 ### **2. Test Data**

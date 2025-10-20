@@ -1,38 +1,42 @@
+import { OdiaDevTTS } from './services/tts/odiadev';
+
 export class CustomTTS {
   private apiUrl: string;
+  private ttsService: OdiaDevTTS;
 
   constructor() {
     this.apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    this.ttsService = new OdiaDevTTS();
   }
 
   async generateSpeech(text: string, voiceId?: string): Promise<ArrayBuffer> {
     try {
       console.log('🔊 Generating speech for:', text.substring(0, 50) + '...');
 
-      const response = await fetch(`${this.apiUrl}/api/generate-voice`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: text,
-          voice_id: voiceId || 'alloy', // Default voice
-          speed: 1.0,
-          pitch: 1.0,
-        }),
+      // Use the actual TTS generation function
+      const result = await this.ttsService.synthesize({
+        text: text,
+        voiceId: voiceId || process.env.DEFAULT_VOICE || 'marcus'
       });
 
-      if (!response.ok) {
-        throw new Error(`TTS API error: ${response.status}`);
+      if (!result.audioUrl) {
+        throw new Error('No audio URL returned from TTS service');
       }
 
-      const audioBuffer = await response.arrayBuffer();
+      // Fetch the actual audio file
+      const audioResponse = await fetch(result.audioUrl);
+      
+      if (!audioResponse.ok) {
+        throw new Error(`Failed to fetch audio: ${audioResponse.status}`);
+      }
+
+      const audioBuffer = await audioResponse.arrayBuffer();
       console.log('🔊 Speech generated successfully');
       return audioBuffer;
 
     } catch (error) {
       console.error('❌ TTS generation error:', error);
-      throw new Error('Failed to generate speech');
+      throw new Error('Failed to generate speech: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 
@@ -40,40 +44,28 @@ export class CustomTTS {
     try {
       console.log('🔊 Generating streaming speech for:', text.substring(0, 50) + '...');
 
-      const response = await fetch(`${this.apiUrl}/api/generate-voice`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: text,
-          voice_id: voiceId || 'alloy',
-          speed: 1.0,
-          pitch: 1.0,
-          streaming: true,
-        }),
+      // For streaming, we'll use the TTS service directly
+      const result = await this.ttsService.synthesize({
+        text: text,
+        voiceId: voiceId || process.env.DEFAULT_VOICE || 'marcus'
       });
 
-      if (!response.ok) {
-        throw new Error(`TTS API error: ${response.status}`);
+      if (!result.audioUrl) {
+        throw new Error('No audio URL returned from TTS service');
       }
 
-      if (!response.body) {
-        throw new Error('No response body for streaming');
+      // Fetch the actual audio file
+      const audioResponse = await fetch(result.audioUrl);
+      
+      if (!audioResponse.ok) {
+        throw new Error(`Failed to fetch audio: ${audioResponse.status}`);
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        
-        if (done) break;
-
-        // Handle streaming audio chunks
-        if (onChunk) {
-          onChunk(value);
-        }
+      const audioBuffer = await audioResponse.arrayBuffer();
+      
+      // Handle streaming audio chunks
+      if (onChunk) {
+        onChunk(audioBuffer);
       }
 
       console.log('🔊 Streaming speech completed');
@@ -87,14 +79,14 @@ export class CustomTTS {
   // Get available voices
   async getAvailableVoices(): Promise<Array<{ id: string; name: string }>> {
     try {
-      const response = await fetch(`${this.apiUrl}/api/tts/voices`);
+      const ttsService = new OdiaDevTTS();
+      const voices = await ttsService.voices();
       
-      if (!response.ok) {
-        throw new Error(`Voices API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.voices || [];
+      // Map to the expected format
+      return voices.map(voice => ({
+        id: voice.id,
+        name: voice.name
+      }));
 
     } catch (error) {
       console.error('❌ Failed to get voices:', error);

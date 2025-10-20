@@ -1,4 +1,6 @@
-export type VoiceId = 'male' | 'female' | 'neutral';
+import { VoiceId } from './services/tts/odiadev';
+
+export type { VoiceId };
 
 export interface TTSResponse {
   audioUrl?: string;
@@ -14,20 +16,41 @@ export function estimateDuration(text: string): number {
 
 export async function generateTTS(text: string, voiceId: VoiceId): Promise<TTSResponse> {
   try {
-    // Mock implementation - in real app this would call ODIADEV TTS API
-    const duration = estimateDuration(text);
+    // Check if we have the required environment variables
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Call the actual TTS API endpoint
+    const response = await fetch(`${baseUrl}/api/tts/test-voice`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        provider: 'odiadev',
+        voiceId: voiceId || 'marcus',
+        text: text
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`TTS API error: ${response.status}`);
+    }
+
+    const data = await response.json();
     
-    // Return mock response
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    // Return the actual audio URL from the API
     return {
-      audioUrl: `/api/mock-audio?text=${encodeURIComponent(text)}&voice=${voiceId}`,
-      duration
+      audioUrl: data.audioUrl,
+      duration: data.duration || estimateDuration(text)
     };
   } catch (error) {
+    console.error('TTS Generation Error:', error);
     return {
-      error: 'Failed to generate TTS audio'
+      error: error instanceof Error ? error.message : 'Failed to generate TTS audio'
     };
   }
 }

@@ -1,3 +1,5 @@
+export type VoiceId = string;
+
 export interface Voice {
   id: string;
   name: string;
@@ -14,13 +16,19 @@ export interface TTSResponse {
 export class OdiaDevTTS {
   private baseUrl: string;
   private apiKey: string;
+  private groupId: string;
 
   constructor() {
     this.baseUrl = process.env.ODIADEV_TTS_BASE_URL || 'https://minimax-tts-odiadev.onrender.com';
-    this.apiKey = process.env.ODIADEV_TTS_API_KEY || '';
+    this.apiKey = process.env.ODIADEV_TTS_API_KEY || process.env.MINIMAX_API_KEY || '';
+    this.groupId = process.env.ODIADEV_TTS_GROUP_ID || process.env.MINIMAX_GROUP_ID || '';
     
     if (!this.apiKey) {
-      console.warn('ODIADEV_TTS_API_KEY environment variable is not set');
+      console.warn('ODIADEV_TTS_API_KEY or MINIMAX_API_KEY environment variable is not set');
+    }
+    
+    if (!this.groupId) {
+      console.warn('ODIADEV_TTS_GROUP_ID or MINIMAX_GROUP_ID environment variable is not set');
     }
   }
 
@@ -79,18 +87,27 @@ export class OdiaDevTTS {
         throw new Error('Text cannot be empty');
       }
 
+      const requestBody: any = {
+        text: text.trim(),
+        voice_id: voiceId || process.env.DEFAULT_VOICE || 'marcus',
+        model: process.env.MINIMAX_MODEL || 'speech-02-hd',
+        speed: parseFloat(process.env.DEFAULT_SPEED || '1.0'),
+        pitch: parseFloat(process.env.DEFAULT_PITCH || '0'),
+        emotion: process.env.DEFAULT_EMOTION || 'neutral'
+      };
+
+      // Add group_id if available
+      if (this.groupId) {
+        requestBody.group_id = this.groupId;
+      }
+
       const response = await fetch(`${this.baseUrl}/v1/tts`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
-          text: text.trim(),
-          voice_id: voiceId,
-          format: 'mp3',
-          speed: 1.0
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
@@ -101,7 +118,7 @@ export class OdiaDevTTS {
       const data = await response.json();
       
       return {
-        audioUrl: data.audio_url || data.url || data.audioUrl,
+        audioUrl: data.audio_url || data.url || data.audioUrl || '',
         duration: data.duration,
         size: data.size
       };

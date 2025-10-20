@@ -31,9 +31,6 @@ const CallAgentButton: React.FC<CallAgentButtonProps> = ({
     return (
       <VoiceChat
         agentId={agentId}
-        agentName={agentName}
-        onCallStart={handleCallStart}
-        onCallEnd={handleCallEnd}
       />
     );
   }
