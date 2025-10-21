@@ -30,24 +30,25 @@ export class GroqChatClient {
     
     // Simple mock responses based on message content
     const lowerMessage = message.toLowerCase();
+    const contextNote = context ? ` [Context: ${context}]` : '';
     
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      return 'Hello! I\'m your CallWaiting AI assistant. How can I help you today?';
+      return `Hello! I'm your CallWaiting AI assistant. How can I help you today?${contextNote}`;
     }
     
     if (lowerMessage.includes('pricing') || lowerMessage.includes('cost')) {
-      return 'We offer flexible pricing plans starting from $300 for the Starter plan and $500 for the Pro plan. Both include AI receptionist services and call handling capabilities.';
+      return `We offer flexible pricing plans starting from $300 for the Starter plan and $500 for the Pro plan. Both include AI receptionist services and call handling capabilities.${contextNote}`;
     }
     
     if (lowerMessage.includes('features') || lowerMessage.includes('what can you do')) {
-      return 'CallWaiting AI provides 24/7 AI receptionist services, voice AI call handling, lead capture, and seamless integration with your business workflows.';
+      return `CallWaiting AI provides 24/7 AI receptionist services, voice AI call handling, lead capture, and seamless integration with your business workflows.${contextNote}`;
     }
     
     if (lowerMessage.includes('demo') || lowerMessage.includes('test')) {
-      return 'You can test our AI receptionist by clicking the "Test Agent" button or scheduling a demo call with our team.';
+      return `You can test our AI receptionist by clicking the "Test Agent" button or scheduling a demo call with our team.${contextNote}`;
     }
     
-    return 'Thank you for your message! Our team will get back to you soon. In the meantime, feel free to explore our features or schedule a demo.';
+    return `Thank you for your message! Our team will get back to you soon. In the meantime, feel free to explore our features or schedule a demo.${contextNote}`;
   }
 }
 

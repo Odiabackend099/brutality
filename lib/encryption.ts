@@ -43,18 +43,19 @@ export class EncryptionService {
       const derivedKey = crypto.pbkdf2Sync(this.key, salt, 100000, KEY_LENGTH, 'sha512')
       
       // Create cipher
-      const cipher = crypto.createCipher(ALGORITHM, derivedKey)
+      const cipher = crypto.createCipheriv(ALGORITHM, derivedKey, iv) as crypto.CipherGCM
       cipher.setAAD(salt)
       
-      // Encrypt data
-      let encrypted = cipher.update(text, 'utf8', 'hex')
-      encrypted += cipher.final('hex')
+      const encryptedBuffer = Buffer.concat([
+        cipher.update(text, 'utf8'),
+        cipher.final()
+      ])
       
       // Get authentication tag
       const tag = cipher.getAuthTag()
       
       // Combine salt + iv + tag + encrypted data
-      const combined = Buffer.concat([salt, iv, tag, Buffer.from(encrypted, 'hex')])
+      const combined = Buffer.concat([salt, iv, tag, encryptedBuffer])
       
       return combined.toString('base64')
     } catch (error) {
@@ -81,15 +82,16 @@ export class EncryptionService {
       const derivedKey = crypto.pbkdf2Sync(this.key, salt, 100000, KEY_LENGTH, 'sha512')
       
       // Create decipher
-      const decipher = crypto.createDecipher(ALGORITHM, derivedKey)
+      const decipher = crypto.createDecipheriv(ALGORITHM, derivedKey, iv) as crypto.DecipherGCM
       decipher.setAAD(salt)
       decipher.setAuthTag(tag)
       
-      // Decrypt data
-      let decrypted = decipher.update(encrypted, undefined, 'utf8')
-      decrypted += decipher.final('utf8')
+      const decryptedBuffer = Buffer.concat([
+        decipher.update(encrypted),
+        decipher.final()
+      ])
       
-      return decrypted
+      return decryptedBuffer.toString('utf8')
     } catch (error) {
       console.error('Decryption error:', error)
       throw new Error('Failed to decrypt data')

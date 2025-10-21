@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Settings, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { StreamingVoiceAIManager, StreamingConfig } from '@/lib/streaming-voice-ai-manager';
 import { EnhancedVADProcessor } from '@/lib/enhanced-vad-processor';
 import { StreamingAudioPlayer } from '@/lib/streaming-audio-player';
@@ -28,16 +28,6 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
   const voiceAIManagerRef = useRef<StreamingVoiceAIManager | null>(null);
   const vadProcessorRef = useRef<EnhancedVADProcessor | null>(null);
   const audioPlayerRef = useRef<StreamingAudioPlayer | null>(null);
-  
-  // Performance metrics
-  const [metrics, setMetrics] = useState({
-    totalLatency: 0,
-    sttLatency: 0,
-    llmLatency: 0,
-    ttsLatency: 0,
-    interruptionCount: 0,
-    averageVolume: 0
-  });
 
   // Initialize components
   useEffect(() => {
@@ -73,6 +63,7 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
           onResponse: (response) => {
             setResponse(response.text);
             setLatency(response.latency);
+            setIsInterrupted(false);
             console.log('🧠 Response:', response.text, `(${response.latency}ms)`);
           },
           onError: (error) => {
@@ -81,11 +72,9 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
           },
           onLatency: (latency) => {
             setLatency(latency);
-            setMetrics(prev => ({ ...prev, totalLatency: latency }));
           },
           onInterruption: () => {
             setIsInterrupted(true);
-            setMetrics(prev => ({ ...prev, interruptionCount: prev.interruptionCount + 1 }));
             console.log('⚠️ Interruption detected');
           }
         });
@@ -117,7 +106,7 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
         audioPlayerRef.current.destroy();
       }
     };
-  }, []);
+  }, [config]);
 
   // Handle connection
   const handleConnect = useCallback(async () => {
@@ -144,6 +133,7 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
       setIsListening(false);
       setIsProcessing(false);
       setIsSpeaking(false);
+      setIsInterrupted(false);
       console.log('🔇 Disconnected from streaming voice AI');
     } catch (error) {
       console.error('❌ Failed to disconnect:', error);
@@ -162,6 +152,7 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
       } else {
         await voiceAIManagerRef.current.startListening();
         setIsListening(true);
+        setIsInterrupted(false);
       }
     } catch (error) {
       console.error('❌ Failed to toggle microphone:', error);
@@ -233,11 +224,17 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
         </div>
 
         {/* Error Display */}
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 mb-6">
-            <p className="text-red-200 text-sm">{error}</p>
-          </div>
-        )}
+          {error && (
+            <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 mb-6">
+              <p className="text-red-200 text-sm">{error}</p>
+            </div>
+          )}
+          {isInterrupted && !error && (
+            <div className="bg-yellow-500/20 border border-yellow-500/40 rounded-2xl p-4 mb-6 flex items-center gap-2 text-yellow-100 text-sm">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <span>Interruption detected. Listening has been paused to protect the conversation flow.</span>
+            </div>
+          )}
 
         {/* Controls */}
         <div className="flex flex-col gap-4 mb-6">
@@ -293,12 +290,13 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
         {/* Volume Control */}
         {isConnected && (
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">Volume</label>
+            <label htmlFor="streaming-volume" className="block text-sm font-medium mb-2">Volume</label>
             <input
               type="range"
               min="0"
               max="1"
               step="0.1"
+              id="streaming-volume"
               value={volume}
               onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
               className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
@@ -346,4 +344,3 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
     </div>
   );
 }
-

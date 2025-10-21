@@ -36,6 +36,7 @@ export default function VoiceChat({ agentId }: VoiceChatProps) {
       await voiceAIManagerRef.current.connect({
         onStateChange: setState,
         onListeningChange: setIsListening,
+        onSpeakingChange: setIsSpeaking,
         onTranscriptChange: setTranscript,
         onError: setError,
       });
@@ -76,6 +77,9 @@ export default function VoiceChat({ agentId }: VoiceChatProps) {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">CallWaitingAI Voice</h1>
           <p className="text-gray-300">Your intelligent voice assistant</p>
+          {agentId && (
+            <p className="text-xs text-gray-500 mt-2">Testing agent ID: {agentId}</p>
+          )}
         </div>
 
         {/* Main Card */}

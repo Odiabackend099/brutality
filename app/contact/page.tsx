@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Logo from '@/components/Logo'
 import { Mail, Phone, MapPin, Clock, Users, Shield } from 'lucide-react'
 

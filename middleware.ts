@@ -138,8 +138,8 @@ export async function middleware(request: NextRequest) {
       'https://callwaitingai.vercel.app'
     ]
 
-    if (typeof origin === 'string' && allowedOrigins.includes(origin)) {
-      response.headers.set('Access-Control-Allow-Origin', origin)
+    if (origin && allowedOrigins.includes(origin as string)) {
+      response.headers.set('Access-Control-Allow-Origin', origin as string)
     }
     
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')

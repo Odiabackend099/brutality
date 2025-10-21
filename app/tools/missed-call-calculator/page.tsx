@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calculator, TrendingDown, TrendingUp, Mail, Share2 } from 'lucide-react';
+import { Calculator, Mail, Share2 } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 // Declare grecaptcha for TypeScript
@@ -258,9 +258,10 @@ export default function MissedCallCalculator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Average job value (£)</label>
+                  <label htmlFor="average-job-value" className="block text-sm font-medium mb-2">Average job value (£)</label>
                   <input
                     type="number"
+                    id="average-job-value"
                     value={formData.jobValue}
                     onChange={(e) => setFormData({...formData, jobValue: e.target.value})}
                     placeholder="800"
@@ -269,9 +270,10 @@ export default function MissedCallCalculator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Conversion rate (%)</label>
+                  <label htmlFor="conversion-rate" className="block text-sm font-medium mb-2">Conversion rate (%)</label>
                   <input
                     type="number"
+                    id="conversion-rate"
                     value={formData.conversionRate}
                     onChange={(e) => setFormData({...formData, conversionRate: e.target.value})}
                     placeholder="20"
@@ -280,8 +282,9 @@ export default function MissedCallCalculator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Industry</label>
+                  <label htmlFor="industry-select" className="block text-sm font-medium mb-2">Industry</label>
                   <select
+                    id="industry-select"
                     value={formData.industry}
                     onChange={(e) => setFormData({...formData, industry: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none"

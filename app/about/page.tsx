@@ -3,7 +3,7 @@ export const metadata = {
   description: 'CallWaitingAI Ltd is a UK-registered AI company that builds voice automation for businesses that can\'t afford to miss a single call.',
 };
 
-import { CheckCircle, Users, Clock, TrendingUp, Globe, Shield } from 'lucide-react';
+import { CheckCircle, Users, Globe, Shield } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 export default function AboutPage() {

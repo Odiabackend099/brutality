@@ -21,8 +21,6 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const callSid = formData.get('CallSid') as string
-    const from = formData.get('From') as string
-    const to = formData.get('To') as string
     const speechResult = formData.get('SpeechResult') as string
     const confidence = formData.get('Confidence') as string
 

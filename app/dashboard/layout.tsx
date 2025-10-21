@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { getUser, signOut } from '@/lib/auth-helpers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Logo from '@/components/Logo'
-import TrialStatusBanner from '@/components/TrialStatusBanner'
 import Link from 'next/link'
 import {
   Phone,

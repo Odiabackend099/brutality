@@ -109,7 +109,7 @@ export class APISecurityManager {
         const refererUrl = new URL(referer)
         const refererOrigin = refererUrl.origin
         if (allowedOrigins.includes(refererOrigin)) return true
-      } catch (error) {
+      } catch {
         // Invalid referer URL
       }
     }
@@ -186,7 +186,7 @@ export class APISecurityManager {
       }
       
       return null
-    } catch (error) {
+    } catch {
       throw new Error('Invalid request body')
     }
   }

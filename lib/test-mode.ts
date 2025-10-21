@@ -64,6 +64,10 @@ export function validateTestModeAccess(request: Request): boolean {
   const origin = request.headers.get('origin');
   const userAgent = request.headers.get('user-agent');
   
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug('[TEST_MODE] Access attempt', { origin, userAgent });
+  }
+  
   // Only allow from localhost in development
   if (process.env.NODE_ENV === 'development') {
     return Boolean(origin?.includes('localhost') || origin?.includes('127.0.0.1'));

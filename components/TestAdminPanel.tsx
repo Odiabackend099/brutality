@@ -77,11 +77,12 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
       {!testAccount ? (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="test-admin-password" className="block text-sm font-medium text-slate-300 mb-2">
               Admin Password
             </label>
             <input
               type="password"
+              id="test-admin-password"
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
               placeholder="Enter admin password"
@@ -123,12 +124,13 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
 
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">
+              <label htmlFor="test-user-email" className="block text-xs font-medium text-slate-400 mb-1">
                 Test User Email
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  id="test-user-email"
                   value={testAccount.email}
                   readOnly
                   className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
@@ -143,12 +145,13 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">
+              <label htmlFor="test-user-password" className="block text-xs font-medium text-slate-400 mb-1">
                 Test Password
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  id="test-user-password"
                   value={testAccount.password}
                   readOnly
                   className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
@@ -163,12 +166,13 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">
+              <label htmlFor="test-phone-number" className="block text-xs font-medium text-slate-400 mb-1">
                 Test Phone Number
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  id="test-phone-number"
                   value={testAccount.phoneNumber}
                   readOnly
                   className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
@@ -183,12 +187,13 @@ export default function TestAdminPanel({ isVisible }: TestAdminPanelProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">
+              <label htmlFor="test-agent-id" className="block text-xs font-medium text-slate-400 mb-1">
                 Agent ID
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  id="test-agent-id"
                   value={testAccount.agentId}
                   readOnly
                   className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Phone, PhoneOff } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import VoiceChat from './VoiceChat';
 
 interface CallAgentButtonProps {
@@ -21,10 +21,6 @@ const CallAgentButton: React.FC<CallAgentButtonProps> = ({
 
   const handleCallStart = () => {
     setIsCallActive(true);
-  };
-
-  const handleCallEnd = () => {
-    setIsCallActive(false);
   };
 
   if (isCallActive) {

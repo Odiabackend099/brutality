@@ -59,7 +59,7 @@ export class AudioPlayer {
     if (this.currentSource) {
       try {
         this.currentSource.stop();
-      } catch (e) {
+      } catch {
         // Already stopped
       }
     }

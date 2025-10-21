@@ -171,7 +171,7 @@ const UpgradePage: React.FC = () => {
 
       {/* Pricing Plans */}
       <div className="grid md:grid-cols-3 gap-8 mb-12">
-        {plans.map((plan, index) => (
+        {plans.map((plan) => (
           <div
             key={plan.name}
             className={`relative bg-slate-800 rounded-lg border p-8 ${

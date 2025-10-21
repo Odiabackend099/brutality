@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
 /**
  * Handle Twilio call status updates
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     message: 'CallWaiting AI - Twilio Inbound Webhook',
     status: 'active',

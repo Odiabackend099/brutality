@@ -267,7 +267,7 @@ async function sendWhatsAppAlert(message: string): Promise<void> {
   //   body: message
   // })
 
-  console.log('[WhatsApp] Twilio package required - install with: npm install twilio')
+  console.log('[WhatsApp] Twilio package required - install with: npm install twilio', { preview: message?.slice(0, 120) })
 }
 
 async function sendEmailAlert(lead: any, html: string): Promise<void> {
@@ -289,7 +289,10 @@ async function sendEmailAlert(lead: any, html: string): Promise<void> {
   //   html
   // })
 
-  console.log('[Email] SendGrid package required - install with: npm install @sendgrid/mail')
+  console.log('[Email] SendGrid package required - install with: npm install @sendgrid/mail', {
+    leadName: lead?.name,
+    preview: html?.slice(0, 120)
+  })
 }
 
 async function syncToAirtable(lead: any): Promise<{ id: string }> {
@@ -316,6 +319,9 @@ async function syncToAirtable(lead: any): Promise<{ id: string }> {
   // })
   // return { id: record.id }
 
-  console.log('[Airtable] Airtable package required - install with: npm install airtable')
+  console.log('[Airtable] Airtable package required - install with: npm install airtable', {
+    leadName: lead?.name,
+    quality: lead?.quality
+  })
   return { id: 'placeholder-record-id' }
 }

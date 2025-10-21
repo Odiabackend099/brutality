@@ -8,7 +8,6 @@ export class DataEncryptionService {
   private algorithm = 'aes-256-gcm'
   private keyLength = 32 // 256 bits
   private ivLength = 16 // 128 bits
-  private tagLength = 16 // 128 bits
 
   private encryptionKey: Buffer
 
@@ -17,8 +16,8 @@ export class DataEncryptionService {
       this.encryptionKey = this.getEncryptionKey()
     } catch (error) {
       console.warn('Encryption service disabled:', error)
-      // Use a dummy key for testing
-      this.encryptionKey = Buffer.from('dummy-key-for-testing-purposes-only-32-bytes')
+      // Use a zero-filled key for testing (NOT secure for production)
+      this.encryptionKey = Buffer.alloc(this.keyLength, 0)
     }
   }
 
@@ -36,8 +35,13 @@ export class DataEncryptionService {
     }
 
     try {
-      return Buffer.from(keyString, 'hex')
+      const keyBuffer = Buffer.from(keyString, 'hex')
+      if (keyBuffer.length !== this.keyLength) {
+        throw new Error(`ENCRYPTION_KEY must decode to ${this.keyLength} bytes`)
+      }
+      return keyBuffer
     } catch (error) {
+      console.error('Invalid ENCRYPTION_KEY format:', error)
       throw new Error('Invalid ENCRYPTION_KEY format. Must be a 64-character hex string.')
     }
   }
@@ -55,18 +59,20 @@ export class DataEncryptionService {
     try {
       // Generate random IV
       const iv = crypto.randomBytes(this.ivLength)
-      
-      // Create cipher
-      const cipher = crypto.createCipher(this.algorithm, this.encryptionKey)
-      
-      // Encrypt data
-      let encrypted = cipher.update(plaintext, 'utf8', 'hex')
-      encrypted += cipher.final('hex')
-      
-      // Combine IV and encrypted data
-      const combined = iv.toString('hex') + ':' + encrypted
-      
-      return combined
+
+      const cipher = crypto.createCipheriv(this.algorithm, this.encryptionKey, iv) as crypto.CipherGCM
+
+      const encryptedBuffer = Buffer.concat([
+        cipher.update(plaintext, 'utf8'),
+        cipher.final()
+      ])
+      const authTag = cipher.getAuthTag()
+
+      return [
+        iv.toString('hex'),
+        authTag.toString('hex'),
+        encryptedBuffer.toString('hex')
+      ].join(':')
     } catch (error) {
       console.error('Encryption error:', error)
       throw new Error('Failed to encrypt data')
@@ -86,21 +92,23 @@ export class DataEncryptionService {
     try {
       // Split the combined data
       const parts = encryptedData.split(':')
-      if (parts.length !== 2) {
+      if (parts.length !== 3) {
         throw new Error('Invalid encrypted data format')
       }
 
       const iv = Buffer.from(parts[0], 'hex')
-      const encrypted = parts[1]
+      const authTag = Buffer.from(parts[1], 'hex')
+      const encrypted = Buffer.from(parts[2], 'hex')
 
-      // Create decipher
-      const decipher = crypto.createDecipher(this.algorithm, this.encryptionKey)
+      const decipher = crypto.createDecipheriv(this.algorithm, this.encryptionKey, iv) as crypto.DecipherGCM
+      decipher.setAuthTag(authTag)
 
-      // Decrypt data
-      let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-      decrypted += decipher.final('utf8')
+      const decryptedBuffer = Buffer.concat([
+        decipher.update(encrypted),
+        decipher.final()
+      ])
 
-      return decrypted
+      return decryptedBuffer.toString('utf8')
     } catch (error) {
       console.error('Decryption error:', error)
       throw new Error('Failed to decrypt data')
@@ -161,7 +169,7 @@ export class DataEncryptionService {
 
     return crypto
       .createHash('sha256')
-      .update(data + process.env.ENCRYPTION_SALT || 'callwaiting-ai-salt')
+      .update(data + (process.env.ENCRYPTION_SALT || 'callwaiting-ai-salt'))
       .digest('hex')
   }
 

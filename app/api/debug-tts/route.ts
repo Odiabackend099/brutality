@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { OdiaDevTTS } from '@/lib/services/tts/odiadev';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     console.log('=== Debugging ODIADEV TTS Service ===');
     

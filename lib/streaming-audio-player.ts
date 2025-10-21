@@ -119,8 +119,7 @@ export class StreamingAudioPlayer {
         this.currentSource.disconnect();
         this.currentSource = null;
       } catch (error) {
-        // Ignore errors when stopping (source might already be stopped)
-        console.log('Audio source already stopped');
+        console.debug('Audio source already stopped:', error);
       }
     }
     

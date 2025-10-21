@@ -41,6 +41,10 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       // Custom sign-in logic
       if (account?.provider === 'google') {
+        if (!user?.email) {
+          console.warn('Google sign-in blocked: missing email payload', { providerAccountId: account.providerAccountId })
+          return false
+        }
         // Verify Google profile
         return !!(profile as any)?.email_verified
       }
@@ -78,6 +82,10 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('Failed to create user profile:', error)
         }
+      }
+      
+      if (profile) {
+        console.debug('Sign-in profile snapshot captured', { provider: account?.provider, locale: (profile as any)?.locale })
       }
     },
     async signOut({ token }) {

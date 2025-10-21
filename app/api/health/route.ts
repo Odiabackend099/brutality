@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
     
-    const { data: dbData, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from('profiles')
       .select('id')
       .limit(1)
@@ -47,20 +47,6 @@ export async function GET(request: NextRequest) {
     const services = externalServices.map(result => 
       result.status === 'fulfilled' ? result.value : { service: 'unknown', status: 'error', latency: 0 }
     )
-    
-    // Environment check
-    const environment = {
-      nodeVersion: process.version,
-      platform: process.platform,
-      arch: process.arch,
-      uptime: process.uptime(),
-      memoryUsage: process.memoryUsage(),
-      testMode: process.env.TEST_MODE === 'true',
-      hasSupabase: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasGroq: !!process.env.GROQ_API_KEY,
-      hasDeepgram: !!process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY,
-      hasFlutterwave: !!process.env.FLUTTERWAVE_PUBLIC_KEY,
-    }
     
     // Overall health status
     const allServicesHealthy = services.every(s => s.status === 'healthy') && databaseStatus === 'healthy'

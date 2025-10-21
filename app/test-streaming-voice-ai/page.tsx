@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Settings, Loader2, AlertCircle, CheckCircle, BarChart3 } from 'lucide-react';
+import { useState } from 'react';
+import { VolumeX, Settings, Loader2, CheckCircle, BarChart3 } from 'lucide-react';
 import StreamingVoiceChat from '@/components/StreamingVoiceChat';
 
 export default function TestStreamingVoiceAIPage() {
@@ -293,4 +293,3 @@ export default function TestStreamingVoiceAIPage() {
     </div>
   );
 }
-

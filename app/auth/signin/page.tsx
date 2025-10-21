@@ -35,6 +35,7 @@ export default function SignInPage() {
         router.push('/dashboard')
       }
     } catch (err) {
+      console.error('Google sign-in failed:', err)
       setError('An unexpected error occurred')
     } finally {
       setLoading(false)

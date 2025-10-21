@@ -85,6 +85,9 @@ export class APIKeyManager {
    * @returns Promise<{newKey: string, hashedKey: string}> - New key and its hash
    */
   static async rotateAPIKey(currentAPIKey?: string): Promise<{newKey: string, hashedKey: string}> {
+    if (currentAPIKey) {
+      console.debug('[APIKeyManager] Rotating key for agent', { oldKeyPrefix: maskAPIKey(currentAPIKey) })
+    }
     const newKey = this.generateAPIKey()
     const hashedKey = await this.hashAPIKey(newKey)
 

@@ -23,6 +23,7 @@ export async function POST(
     const supabase = createServiceSupabase()
     
     const getAgentByAPIKey = async (apiKey: string) => {
+      console.debug(`[Agent Webhook] Incoming key for validation`, { agentId, prefix: maskAPIKey(apiKey) })
       const { data: agent } = await supabase
         .from('agents')
         .select('*')
@@ -136,4 +137,3 @@ export async function POST(
     )
   }
 }
-

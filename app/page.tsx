@@ -1,29 +1,11 @@
 'use client';
 
-import { ArrowRight, Phone, Clock, MessageSquare, CheckCircle, Mail } from 'lucide-react';
-import { useState } from 'react';
-import PricingSection from '@/components/PricingSection';
+import { ArrowRight, Phone, CheckCircle } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 
 export default function Page() {
-  const [email, setEmail] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
   // Demo phone number from environment variable
   const demoPhone = process.env.NEXT_PUBLIC_DEMO_PHONE || '+14156876510';
-
-  const handleEarlyAccess = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Connect to your email/CRM system
-    console.log('Early access request:', { email, whatsapp });
-    setSubmitted(true);
-    setTimeout(() => {
-      setEmail('');
-      setWhatsapp('');
-      setSubmitted(false);
-    }, 3000);
-  };
 
   return (
     <>

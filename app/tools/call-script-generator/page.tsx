@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Copy, Download, Mail } from 'lucide-react';
+import { FileText, Copy, Mail } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 export default function CallScriptGenerator() {
@@ -36,7 +36,6 @@ export default function CallScriptGenerator() {
   ];
 
   const generateScript = () => {
-    const industry = formData.industry;
     const services = formData.services.split(',').map(s => s.trim()).filter(s => s);
     const questions = formData.questions;
 

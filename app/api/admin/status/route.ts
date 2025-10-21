@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Security check: Only allow in TEST_MODE
     if (process.env.TEST_MODE !== 'true') {
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey)
 
     // Test basic database connection
-    const { data: profileData, error: profileError } = await supabaseAdmin
+    const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('id')
       .limit(1)

@@ -116,6 +116,7 @@ export default function FloatChat({ className = '' }: FloatChatProps) {
             <button
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-gray-200 transition-colors"
+              aria-label="Close support chat"
             >
               <X className="w-5 h-5" />
             </button>
@@ -156,8 +157,8 @@ export default function FloatChat({ className = '' }: FloatChatProps) {
                     <Bot className="w-4 h-4" />
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                     </div>
                   </div>
                 </div>
@@ -181,8 +182,10 @@ export default function FloatChat({ className = '' }: FloatChatProps) {
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading}
                 className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-300 text-white p-2 rounded-lg transition-colors"
+                aria-label="Send message"
+                title="Send message"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
           </div>

@@ -352,7 +352,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
                 }]);
                 setStreamingMessage('');
               }
-            } catch (e) {
+            } catch {
               // Ignore parsing errors for incomplete chunks
             }
           }
