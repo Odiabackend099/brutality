@@ -138,7 +138,7 @@ export async function middleware(request: NextRequest) {
       'https://callwaitingai.vercel.app'
     ]
 
-    if (origin && allowedOrigins.includes(origin)) {
+    if (origin && allowedOrigins.includes(origin as string)) {
       response.headers.set('Access-Control-Allow-Origin', origin)
     }
     
