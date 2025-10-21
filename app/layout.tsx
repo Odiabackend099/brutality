@@ -83,8 +83,6 @@ export const metadata = {
 
 import './globals.css';
 import './chat-widget.css';
-import ChatWidget from '@/components/ChatWidget';
-import TestAdminPanel from '@/components/TestAdminPanel';
 import FloatChat from '@/components/support/float-chat';
 import Footer from '@/components/Footer';
 
@@ -182,9 +180,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-slate-950 text-slate-100 antialiased">
         {children}
         <Footer />
-        <ChatWidget />
         <FloatChat />
-        <TestAdminPanel isVisible={process.env.TEST_MODE === 'true'} />
       </body>
     </html>
   );
