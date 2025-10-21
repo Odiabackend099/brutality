@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
+import { validateTwilioWebhook } from '@/lib/twilio-signature-validation'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate Twilio signature for security
+    const isValidSignature = await validateTwilioWebhook(request)
+    if (!isValidSignature) {
+      console.error('[Twilio Call Status] Invalid signature - potential security threat')
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
     const formData = await request.formData()
     const callSid = formData.get('CallSid') as string
     const callStatus = formData.get('CallStatus') as string

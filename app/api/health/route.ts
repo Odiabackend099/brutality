@@ -85,7 +85,6 @@ export async function GET(request: NextRequest) {
         }
         return acc
       }, {} as Record<string, any>),
-      environment,
       checks: {
         database: databaseStatus === 'healthy',
         groq: services.find(s => s.service === 'groq')?.status === 'healthy',

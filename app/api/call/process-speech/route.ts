@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { processMulawAudioChunk } from '@/lib/services/agent-orchestrator'
 import { createServerSupabase } from '@/lib/supabase-server'
+import { validateTwilioWebhook } from '@/lib/twilio-signature-validation'
 
 // Force dynamic rendering for webhook
 export const dynamic = 'force-dynamic'
@@ -11,6 +12,13 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(request: NextRequest) {
   try {
+    // Validate Twilio signature for security
+    const isValidSignature = await validateTwilioWebhook(request)
+    if (!isValidSignature) {
+      console.error('[Twilio Speech] Invalid signature - potential security threat')
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
     const formData = await request.formData()
     const callSid = formData.get('CallSid') as string
     const from = formData.get('From') as string

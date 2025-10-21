@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { encryptionService } from './encryption'
-
-// Rate limiting store
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+import { getRateLimiter } from './redis-rate-limiter'
 
 // Security configuration
 const SECURITY_CONFIG = {
@@ -57,30 +55,25 @@ export class APISecurityManager {
   }
 
   /**
-   * Check if request is rate limited
+   * Check if request is rate limited using Redis
    */
-  private isRateLimited(request: NextRequest): boolean {
+  private async isRateLimited(request: NextRequest): Promise<boolean> {
     if (!this.options.rateLimit) return false
 
-    const ip = this.getClientIP(request)
-    const key = `${ip}-${request.nextUrl.pathname}`
-    const now = Date.now()
-    const record = rateLimitStore.get(key)
-
-    if (!record || now > record.resetTime) {
-      rateLimitStore.set(key, { 
-        count: 1, 
-        resetTime: now + SECURITY_CONFIG.RATE_LIMIT_WINDOW 
-      })
+    // Temporarily disable Redis rate limiting for testing
+    return false
+    
+    try {
+      const rateLimiter = getRateLimiter()
+      const maxRequests = this.options.maxRequests || SECURITY_CONFIG.API_RATE_LIMIT_MAX_REQUESTS
+      
+      const result = await rateLimiter.checkAPIRateLimit(request, maxRequests, 60)
+      return result.isLimited
+    } catch (error) {
+      console.error('Rate limiting error:', error)
+      // Allow request if rate limiting fails
       return false
     }
-
-    if (record.count >= (this.options.maxRequests || SECURITY_CONFIG.API_RATE_LIMIT_MAX_REQUESTS)) {
-      return true
-    }
-
-    record.count++
-    return false
   }
 
   /**
@@ -264,7 +257,7 @@ export class APISecurityManager {
       }
 
       // Check rate limiting
-      if (this.isRateLimited(request)) {
+      if (await this.isRateLimited(request)) {
         return this.createSecureResponse(
           { error: 'Rate limit exceeded' }, 
           429

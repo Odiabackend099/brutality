@@ -3,6 +3,7 @@ import { createServiceSupabase } from '@/lib/supabase-server'
 import { GroqLLM } from '@/lib/services/llm/groq'
 import { OdiaDevTTS } from '@/lib/services/tts/odiadev'
 import { assertWithinQuota, addUsage } from '@/lib/usage'
+import { validateAPIKey, maskAPIKey } from '@/lib/api-key-security'
 
 // Force dynamic rendering for webhook
 export const dynamic = 'force-dynamic'
@@ -18,39 +19,31 @@ export async function POST(
   try {
     const agentId = params.id
 
-    // Verify API key from header
-    const apiKey = request.headers.get('x-agent-key')
-
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'Missing X-AGENT-KEY header' },
-        { status: 401 }
-      )
-    }
-
-    // Get agent from database
+    // Get agent by ID for API key validation
     const supabase = createServiceSupabase()
     
-    const { data: agent, error: agentError } = await supabase
-      .from('agents')
-      .select('*')
-      .eq('id', agentId)
-      .eq('api_key', apiKey)
-      .single()
+    const getAgentByAPIKey = async (apiKey: string) => {
+      const { data: agent } = await supabase
+        .from('agents')
+        .select('*')
+        .eq('id', agentId)
+        .single()
+      return agent
+    }
 
-    if (agentError || !agent) {
+    // Validate API key securely
+    const validation = await validateAPIKey(request, getAgentByAPIKey)
+    
+    if (!validation.isValid) {
+      console.warn(`[Agent Webhook] Invalid API key for agent ${agentId}: ${validation.error}`)
       return NextResponse.json(
-        { error: 'Invalid agent ID or API key' },
+        { error: validation.error || 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    if (!agent.is_active) {
-      return NextResponse.json(
-        { error: 'Agent is inactive' },
-        { status: 403 }
-      )
-    }
+    const agent = validation.agent
+    console.log(`[Agent Webhook] Valid request for agent ${agentId} (${maskAPIKey(request.headers.get('x-agent-key') || '')})`)
 
     // Parse request body
     const body = await request.json()

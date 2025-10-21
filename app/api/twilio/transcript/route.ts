@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
+import { validateTwilioWebhook } from '@/lib/twilio-signature-validation'
+import { DataEncryption } from '@/lib/data-encryption'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate Twilio signature for security
+    const isValidSignature = await validateTwilioWebhook(request)
+    if (!isValidSignature) {
+      console.error('[Twilio Transcript] Invalid signature - potential security threat')
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
     const formData = await request.formData()
     const callSid = formData.get('CallSid') as string
     const transcript = formData.get('TranscriptionText') as string
@@ -19,11 +28,14 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerSupabase()
 
-    // Update call log with transcript
+    // Encrypt sensitive data before storage
+    const encryptedTranscript = DataEncryption.encryptTranscript(transcript)
+    
+    // Update call log with encrypted transcript
     const { error: updateError } = await supabase
       .from('call_logs')
       .update({
-        transcript: transcript,
+        transcript: encryptedTranscript,
         lead_data: {
           confidence: confidence ? parseFloat(confidence) : null,
           transcript_length: transcript.length,
@@ -41,12 +53,15 @@ export async function POST(request: NextRequest) {
     const leadData = await extractLeadInformation(transcript)
     
     if (leadData && Object.keys(leadData).length > 0) {
-      // Update call log with lead data
+      // Encrypt lead data before storage
+      const encryptedLeadData = DataEncryption.encryptLeadData(leadData)
+      
+      // Update call log with encrypted lead data
       await supabase
         .from('call_logs')
         .update({
           lead_data: {
-            ...leadData,
+            encrypted_data: encryptedLeadData,
             confidence: confidence ? parseFloat(confidence) : null,
             transcript_length: transcript.length,
             processed_at: new Date().toISOString()

@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
       // Custom sign-in logic
       if (account?.provider === 'google') {
         // Verify Google profile
-        return !!profile?.email_verified
+        return !!(profile as any)?.email_verified
       }
       return true
     }

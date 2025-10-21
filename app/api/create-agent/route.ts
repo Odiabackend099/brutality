@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase-server'
-import { randomBytes } from 'crypto'
+import { APIKeyManager } from '@/lib/api-key-security'
 
 // Force dynamic rendering since we use cookies for auth
 export const dynamic = 'force-dynamic'
@@ -40,9 +40,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate API key and webhook secret
-    const apiKey = `agt_${randomBytes(24).toString('hex')}`
-    const webhookSecret = randomBytes(32).toString('hex')
+    // Generate secure API key and webhook secret
+    const apiKey = APIKeyManager.generateAPIKey()
+    const webhookSecret = APIKeyManager.generateWebhookSecret()
+    
+    // Hash the API key for secure storage
+    const hashedAPIKey = await APIKeyManager.hashAPIKey(apiKey)
 
     // Create agent
     const { data: agent, error: insertError } = await supabase
@@ -58,8 +61,9 @@ export async function POST(request: NextRequest) {
         llm_temperature: 0.6,
         llm_max_tokens: 400,
         greeting_message: 'Hello! Welcome to CallWaiting AI. How can I help you today?',
-        api_key: apiKey,
+        api_key_hash: hashedAPIKey,
         webhook_secret: webhookSecret,
+        api_key_created_at: new Date().toISOString(),
         is_active: true
       })
       .select()
