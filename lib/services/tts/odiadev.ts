@@ -8,9 +8,9 @@ export interface Voice {
   accent?: string;
 }
 
-// MiniMax Voice ID Mappings
+// ODIADEV TTS Voice ID Mappings
 export const VOICE_MAPPINGS = {
-  // Friendly names -> MiniMax Voice IDs
+  // Friendly names -> ODIADEV Voice IDs
   'odia': 'moss_audio_4e6eb029-ab89-11f0-a74c-2a7a0b4baedc',       // Odia - African Male (Default)
   'marcus': 'moss_audio_a59cd561-ab87-11f0-a74c-2a7a0b4baedc',     // Marcus - American Male
   'marcy': 'moss_audio_fdad4786-ab84-11f0-a816-023f15327f7a',      // Marcy - American Female
@@ -43,20 +43,20 @@ export class OdiaDevTTS {
 
   constructor() {
     this.baseUrl = process.env.ODIADEV_TTS_BASE_URL || 'https://minimax-tts-odiadev.onrender.com';
-    this.apiKey = process.env.ODIADEV_TTS_API_KEY || process.env.MINIMAX_API_KEY || '';
-    this.groupId = process.env.ODIADEV_TTS_GROUP_ID || process.env.MINIMAX_GROUP_ID || '';
-    
+    this.apiKey = process.env.ODIADEV_TTS_API_KEY || '';
+    this.groupId = process.env.ODIADEV_TTS_GROUP_ID || '';
+
     if (!this.apiKey) {
-      console.warn('ODIADEV_TTS_API_KEY or MINIMAX_API_KEY environment variable is not set');
+      console.warn('ODIADEV_TTS_API_KEY environment variable is not set');
     }
-    
+
     if (!this.groupId) {
-      console.warn('ODIADEV_TTS_GROUP_ID or MINIMAX_GROUP_ID environment variable is not set');
+      console.warn('ODIADEV_TTS_GROUP_ID environment variable is not set');
     }
   }
 
   async voices(): Promise<Voice[]> {
-    // Return available voices with friendly names and MiniMax IDs
+    // Return available voices with friendly names and ODIADEV IDs
     return [
       {
         id: 'odia',
@@ -99,7 +99,7 @@ export class OdiaDevTTS {
         throw new Error('Text cannot be empty');
       }
 
-      // Map friendly voice name to MiniMax voice ID
+      // Map friendly voice name to ODIADEV voice ID
       const friendlyVoiceId = voiceId || process.env.DEFAULT_VOICE || 'odia';
       const actualVoiceId = VOICE_MAPPINGS[friendlyVoiceId as VoiceName] || VOICE_MAPPINGS.odia;
 
@@ -108,7 +108,7 @@ export class OdiaDevTTS {
       const requestBody: any = {
         text: text.trim(),
         voice_id: actualVoiceId,
-        model: process.env.MINIMAX_MODEL || 'speech-02-hd',
+        model: 'speech-02-hd',
         speed: speed ?? parseFloat(process.env.DEFAULT_SPEED || '1.0'),
         pitch: pitch !== undefined ? pitch : parseFloat(process.env.DEFAULT_PITCH || '0'),
         emotion: emotion || process.env.DEFAULT_EMOTION || 'neutral'

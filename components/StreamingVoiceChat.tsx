@@ -14,10 +14,10 @@ interface StreamingVoiceChatProps {
 }
 
 const AVAILABLE_VOICES = [
-  { id: 'odia', name: 'Odia (African Male)', description: 'Warm, professional African male voice' },
-  { id: 'marcus', name: 'Marcus (American Male)', description: 'Clear, confident American male voice' },
-  { id: 'marcy', name: 'Marcy (American Female)', description: 'Friendly, energetic American female voice' },
-  { id: 'joslyn', name: 'Joslyn (African Female)', description: 'Smooth, professional African female voice' }
+  { id: 'odia', name: 'Odia (African Male)', description: 'Warm, professional African male voice', moss_id: 'moss_audio_4e6eb029-ab89-11f0-a74c-2a7a0b4baedc' },
+  { id: 'marcus', name: 'Marcus (American Male)', description: 'Clear, confident American male voice', moss_id: 'moss_audio_a59cd561-ab87-11f0-a74c-2a7a0b4baedc' },
+  { id: 'marcy', name: 'Marcy (American Female)', description: 'Friendly, energetic American female voice', moss_id: 'moss_audio_fdad4786-ab84-11f0-a816-023f15327f7a' },
+  { id: 'joslyn', name: 'Joslyn (African Female)', description: 'Smooth, professional African female voice', moss_id: 'moss_audio_141d8c4c-a6f8-11f0-84c1-0ec6fa858d82' }
 ];
 
 export default function StreamingVoiceChat({ className = '', config = {}, defaultVoice, systemPrompt }: StreamingVoiceChatProps) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Phone, CheckCircle } from 'lucide-react';
+import { ArrowRight, Phone, CheckCircle, Mic } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 
 export default function Page() {
@@ -45,6 +45,13 @@ export default function Page() {
               >
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
+              </a>
+              <a
+                href="/voice-ai"
+                className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl"
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                Talk to Oma
               </a>
               <a
                 href={`tel:${demoPhone}`}

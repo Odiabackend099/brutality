@@ -105,8 +105,8 @@ const ChatInterface: React.FC<{
         <div className="flex items-center space-x-2">
           <MessageCircle size={20} className="text-cyan-400" />
           <div>
-            <h3 className="font-semibold text-sm">ODIADEV Assistant</h3>
-            <p className="text-xs text-slate-300">Always here to help</p>
+            <h3 className="font-semibold text-sm">Oma</h3>
+            <p className="text-xs text-slate-300">Your AI Assistant</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -241,7 +241,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Hi! I\'m your CallWaitingAI assistant. How can I help you today? 😊',
+      content: 'Hi! I\'m Oma, your CallWaitingAI assistant. How can I help you today?',
       timestamp: new Date()
     }
   ]);
@@ -407,7 +407,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ className = '' }) => {
           aria-label="Open chat widget"
         >
           <MessageCircle size={20} className="text-cyan-400" />
-          <span className="text-sm font-medium">Chat with us</span>
+          <span className="text-sm font-medium">Chat with Oma</span>
         </button>
       </div>
     );
