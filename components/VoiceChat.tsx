@@ -55,8 +55,11 @@ export default function VoiceChat({ agentId }: VoiceChatProps) {
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
-    // Implement mute functionality
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    if (voiceAIManagerRef.current) {
+      voiceAIManagerRef.current.setMuted(newMutedState);
+    }
   };
 
   const testSystem = async () => {

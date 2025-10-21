@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate voice ID
-    const validVoiceIds = ['professional_f', 'professional_m', 'soft_f', 'warm_m']
+    // Validate voice ID - using new voice names
+    const validVoiceIds = ['odia', 'marcus', 'marcy', 'joslyn']
     if (!validVoiceIds.includes(voiceId)) {
       return NextResponse.json(
         { error: 'Invalid voiceId. Must be one of: ' + validVoiceIds.join(', ') },
@@ -125,7 +125,13 @@ export async function POST(request: NextRequest) {
         user_id: userId,
         name,
         system_prompt: systemPrompt,
-        voice_id: voiceId,
+        tts_provider: 'odiadev',
+        tts_voice_id: voiceId,
+        llm_provider: 'groq',
+        llm_model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
+        llm_temperature: 0.6,
+        llm_max_tokens: 400,
+        greeting_message: 'Hello! Welcome to CallWaiting AI. How can I help you today?',
         api_key: apiKey,
         webhook_secret: webhookSecret,
         is_active: true,
@@ -159,7 +165,7 @@ export async function POST(request: NextRequest) {
       apiKey: apiKey,
       webhookUrl: webhookUrl,
       name: agent.name,
-      voiceId: agent.voice_id,
+      voiceId: agent.tts_voice_id,
       email: email,
       message: 'Agent created successfully! No payment required.'
     }, { status: 201 })

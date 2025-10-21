@@ -85,29 +85,65 @@ export async function POST(request: NextRequest) {
         )
       }
 
+      const altUserId = altAuthData.user.id
+
+      // Create profile for the alternative user
+      const { error: altProfileError } = await supabaseAdmin
+        .from('profiles')
+        .insert({
+          id: altUserId,
+          email: testEmail,
+          name: 'Test Admin User',
+          plan_name: 'test-admin',
+          plan_limit: 999999
+        })
+
+      if (altProfileError) {
+        console.warn('Alt profile creation failed but user created:', altProfileError.message)
+      }
+
       console.log('✅ Test admin account created successfully (alternative method):', {
-        userId: altAuthData.user.id,
-        email: testEmail
+        userId: altUserId,
+        email: testEmail,
+        profileCreated: !altProfileError
       })
 
       return NextResponse.json({
         success: true,
         message: 'Test admin account created successfully',
         data: {
-          userId: altAuthData.user.id,
+          userId: altUserId,
           email: testEmail,
           password: testPassword,
           testMode: true,
-          method: 'alternative'
+          method: 'alternative',
+          profileCreated: !altProfileError
         }
       })
     }
 
     const userId = authData.user.id
 
+    // Create profile for the user
+    const { error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .insert({
+        id: userId,
+        email: testEmail,
+        name: 'Test Admin User',
+        plan_name: 'test-admin',
+        plan_limit: 999999
+      })
+
+    if (profileError) {
+      console.warn('Profile creation failed but user created:', profileError.message)
+      // Continue anyway - the auth user is created
+    }
+
     console.log('✅ Test admin account created successfully:', {
       userId,
-      email: testEmail
+      email: testEmail,
+      profileCreated: !profileError
     })
 
     return NextResponse.json({
@@ -118,7 +154,8 @@ export async function POST(request: NextRequest) {
         email: testEmail,
         password: testPassword,
         testMode: true,
-        method: 'standard'
+        method: 'standard',
+        profileCreated: !profileError
       }
     })
 

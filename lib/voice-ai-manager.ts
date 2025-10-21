@@ -256,6 +256,19 @@ Remember: You're having a voice conversation. Be natural, brief, and helpful.`;
     }
   }
 
+  // Mute/unmute microphone
+  setMuted(muted: boolean) {
+    if (this.vadProcessor) {
+      if (muted) {
+        this.vadProcessor.pause();
+        console.log('🔇 Microphone muted');
+      } else {
+        this.vadProcessor.start();
+        console.log('🔊 Microphone unmuted');
+      }
+    }
+  }
+
   // Update system prompt
   updateSystemPrompt(prompt: string) {
     this.systemPrompt = prompt;

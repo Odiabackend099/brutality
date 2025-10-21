@@ -37,21 +37,21 @@ async function fixAgents() {
     console.log(`📊 Found ${agents.length} agents`);
 
     // Default voice options
-    const defaultVoices = ['marcus', 'marcy', 'austyn', 'joslyn'];
+    const defaultVoices = ['odia', 'marcus', 'marcy', 'joslyn'];
     let fixedCount = 0;
 
     for (const agent of agents) {
       const updates = {};
-      
+
       // Fix TTS provider
       if (!agent.tts_provider) {
         updates.tts_provider = 'odiadev';
       }
-      
+
       // Fix TTS voice ID
       if (!agent.tts_voice_id || !defaultVoices.includes(agent.tts_voice_id)) {
-        // Use first voice as default
-        updates.tts_voice_id = 'marcus';
+        // Use odia as default voice (African Male)
+        updates.tts_voice_id = 'odia';
       }
       
       // Fix LLM provider

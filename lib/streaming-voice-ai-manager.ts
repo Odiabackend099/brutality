@@ -145,23 +145,38 @@ export class StreamingVoiceAIManager {
     try {
       // Stop all processing
       this.abortController?.abort();
-      
+
       // Stop VAD
       this.vadProcessor.pause();
       this.isListening = false;
-      
+
       // Stop audio playback
       this.audioPlayer.stop();
       this.isSpeaking = false;
-      
+
       // Clear buffers
       this.audioBuffer = [];
       this.responseBuffer = [];
       this.processingQueue = [];
-      
+
       console.log('🔇 Streaming voice AI disconnected');
     } catch (error) {
       console.error('❌ Error disconnecting streaming voice AI:', error);
+    }
+  }
+
+  // Mute/unmute microphone
+  setMuted(muted: boolean) {
+    if (this.vadProcessor) {
+      if (muted) {
+        this.vadProcessor.pause();
+        this.isListening = false;
+        console.log('🔇 Microphone muted');
+      } else {
+        this.vadProcessor.start();
+        this.isListening = true;
+        console.log('🔊 Microphone unmuted');
+      }
     }
   }
 

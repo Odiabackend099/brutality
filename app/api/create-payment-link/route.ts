@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       })
 
     return NextResponse.json({
-      paymentLink: result.data.link,
+      paymentUrl: result.data.link,
       txRef: txRef
     })
 

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate voice ID
-    const validVoiceIds = ['marcus', 'marcy', 'austyn', 'joslyn']
+    const validVoiceIds = ['odia', 'marcus', 'marcy', 'joslyn']
     if (!validVoiceIds.includes(voiceId)) {
       return NextResponse.json(
         { error: 'Invalid voiceId. Must be one of: ' + validVoiceIds.join(', ') },
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       apiKey: apiKey,
       webhookUrl: webhookUrl,
       name: agent.name,
-      voiceId: agent.voice_id
+      voiceId: agent.tts_voice_id
     }, { status: 201 })
 
   } catch (error) {
