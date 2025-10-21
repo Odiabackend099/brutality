@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Mic, Play, Pause } from 'lucide-react';
+import { Plus, Trash2, Mic, Play, Pause, Settings } from 'lucide-react';
 import CallAgentButton from '@/components/CallAgentButton';
+import AgentSettingsModal from '@/components/AgentSettingsModal';
 import { getUser } from '@/lib/auth-helpers';
 import { supabase } from '@/lib/supabase-client';
 
@@ -13,12 +14,20 @@ interface Agent {
   voice_id: string;
   is_active: boolean;
   created_at: string;
+  llm_model?: string;
+  llm_temperature?: number;
+  llm_max_tokens?: number;
+  voice_speed?: number;
+  voice_pitch?: number;
+  voice_emotion?: string;
 }
 
 const AgentsPage: React.FC = () => {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchAgents();
@@ -66,10 +75,16 @@ const AgentsPage: React.FC = () => {
           user_id: user.id,
           name: `Agent ${agents.length + 1}`,
           system_prompt: 'You are a helpful AI assistant. How can I help you today?',
-          voice_id: 'moss_audio_a59cd561-ab87-11f0-a74c-2a7a0b4baedc', // Marcus voice
+          voice_id: 'moss_audio_4e6eb029-ab89-11f0-a74c-2a7a0b4baedc', // Odia voice (default)
           api_key: `agent_${Date.now()}`,
           webhook_secret: `secret_${Date.now()}`,
-          is_active: true
+          is_active: true,
+          llm_model: 'llama-3.1-8b-instant',
+          llm_temperature: 0.6,
+          llm_max_tokens: 400,
+          voice_speed: 1.0,
+          voice_pitch: 1.0,
+          voice_emotion: 'neutral'
         })
         .select()
         .single();
@@ -83,6 +98,17 @@ const AgentsPage: React.FC = () => {
     } catch (error) {
       console.error('Error creating agent:', error);
     }
+  };
+
+  const openSettingsModal = (agent: Agent) => {
+    setSelectedAgent(agent);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveAgent = (updatedAgent: Agent) => {
+    setAgents(prev => prev.map(agent =>
+      agent.id === updatedAgent.id ? updatedAgent : agent
+    ));
   };
 
   const deleteAgent = async (agentId: string) => {
@@ -200,6 +226,14 @@ const AgentsPage: React.FC = () => {
                 
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => openSettingsModal(agent)}
+                    className="p-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                    title="Settings"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </button>
+
+                  <button
                     onClick={() => toggleAgentStatus(agent.id, agent.is_active)}
                     className={`p-2 rounded-lg transition-colors ${
                       agent.is_active
@@ -210,7 +244,7 @@ const AgentsPage: React.FC = () => {
                   >
                     {agent.is_active ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                   </button>
-                  
+
                   <button
                     onClick={() => deleteAgent(agent.id)}
                     className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
@@ -267,6 +301,14 @@ const AgentsPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Agent Settings Modal */}
+      <AgentSettingsModal
+        agent={selectedAgent}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveAgent}
+      />
     </div>
   );
 };

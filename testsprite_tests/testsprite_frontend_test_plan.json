@@ -1,0 +1,510 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Sign Up with Email and Password",
+    "description": "Verify that a new user can successfully sign up using a valid email address and password, and receives a confirmation or welcome message.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the sign-up page"
+      },
+      {
+        "type": "action",
+        "description": "Input a valid email address and a secure password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to a welcome or dashboard page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user record is created in the database"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Login with OAuth Provider",
+    "description": "Verify users can authenticate via supported OAuth providers successfully and that sessions are properly created.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Select an available OAuth login option (e.g., Google, GitHub)"
+      },
+      {
+        "type": "action",
+        "description": "Complete OAuth provider login flow"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to dashboard after authentication"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user session token is issued and accessible"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Forgot Password Flow",
+    "description": "Verify that users can request a password reset link and reset their password successfully via email.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the forgot password page"
+      },
+      {
+        "type": "action",
+        "description": "Input a registered email address and submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify password reset email is sent with valid link"
+      },
+      {
+        "type": "action",
+        "description": "Click password reset link and input a new valid password"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user can login successfully with new password"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Create AI Voice Agent with Custom Settings",
+    "description": "Verify that users can create a new AI voice agent with custom LLM and TTS configuration and scripts.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login to user dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to create agent page"
+      },
+      {
+        "type": "action",
+        "description": "Fill in agent details, upload or input custom script, select LLM and TTS options"
+      },
+      {
+        "type": "action",
+        "description": "Submit to create agent"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify agent appears in user's agent list with correct settings"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Inbound Call Handling via Twilio with Accurate STT and AI Response",
+    "description": "Verify real-time processing of inbound voice calls through Twilio integration including speech-to-text conversion and AI-generated voice responses.",
+    "category": "integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Place an inbound call to the Twilio assigned number"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify call is received and routed to the AI voice agent"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify real-time speech from caller is converted to text via Deepgram STT"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify AI (Groq LLM) generates an appropriate response"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response is converted back to speech with selected TTS voice"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify call flow follows designed script and conversation logic"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Lead Extraction and CRM Integration",
+    "description": "Verify that AI correctly extracts lead information from conversations and delivers it to configured CRM systems.",
+    "category": "integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Complete a call session qualifying a lead with relevant data"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify extracted lead data matches conversation content"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify lead data is transmitted and accepted by CRM integration endpoint"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Free Trial Usage Tracking and Quota Enforcement",
+    "description": "Verify that free trial usage is correctly tracked and enforced, preventing usage beyond quota limits.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Start a free trial account"
+      },
+      {
+        "type": "action",
+        "description": "Perform calls until trial quota is reached"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify usage metrics update correctly in dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify subsequent calls are blocked or notified due to trial quota exceeded"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Payment Processing and Subscription Activation through Flutterwave",
+    "description": "Verify end-to-end payment process for subscription plans using Flutterwave including payment link generation, successful payment, webhook handling, and subscription status update.",
+    "category": "integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Generate payment link for a subscription plan"
+      },
+      {
+        "type": "action",
+        "description": "Complete payment through Flutterwave interface"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment success webhook is received and validated"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user subscription status updates to active"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Dashboard Analytics Display Accuracy",
+    "description": "Verify that the user dashboard accurately displays real-time analytics including call usage, agent performance, and billing information.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login to user dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify analytics data matches backend metrics for calls and usage"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify billing section shows current subscription and payment status"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "API Rate Limiting Enforcement",
+    "description": "Verify that the platform enforces configured rate limits to prevent API abuse and returns appropriate error responses when limits are exceeded.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send API requests in rapid succession exceeding rate limit policy"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API returns rate limit exceeded error codes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify further requests remain blocked until rate limit window resets"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "API Key Management and Authorization",
+    "description": "Verify only authorized API keys with valid permissions can access protected endpoints and that unauthorized keys are rejected.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt API call with valid API key"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API call is successful and authorized features are accessible"
+      },
+      {
+        "type": "action",
+        "description": "Attempt API call with invalid or revoked API key"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API call is rejected with authorization error"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Webhook Signature Validation for Secure Event Handling",
+    "description": "Verify that incoming webhooks from third-party integrations (e.g., Twilio, Flutterwave) are validated using signature checks before processing.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send valid webhook request with correct signature"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify webhook is accepted and processed"
+      },
+      {
+        "type": "action",
+        "description": "Send webhook request with forged or missing signature"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify webhook is rejected and logged as suspicious"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "System Health Check Endpoint Validation",
+    "description": "Verify that the health check API endpoint correctly reports system uptime, component status, and critical performance metrics.",
+    "category": "monitoring",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send request to system health check API endpoint"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response contains accurate uptime and component status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify any system errors are reported with log references"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Admin Panel User Management Functions",
+    "description": "Verify that administrators can create, update, and manage user accounts and monitor system health from the admin panel interface.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as admin to the admin panel"
+      },
+      {
+        "type": "action",
+        "description": "Create a new user account from admin interface"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify new user is created and appears in user list"
+      },
+      {
+        "type": "action",
+        "description": "View system health metrics via admin dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify displayed data matches system monitoring data"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Chat Widget AI-Powered Real-Time Messaging",
+    "description": "Verify that the embedded chat widget provides AI-generated responses with low latency and maintains conversational context.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Embed chat widget on a test web page"
+      },
+      {
+        "type": "action",
+        "description": "Send messages via the chat widget"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify responses are generated by Groq AI and contextually relevant"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response latency is within acceptable limits"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "WhatsApp Integration for Notification Delivery",
+    "description": "Verify that WhatsApp messaging integration successfully sends notifications and updates to customers.",
+    "category": "integration",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger a WhatsApp notification event (e.g., lead status update)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify WhatsApp message is sent to the intended customer number"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify message content matches intended notification"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Error Handling and UI Feedback on API Failures",
+    "description": "Verify that the UI components properly handle and display error messages when backend API calls fail or return error states.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate API failure (e.g., network error, 500 response) during user action such as agent creation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI shows appropriate error message or notification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error state does not leave UI in inconsistent or unusable state"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Text-to-Speech Voice Option Selection and Playback",
+    "description": "Verify users can select among multiple TTS voice options and that generated audio responses implement the selected voice accurately.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to TTS voice selection page or agent configuration"
+      },
+      {
+        "type": "action",
+        "description": "Select each available voice option in turn"
+      },
+      {
+        "type": "action",
+        "description": "Trigger voice generation with sample text input"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify output audio matches the selected voice characteristics"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Session Expiry and Logout Behavior",
+    "description": "Verify user sessions expire as expected and that logout functionality clears session tokens preventing further access without login.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user and use the system normally"
+      },
+      {
+        "type": "action",
+        "description": "Trigger session expiry manually or wait for timeout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to the login page when making further requests"
+      },
+      {
+        "type": "action",
+        "description": "Perform logout action explicitly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify session tokens are invalidated and further access requires login"
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Documentation and Support Accessibility",
+    "description": "Verify that users can access documentation, FAQ, privacy policy, terms of service, and contact pages, and that AI chat support is functional.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to each documentation and support related page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify content loads correctly and is comprehensive"
+      },
+      {
+        "type": "action",
+        "description": "Use the support AI chat widget to ask a question"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify AI assistant returns relevant and helpful responses"
+      }
+    ]
+  }
+]

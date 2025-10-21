@@ -9,9 +9,18 @@ import { StreamingAudioPlayer } from '@/lib/streaming-audio-player';
 interface StreamingVoiceChatProps {
   className?: string;
   config?: Partial<StreamingConfig>;
+  defaultVoice?: string;
+  systemPrompt?: string;
 }
 
-export default function StreamingVoiceChat({ className = '', config = {} }: StreamingVoiceChatProps) {
+const AVAILABLE_VOICES = [
+  { id: 'odia', name: 'Odia (African Male)', description: 'Warm, professional African male voice' },
+  { id: 'marcus', name: 'Marcus (American Male)', description: 'Clear, confident American male voice' },
+  { id: 'marcy', name: 'Marcy (American Female)', description: 'Friendly, energetic American female voice' },
+  { id: 'joslyn', name: 'Joslyn (African Female)', description: 'Smooth, professional African female voice' }
+];
+
+export default function StreamingVoiceChat({ className = '', config = {}, defaultVoice, systemPrompt }: StreamingVoiceChatProps) {
   // State management
   const [isConnected, setIsConnected] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -23,7 +32,8 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
   const [response, setResponse] = useState('');
   const [latency, setLatency] = useState(0);
   const [volume, setVolume] = useState(1.0);
-  
+  const [selectedVoice, setSelectedVoice] = useState(defaultVoice || 'odia');
+
   // Refs
   const voiceAIManagerRef = useRef<StreamingVoiceAIManager | null>(null);
   const vadProcessorRef = useRef<EnhancedVADProcessor | null>(null);
@@ -46,13 +56,13 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
           maxQueueSize: 5
         });
 
-        // Initialize voice AI manager
+        // Initialize voice AI manager with selected voice
         voiceAIManagerRef.current = new StreamingVoiceAIManager({
           maxLatency: 200,
           preBufferResponses: true,
           enableInterruption: true,
           ...config
-        });
+        }, selectedVoice);
 
         // Set up callbacks
         await voiceAIManagerRef.current.initialize({
@@ -106,7 +116,7 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
         audioPlayerRef.current.destroy();
       }
     };
-  }, [config]);
+  }, [config, selectedVoice]);
 
   // Handle connection
   const handleConnect = useCallback(async () => {
@@ -177,13 +187,22 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
   // Handle volume change
   const handleVolumeChange = useCallback(async (newVolume: number) => {
     if (!audioPlayerRef.current) return;
-    
+
     try {
       await audioPlayerRef.current.setVolume(newVolume);
       setVolume(newVolume);
     } catch (error) {
       console.error('❌ Failed to change volume:', error);
     }
+  }, []);
+
+  // Handle voice change
+  const handleVoiceChange = useCallback((voiceId: string) => {
+    setSelectedVoice(voiceId);
+    if (voiceAIManagerRef.current) {
+      voiceAIManagerRef.current.setVoice(voiceId);
+    }
+    console.log('🎤 Voice changed to:', voiceId);
   }, []);
 
   // Get status for UI
@@ -285,6 +304,29 @@ export default function StreamingVoiceChat({ className = '', config = {} }: Stre
               </button>
             </div>
           )}
+        </div>
+
+        {/* Voice Selection */}
+        <div className="mb-6">
+          <label htmlFor="voice-select" className="block text-sm font-medium mb-2">
+            Voice Selection
+          </label>
+          <select
+            id="voice-select"
+            value={selectedVoice}
+            onChange={(e) => handleVoiceChange(e.target.value)}
+            disabled={isConnected}
+            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {AVAILABLE_VOICES.map((voice) => (
+              <option key={voice.id} value={voice.id} className="bg-gray-900">
+                {voice.name}
+              </option>
+            ))}
+          </select>
+          <p className="text-gray-400 text-xs mt-1">
+            {AVAILABLE_VOICES.find(v => v.id === selectedVoice)?.description}
+          </p>
         </div>
 
         {/* Volume Control */}

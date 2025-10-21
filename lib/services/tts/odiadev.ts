@@ -28,6 +28,14 @@ export interface TTSResponse {
   size?: number;
 }
 
+export interface TTSOptions {
+  text: string;
+  voiceId: string;
+  speed?: number;
+  pitch?: number;
+  emotion?: string;
+}
+
 export class OdiaDevTTS {
   private baseUrl: string;
   private apiKey: string;
@@ -81,7 +89,7 @@ export class OdiaDevTTS {
     ];
   }
 
-  async synthesize({ text, voiceId }: { text: string; voiceId: string }): Promise<TTSResponse> {
+  async synthesize({ text, voiceId, speed, pitch, emotion }: TTSOptions): Promise<TTSResponse> {
     if (!this.apiKey) {
       throw new Error('ODIADEV_TTS_API_KEY not set - cannot synthesize speech');
     }
@@ -101,9 +109,9 @@ export class OdiaDevTTS {
         text: text.trim(),
         voice_id: actualVoiceId,
         model: process.env.MINIMAX_MODEL || 'speech-02-hd',
-        speed: parseFloat(process.env.DEFAULT_SPEED || '1.0'),
-        pitch: parseFloat(process.env.DEFAULT_PITCH || '0'),
-        emotion: process.env.DEFAULT_EMOTION || 'neutral'
+        speed: speed ?? parseFloat(process.env.DEFAULT_SPEED || '1.0'),
+        pitch: pitch !== undefined ? pitch : parseFloat(process.env.DEFAULT_PITCH || '0'),
+        emotion: emotion || process.env.DEFAULT_EMOTION || 'neutral'
       };
 
       // Add group_id if available

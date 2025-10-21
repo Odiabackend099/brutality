@@ -2,7 +2,7 @@ import { AudioPlayer } from './audio-player';
 import { VADProcessor } from './vad-processor';
 import { DeepgramSTT } from './deepgram-stt';
 import { GroqLLM } from './groq-llm';
-import { CustomTTS } from './custom-tts';
+import { CustomTTS, VoiceParameters } from './custom-tts';
 
 export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
 
@@ -12,12 +12,14 @@ export class VoiceAIManager {
   private deepgramSTT: DeepgramSTT;
   private groqLLM: GroqLLM;
   private customTTS: CustomTTS;
-  
+
   private state: ConnectionState = 'disconnected';
   private isListening = false;
   private isSpeaking = false;
   private currentTranscript = '';
   private systemPrompt: string;
+  private currentVoice: string = 'odia';
+  private voiceParams: VoiceParameters = {};
 
   private onStateChange?: (state: ConnectionState) => void;
   private onListeningChange?: (isListening: boolean) => void;
@@ -25,9 +27,11 @@ export class VoiceAIManager {
   private onTranscriptChange?: (transcript: string) => void;
   private onError?: (error: string) => void;
 
-  constructor(systemPrompt?: string) {
+  constructor(systemPrompt?: string, voiceId?: string, voiceParams?: VoiceParameters) {
     this.systemPrompt = systemPrompt || this.getDefaultSystemPrompt();
-    
+    this.currentVoice = voiceId || 'odia';
+    this.voiceParams = voiceParams || {};
+
     this.audioPlayer = new AudioPlayer();
     this.vadProcessor = new VADProcessor();
     this.deepgramSTT = new DeepgramSTT();
@@ -171,7 +175,9 @@ Remember: You're having a voice conversation. Be natural, brief, and helpful.`;
   private async generateAndPlaySpeech(text: string) {
     try {
       console.log('🔊 Generating speech for AI response:', text.substring(0, 50) + '...');
-      const audioBuffer = await this.customTTS.generateSpeech(text, 'marcus');
+      console.log('🔊 Using voice:', this.currentVoice);
+      console.log('🔊 Voice parameters:', this.voiceParams);
+      const audioBuffer = await this.customTTS.generateSpeech(text, this.currentVoice, this.voiceParams);
       console.log('🔊 Adding audio chunk to player');
       await this.audioPlayer.addAudioChunk(audioBuffer);
       console.log('✅ Audio chunk added successfully');
@@ -274,5 +280,27 @@ Remember: You're having a voice conversation. Be natural, brief, and helpful.`;
     this.systemPrompt = prompt;
     this.groqLLM.clearHistory();
     console.log('📝 System prompt updated');
+  }
+
+  // Update voice
+  setVoice(voiceId: string) {
+    this.currentVoice = voiceId;
+    console.log('🎤 Voice updated to:', voiceId);
+  }
+
+  // Get current voice
+  getCurrentVoice(): string {
+    return this.currentVoice;
+  }
+
+  // Update voice parameters
+  setVoiceParameters(params: VoiceParameters) {
+    this.voiceParams = { ...this.voiceParams, ...params };
+    console.log('🎤 Voice parameters updated:', this.voiceParams);
+  }
+
+  // Get voice parameters
+  getVoiceParameters(): VoiceParameters {
+    return { ...this.voiceParams };
   }
 }

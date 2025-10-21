@@ -32,19 +32,20 @@ export class StreamingVoiceAIManager {
   private groqLLM: GroqLLM;
   private customTTS: CustomTTS;
   private audioPlayer: StreamingAudioPlayer;
-  
+
   private config: StreamingConfig;
   private isConnected = false;
   private isProcessing = false;
   private isSpeaking = false;
   private isListening = false;
-  
+  private currentVoice: string = 'odia';
+
   // Streaming pipeline components
   private audioBuffer: AudioChunk[] = [];
   private responseBuffer: StreamingResponse[] = [];
   private processingQueue: Promise<any>[] = [];
   private abortController: AbortController | null = null;
-  
+
   // Performance tracking
   private latencyTracker = {
     sttStart: 0,
@@ -52,7 +53,7 @@ export class StreamingVoiceAIManager {
     ttsStart: 0,
     totalStart: 0
   };
-  
+
   // Event callbacks
   private onTranscript?: (text: string) => void;
   private onResponse?: (response: StreamingResponse) => void;
@@ -60,7 +61,7 @@ export class StreamingVoiceAIManager {
   private onLatency?: (latency: number) => void;
   private onInterruption?: () => void;
 
-  constructor(config: Partial<StreamingConfig> = {}) {
+  constructor(config: Partial<StreamingConfig> = {}, voiceId?: string) {
     this.config = {
       maxLatency: 200, // 200ms target latency
       bufferSize: 4096,
@@ -70,7 +71,9 @@ export class StreamingVoiceAIManager {
       enableInterruption: true,
       ...config
     };
-    
+
+    this.currentVoice = voiceId || 'odia';
+
     this.vadProcessor = new EnhancedVADProcessor();
     this.deepgramSTT = new DeepgramSTT();
     this.groqLLM = new GroqLLM();
@@ -286,21 +289,22 @@ export class StreamingVoiceAIManager {
 
   private async processTTS(text?: string): Promise<ArrayBuffer> {
     const startTime = Date.now();
-    
+
     try {
       // Use text from LLM or provided text
       const responseText = text || '';
-      
+
       if (!responseText.trim()) {
         return new ArrayBuffer(0);
       }
-      
-      // Generate audio using custom TTS
-      const audioBuffer = await this.customTTS.generateSpeech(responseText);
-      
+
+      // Generate audio using custom TTS with current voice
+      console.log('🔊 Using voice:', this.currentVoice);
+      const audioBuffer = await this.customTTS.generateSpeech(responseText, this.currentVoice);
+
       const latency = Date.now() - startTime;
       console.log(`🔊 TTS completed in ${latency}ms`);
-      
+
       return audioBuffer;
     } catch (error) {
       console.error('❌ TTS processing error:', error);
@@ -415,10 +419,10 @@ export class StreamingVoiceAIManager {
       "Could you repeat that?",
       "Thank you for calling."
     ];
-    
+
     try {
       for (const response of commonResponses) {
-        const audioBuffer = await this.customTTS.generateSpeech(response);
+        const audioBuffer = await this.customTTS.generateSpeech(response, this.currentVoice);
         const preBufferedResponse: StreamingResponse = {
           text: response,
           audio: audioBuffer,
@@ -427,7 +431,7 @@ export class StreamingVoiceAIManager {
         };
         this.responseBuffer.push(preBufferedResponse);
       }
-      
+
       console.log(`✅ Pre-buffered ${commonResponses.length} common responses`);
     } catch (error) {
       console.error('❌ Failed to pre-buffer responses:', error);
@@ -469,5 +473,16 @@ export class StreamingVoiceAIManager {
       ...this.latencyTracker,
       totalLatency: Date.now() - this.latencyTracker.totalStart
     };
+  }
+
+  // Update voice
+  setVoice(voiceId: string) {
+    this.currentVoice = voiceId;
+    console.log('🎤 Voice updated to:', voiceId);
+  }
+
+  // Get current voice
+  getCurrentVoice(): string {
+    return this.currentVoice;
   }
 }

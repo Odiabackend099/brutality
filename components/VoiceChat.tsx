@@ -6,28 +6,38 @@ import { VoiceAIManager, ConnectionState } from '@/lib/voice-ai-manager';
 
 interface VoiceChatProps {
   agentId?: string;
+  defaultVoice?: string;
+  systemPrompt?: string;
 }
 
-export default function VoiceChat({ agentId }: VoiceChatProps) {
+const AVAILABLE_VOICES = [
+  { id: 'odia', name: 'Odia (African Male)', description: 'Warm, professional African male voice' },
+  { id: 'marcus', name: 'Marcus (American Male)', description: 'Clear, confident American male voice' },
+  { id: 'marcy', name: 'Marcy (American Female)', description: 'Friendly, energetic American female voice' },
+  { id: 'joslyn', name: 'Joslyn (African Female)', description: 'Smooth, professional African female voice' }
+];
+
+export default function VoiceChat({ agentId, defaultVoice, systemPrompt }: VoiceChatProps) {
   const [state, setState] = useState<ConnectionState>('disconnected');
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState('');
   const [isMuted, setIsMuted] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState(defaultVoice || 'odia');
 
   const voiceAIManagerRef = useRef<VoiceAIManager | null>(null);
 
   useEffect(() => {
-    // Initialize Voice AI Manager
-    voiceAIManagerRef.current = new VoiceAIManager();
-    
+    // Initialize Voice AI Manager with optional system prompt and voice
+    voiceAIManagerRef.current = new VoiceAIManager(systemPrompt, selectedVoice);
+
     return () => {
       if (voiceAIManagerRef.current) {
         voiceAIManagerRef.current.disconnect();
       }
     };
-  }, []);
+  }, [systemPrompt, selectedVoice]);
 
   const connect = async () => {
     if (!voiceAIManagerRef.current) return;
@@ -70,6 +80,13 @@ export default function VoiceChat({ agentId }: VoiceChatProps) {
       } else {
         setError('System test failed. Check console for details.');
       }
+    }
+  };
+
+  const handleVoiceChange = (voiceId: string) => {
+    setSelectedVoice(voiceId);
+    if (voiceAIManagerRef.current) {
+      voiceAIManagerRef.current.setVoice(voiceId);
     }
   };
 
@@ -136,6 +153,29 @@ export default function VoiceChat({ agentId }: VoiceChatProps) {
                isSpeaking ? 'Speaking...' : 
                state === 'connected' ? 'Ready to chat' : 
                'Not connected'}
+            </p>
+          </div>
+
+          {/* Voice Selection */}
+          <div className="mb-6">
+            <label htmlFor="voice-select" className="block text-white text-sm font-medium mb-2">
+              Voice Selection
+            </label>
+            <select
+              id="voice-select"
+              value={selectedVoice}
+              onChange={(e) => handleVoiceChange(e.target.value)}
+              disabled={state === 'connected'}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {AVAILABLE_VOICES.map((voice) => (
+                <option key={voice.id} value={voice.id} className="bg-gray-900">
+                  {voice.name}
+                </option>
+              ))}
+            </select>
+            <p className="text-gray-400 text-xs mt-1">
+              {AVAILABLE_VOICES.find(v => v.id === selectedVoice)?.description}
             </p>
           </div>
 
